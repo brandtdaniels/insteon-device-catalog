@@ -462,11 +462,12 @@ Open/Close Sensor's `configuration` and the Hidden Door Sensor's `operatingFlags
 the command set's operating flags with that query name its bits. Before writing the value, an
 app reads it, and refuses a write that would change a `keep` bit or set a `neverSet` one.
 
-**Flags linking changes.** Linking can change an operating flag on its own. A command set's
-`linkingChanges` lists those flags, as an allowlist: a linking flow may read them before it
-links and set them back afterward with Set Operating Flags, and it changes no other flag. No
-flag with a `guard` is ever on the list. A flag goes on the list once a document or a
-device shows that linking changes it; until then a command set has no `linkingChanges`.
+**Flags linking changes.** A flag can change what a link records, or linking can change the
+flag itself. A command set's `linkingChanges` lists the flags a linking flow may change around
+a link, as an allowlist: it reads them before it links and sets them back afterward with Set
+Operating Flags, and it changes no other flag. No flag with a `guard` is ever on the list. A
+flag goes on the list once a document or a device shows that linking changes it or that it
+changes what a link records; until then a command set has no `linkingChanges`.
 
 ```json
 "linkingChanges": [{ "flag": "exampleFlag" }]
