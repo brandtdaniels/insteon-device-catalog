@@ -7,6 +7,17 @@
       "subcategory": "0x2B"
     }
   ],
+  "commandSets": [
+    {
+      "commandSet": "switchLincDimmer",
+      "category": "0x01",
+      "subcategory": "0x2B",
+      "verification": {
+        "status": "inferred",
+        "note": "Inferred from the Wall Dimmer 4701, which takes the same command set: this product, the Wall Dimmer - 1000W, is a wall dimmer with a single load. No document lists this product's own."
+      }
+    }
+  ],
   "capabilities": [
     {
       "kind": "dimmable"

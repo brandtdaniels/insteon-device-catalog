@@ -13,6 +13,26 @@
       "region": "Australia and New Zealand"
     }
   ],
+  "commandSets": [
+    {
+      "commandSet": "inLineLinc",
+      "category": "0x01",
+      "subcategory": "0x3F",
+      "verification": {
+        "status": "inferred",
+        "note": "Inferred from the In-Line Dimmer Module (Dual-Band) 2475DA1, which takes the same command set: this product is an in-line dimmer for a fixture, with a single load. No document lists this product's own."
+      }
+    },
+    {
+      "commandSet": "inLineLinc",
+      "category": "0x01",
+      "subcategory": "0x40",
+      "verification": {
+        "status": "inferred",
+        "note": "Inferred from the In-Line Dimmer Module (Dual-Band) 2475DA1, which takes the same command set: this product is an in-line dimmer for a fixture, with a single load. No document lists this product's own."
+      }
+    }
+  ],
   "engines": [
     {
       "engine": "i2cs",
