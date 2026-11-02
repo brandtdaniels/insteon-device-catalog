@@ -14,7 +14,7 @@
       "subcategory": "0x2B",
       "verification": {
         "status": "inferred",
-        "note": "Read from the Insteon Developer's Guide (2009) giving the same operating flags and extended settings to the SwitchLinc dimmers, which run the same code base with a single load; no document lists this product's."
+        "note": "Inferred from the Insteon Developer's Guide (2009), which gives the SwitchLinc dimmers one set of operating flags and extended settings. This product is a wall dimmer with a single load, so it is assumed to take the same set. No document lists this product's own."
       }
     }
   ],
