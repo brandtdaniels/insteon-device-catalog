@@ -158,7 +158,7 @@
     "HouseLinc also lists 0x02/0x0C, which Insteon Device Categories (January 2014) gives to the 2856S3, under 2856S3B."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "Insteon Device Categories (January 2014)",
     "Insteon Developer's Guide (2009)"
   ]

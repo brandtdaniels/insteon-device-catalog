@@ -13,7 +13,7 @@
       "productKey": "0x000001",
       "verification": {
         "status": "inferred",
-        "note": "Insteon Device Categories and Product Keys (October 2008) gives 0x04/0x00 to the Compacta EZRain Sprinkler Controller and lists no EZFlora; the HouseLinc device catalog gives the same identity to the EZRain as model 31270. That the EZFlora reports it is read from those entries: no other irrigation controller from Compacta is listed, and no EZFlora document gives a category."
+        "note": "Insteon Device Categories and Product Keys (October 2008) gives 0x04/0x00 to the Compacta EZRain Sprinkler Controller and lists no EZFlora; the HouseLinc Device Definitions (version 2.9.87) gives the same identity to the EZRain as model 31270. That the EZFlora reports it is read from those entries: no other irrigation controller from Compacta is listed, and no EZFlora document gives a category."
       }
     }
   ],
@@ -348,6 +348,6 @@
     "Quick Start Guide - EZFlora Model #5010A",
     "EZFlora Insteon and X10 Messages/Commands",
     "Insteon Device Categories and Product Keys (October 2008)",
-    "HouseLinc device catalog"
+    "HouseLinc Device Definitions (version 2.9.87)"
   ]
 }

@@ -350,7 +350,7 @@
     "It sends group 1 as one on/off pair by default, and can be set to two scenes."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "Mini Remote Control 2342 Owner's Manual",
     "RemoteLinc 2 Developer Notes"
   ]

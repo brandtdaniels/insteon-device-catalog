@@ -388,7 +388,7 @@
     "Seen on a device running firmware 0x48: with both of its links to the modem removed, the device didn't answer ID Request; it rejected Ping and Beep; it rejected Light On (cmd1 0x11) with a NAK carrying cmd2 0xFF; it answered Get Insteon Engine Version (cmd1 0x0D) and Get Operating Flags (cmd1 0x1F, cmd2 0x00) with a NAK carrying cmd2 0xFF; and it still answered Light Status Request."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "insteon.com product catalog",
     "On/Off Module, Dual-Band Developer Notes",
     "On/Off Plug 2635-222 Owner's Manual",

@@ -135,7 +135,7 @@
     "Insteon Device Categories (January 2014) lists 0x03/0x1E as a version without EEPROM and without RF."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "Insteon Device Categories (January 2014)",
     "HouseLinc Owner's Manual",
     "Insteon Modem Developer's Guide",

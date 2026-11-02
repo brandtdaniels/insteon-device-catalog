@@ -330,7 +330,7 @@
     "The Dimmer Switch 2477DH Owner's Manual prints subcategory 0x20, the 2477D's; Insteon Device Categories (January 2014) gives the 2477DH 0x01/0x2D for every revision."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "insteon.com product catalog",
     "Dimmer Switch 2477DH Owner's Manual",
     "Dimmer Switch 2477DH Quick Start Guide",

@@ -344,7 +344,7 @@
     "Seen on a device running firmware 0x42: when a Hub 2245 linked it remotely, as the responder to the Hub's group 0, the module itself wrote its responder record for that link, at ALL-Link database address 0x0FFF with flags 0xA2, and set Data 1 from the load's state at the time of the link: 0x00 when the load was off and 0xFF when it was on. Linked while its load was off, the record held Data 1 to 3 as 0x00 0x1F 0x00; turned on with Light On (cmd1 0x11) first and linked again, 0xFF 0x1F 0x00. Data 2 was 0x1F on these links and 0x00 on an earlier one, whose record held 0xFF 0x00 0x00; a link made over that record later read 0x00 0x00 0x00, and with Data 1 0x00 an On to group 0 from the modem left the load off. With Data 1 0xFF, an On to group 0 from the modem turned the load on and an Off turned it off. None of these links gave 0xFE. The Outdoor ApplianceLinc with RF Developer Notes say to set the on-level to 0xFE and the ramp rate to 0x1F. Read/Write ALL-Link Database (cmd1 0x2F) with D2 0x02, writing that record with Data 0xFE 0x1F 0x00, was acknowledged and read back as written, with only Data 1 to 3 changed; then an On to group 0 from the modem turned the load on and an Off turned it off. Its controller record for group 1, to the Hub, held 0x03 0x00 0x00."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "insteon.com product catalog",
     "Outdoor ApplianceLinc with RF Developer Notes",
     "Outdoor On/Off Plug 2634-222 Owner's Manual",

@@ -379,7 +379,7 @@
     "Inferred: group 1 is both the sensor, which controls it, and the output relay, which responds to it. The I/O Module 2450 Owner's Manual says the output relay responds to Insteon ON and OFF commands, and the ioLinc command set's relay commands, Light ON (cmd1 0x11) and Light OFF (cmd1 0x13) sent to the device directly, are read from that and the Insteon Developer's Guide; no document gives the I/O Linc's direct commands."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "insteon.com product catalog",
     "Insteon Device Categories (January 2014)",
     "I/O Module 2450 Owner's Manual",

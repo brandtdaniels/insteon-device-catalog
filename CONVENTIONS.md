@@ -41,7 +41,7 @@ Owner's Manual: Hub Pro 2243 Owner's Manual.
 | The device lists | Insteon Device Categories and Product Keys (October 2008), Insteon Device Categories (January 2014) |
 | The i2CS notes | Insteon Firmware Update i2CS Developer Notes |
 | A product's notes | Its title's subject, then Developer Notes: Leak Sensor Developer Notes |
-| HouseLinc's data | HouseLinc device catalog |
+| HouseLinc's data | HouseLinc Device Definitions (version 2.9.87) |
 
 ## How sure a value is
 

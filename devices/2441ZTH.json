@@ -436,7 +436,7 @@
     "The Wireless Zone Thermostat 2441ZTH Owner's Manual gives subcategory 0x0A to the 2441ZTH, 0x11 to the 2732-432 and 0x12 to the 2732-532."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "Wireless Zone Thermostat 2441ZTH Owner's Manual",
     "Wireless Zone Thermostat 2441ZTH Quick Start Guide",
     "Wireless Thermostat Developer Notes"

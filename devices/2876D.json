@@ -168,7 +168,7 @@
     "Insteon Device Categories (January 2014) lists 0x01/0x03 and 0x01/0x1E as model 2876DB; Insteon Device Categories and Product Keys (October 2008) gives 0x01/0x03 as 2876D."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "Insteon Device Categories (January 2014)",
     "Insteon Device Categories and Product Keys (October 2008)",
     "Insteon Developer's Guide (2009)"

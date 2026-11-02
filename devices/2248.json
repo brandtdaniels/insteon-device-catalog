@@ -168,6 +168,6 @@
     "An I/O Module Expander, which has no Insteon radio of its own, adds four more zones."
   ],
   "sources": [
-    "HouseLinc device catalog"
+    "HouseLinc Device Definitions (version 2.9.87)"
   ]
 }

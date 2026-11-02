@@ -343,7 +343,7 @@
     "The 2015 owner's manual for the 2477S, 2477D and 2477DH prints subcategory 0x00, a template value; Insteon Device Categories (January 2014) gives the 2477D 0x01/0x20."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "insteon.com product catalog",
     "Dimmer Switch 2477D Owner's Manual",
     "Dimmer Switch 2477D Quick Start Guide",

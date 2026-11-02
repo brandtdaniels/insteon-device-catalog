@@ -41,7 +41,7 @@
       "type": "light",
       "verification": {
         "status": "inferred",
-        "note": "The HouseLinc device catalog makes the FanLinc a responder only; no document says its light group controls other devices."
+        "note": "The HouseLinc Device Definitions (version 2.9.87) makes the FanLinc a responder only; no document says its light group controls other devices."
       }
     },
     {
@@ -413,7 +413,7 @@
     "It takes a standard On for the light, and an extended On with 0x02 in D1 for the fan."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "insteon.com product catalog",
     "FanLinc Developer Notes",
     "Ceiling Fan and Light Control Module 2475F Owner's Manual",

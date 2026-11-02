@@ -194,7 +194,7 @@
     "Seen on a device running Hub firmware 1019: the request /1?L=USERNAME=1=PASSWORD, sent with the current login to set a new one, was answered with HTTP 200, but the login didn't change, either at once or after the Hub was powered off and on; the earlier login still worked and the new one was refused with HTTP 401. So that device offered no local way to change its login."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "insteon.com product catalog",
     "Hub 2245 Owner's Manual",
     "Hub 2245 Quick Start Guide"

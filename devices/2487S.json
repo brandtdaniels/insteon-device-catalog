@@ -43,6 +43,7 @@
       "firmware": {
         "only": [
           "0x41",
+          "0x44",
           "0xB6",
           "0xB7",
           "0xB8",
@@ -476,7 +477,7 @@
     "Group 9 controls the load only while it's detached from group 1."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "insteon.com product catalog",
     "KeypadLinc Line Developer Notes",
     "On/Off Keypad 2487S Owner's Manual",
