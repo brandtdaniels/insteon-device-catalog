@@ -20,7 +20,7 @@
       "subcategory": "0x3F",
       "verification": {
         "status": "inferred",
-        "note": "Inferred from the Insteon Developer's Guide (2009), which gives the In-LineLinc dimmers one set of operating flags and extended settings. This product is an in-line dimmer with a single load, so it is assumed to take the same set. No document lists this product's own."
+        "note": "Inferred from the In-Line Dimmer Module (Dual-Band) 2475DA1, which takes the same command set: this product is an in-line dimmer for a fixture, with a single load. No document lists this product's own."
       }
     },
     {
@@ -29,7 +29,7 @@
       "subcategory": "0x40",
       "verification": {
         "status": "inferred",
-        "note": "Inferred from the Insteon Developer's Guide (2009), which gives the In-LineLinc dimmers one set of operating flags and extended settings. This product is an in-line dimmer with a single load, so it is assumed to take the same set. No document lists this product's own."
+        "note": "Inferred from the In-Line Dimmer Module (Dual-Band) 2475DA1, which takes the same command set: this product is an in-line dimmer for a fixture, with a single load. No document lists this product's own."
       }
     }
   ],

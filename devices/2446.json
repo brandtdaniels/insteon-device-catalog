@@ -15,21 +15,21 @@
   ],
   "commandSets": [
     {
-      "commandSet": "inLineLinc",
+      "commandSet": "inLineLinc0To10V",
       "category": "0x01",
       "subcategory": "0x3D",
       "verification": {
         "status": "inferred",
-        "note": "Inferred from the Insteon Developer's Guide (2009), which gives the In-LineLinc dimmers one set of operating flags and extended settings. This product is an in-line dimmer with a single load, so it is assumed to take the same set. No document lists this product's own."
+        "note": "Inferred from the 0-10V Ballast Dimmer 2475DA2, which this product matches: both are 0-10VDC ballast dimmers that also work as two relays. The In-Line 0-10VDC Dimmer Developer Notes describe the 2475DA2's settings. No document lists this product's own, or says whether its two input lines match."
       }
     },
     {
-      "commandSet": "inLineLinc",
+      "commandSet": "inLineLinc0To10V",
       "category": "0x01",
       "subcategory": "0x3E",
       "verification": {
         "status": "inferred",
-        "note": "Inferred from the Insteon Developer's Guide (2009), which gives the In-LineLinc dimmers one set of operating flags and extended settings. This product is an in-line dimmer with a single load, so it is assumed to take the same set. No document lists this product's own."
+        "note": "Inferred from the 0-10V Ballast Dimmer 2475DA2, which this product matches: both are 0-10VDC ballast dimmers that also work as two relays. The In-Line 0-10VDC Dimmer Developer Notes describe the 2475DA2's settings. No document lists this product's own, or says whether its two input lines match."
       }
     }
   ],
@@ -310,6 +310,7 @@
   "sources": [
     "HouseLinc device catalog",
     "Ballast Dimmer 2446 Owner's Manual",
-    "Ballast Dimmer 2446 Quick Start Guide"
+    "Ballast Dimmer 2446 Quick Start Guide",
+    "In-Line 0-10VDC Dimmer Developer Notes"
   ]
 }

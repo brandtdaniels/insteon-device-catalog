@@ -14,7 +14,7 @@
       "subcategory": "0x2B",
       "verification": {
         "status": "inferred",
-        "note": "Inferred from the Insteon Developer's Guide (2009), which gives the SwitchLinc dimmers one set of operating flags and extended settings. This product is a wall dimmer with a single load, so it is assumed to take the same set. No document lists this product's own."
+        "note": "Inferred from the Wall Dimmer 4701, which takes the same command set: this product, the Wall Dimmer - 1000W, is a wall dimmer with a single load. No document lists this product's own."
       }
     }
   ],
