@@ -13,6 +13,26 @@
       "region": "Australia and New Zealand"
     }
   ],
+  "commandSets": [
+    {
+      "commandSet": "inLineLinc",
+      "category": "0x01",
+      "subcategory": "0x3D",
+      "verification": {
+        "status": "inferred",
+        "note": "Read from the Insteon Developer's Guide (2009) giving the same operating flags and extended settings to the dual-band In-LineLinc dimmers, which run the same code base with a single load; no document lists this product's."
+      }
+    },
+    {
+      "commandSet": "inLineLinc",
+      "category": "0x01",
+      "subcategory": "0x3E",
+      "verification": {
+        "status": "inferred",
+        "note": "Read from the Insteon Developer's Guide (2009) giving the same operating flags and extended settings to the dual-band In-LineLinc dimmers, which run the same code base with a single load; no document lists this product's."
+      }
+    }
+  ],
   "engines": [
     {
       "engine": "i2cs",

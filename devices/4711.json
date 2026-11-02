@@ -7,6 +7,17 @@
       "subcategory": "0x2B"
     }
   ],
+  "commandSets": [
+    {
+      "commandSet": "switchLincDimmer",
+      "category": "0x01",
+      "subcategory": "0x2B",
+      "verification": {
+        "status": "inferred",
+        "note": "Read from the Insteon Developer's Guide (2009) giving the same operating flags and extended settings to the SwitchLinc dimmers, which run the same code base with a single load; no document lists this product's."
+      }
+    }
+  ],
   "capabilities": [
     {
       "kind": "dimmable"
