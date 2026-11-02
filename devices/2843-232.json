@@ -389,11 +389,11 @@
     "Its heartbeat's cmd1 is 0x11 while it's open and 0x13 while it's closed."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "Open/Close Sensor Developer Notes"
   ],
   "verification": {
     "status": "inferred",
-    "note": "Read from its device category: it shares category 0x10 with the Open/Close Sensor 2843, and its commands, groups and setup are read from that sensor. The HouseLinc device catalog lists subcategory 0x09 as the Door Sensor 2843-232; no other document gives its model number, and none describes the sensor itself."
+    "note": "Read from its device category: it shares category 0x10 with the Open/Close Sensor 2843, and its commands, groups and setup are read from that sensor. The HouseLinc Device Definitions (version 2.9.87) lists subcategory 0x09 as the Door Sensor 2843-232; no other document gives its model number, and none describes the sensor itself."
   }
 }

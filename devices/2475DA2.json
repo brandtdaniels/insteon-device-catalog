@@ -385,7 +385,7 @@
     "Closing input 1 sends group 1, opening it group 2, closing input 2 group 3 and opening it group 4."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "insteon.com product catalog",
     "In-Line 0-10VDC Dimmer Developer Notes",
     "0-10V Ballast Dimmer 2475DA2 Owner's Manual",

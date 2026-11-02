@@ -353,7 +353,7 @@
     "The SwitchLinc 2-Wire Dimmer Developer Notes send D1 0x00 in the ramp rate and on-level Sets and say other values are ignored; the catalog's settings send 0x01, as for other products."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "SwitchLinc 2-Wire Dimmer Developer Notes",
     "2-Wire Dimmer Switch 2474DWH Owner's Manual",
     "Insteon Developer's Guide (2009)",

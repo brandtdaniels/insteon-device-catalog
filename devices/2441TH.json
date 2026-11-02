@@ -473,7 +473,7 @@
     "The Thermostat 2441TH Owner's Manual's list of groups prints the status report group as EF; its footnote, like the catalog, gives FE, group 254."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "Thermostat 2441TH Owner's Manual",
     "Thermostat 2441TH Quick Start Guide",
     "Insteon Developer's Guide (2009)"

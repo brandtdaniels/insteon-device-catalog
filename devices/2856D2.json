@@ -162,7 +162,7 @@
     "HouseLinc and Insteon Device Categories (January 2014) also list its identity under 2856D2B; Insteon Device Categories and Product Keys (October 2008) gives 2856D2."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "Insteon Device Categories (January 2014)",
     "Insteon Device Categories and Product Keys (October 2008)",
     "Insteon Developer's Guide (2009)"

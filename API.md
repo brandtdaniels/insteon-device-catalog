@@ -65,7 +65,7 @@ Bytes are strings of `0x` and two uppercase hexadecimal digits, as Insteon docum
     },
     { "kind": "heartbeat", "group": "0x04", "intervalMinutes": 1428 }
   ],
-  "sources": ["HouseLinc device catalog", "Leak Sensor Developer Notes"]
+  "sources": ["HouseLinc Device Definitions (version 2.9.87)", "Leak Sensor Developer Notes"]
 }
 ```
 

@@ -33,7 +33,7 @@
       "region": "Australia and New Zealand, B22",
       "verification": {
         "status": "conflicting",
-        "note": "The LED Bulb Developer Notes print 0x4D as an Australian Edison base, the same as 0x3C; the HouseLinc device catalog makes it the B22 version."
+        "note": "The LED Bulb Developer Notes print 0x4D as an Australian Edison base, the same as 0x3C; the HouseLinc Device Definitions (version 2.9.87) makes it the B22 version."
       }
     }
   ],
@@ -309,7 +309,7 @@
     "Sold as the 2672-222 in the US, the 2672-422 (E27) and 2672-432 (B22) in Europe, and the 2672-522 (E27) and 2672-532 (B22) in Australia and New Zealand."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "LED Bulb A19 2672 Owner's Manual",
     "LED Bulb Developer Notes",
     "LED Bulb A19 2672 Quick Start Guide",

@@ -444,7 +444,7 @@
     "With its jumper removed, in multi-scene mode, the sensor sends group 1 when it opens and group 2 when it closes. Later units without a jumper, as the 2016 Open/Close Sensor 2843 Owner's Manual describes them, have no multi-scene mode."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "insteon.com product catalog",
     "Open/Close Sensor Developer Notes",
     "Open/Close Sensor 2843 Owner's Manual",

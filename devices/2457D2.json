@@ -324,7 +324,7 @@
     "The 2014 to 2016 owner's manuals print subcategory 0x37, which the DIN Rail Dimmer 2452 reports in Australia and New Zealand; Insteon Device Categories (January 2014) gives the 2457D2 only 0x01/0x0E. A later hardware revision may report 0x37."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "insteon.com product catalog",
     "Dimmer Plug 2457D2 Owner's Manual",
     "Dimmer Plug 2457D2 Quick Start Guide",

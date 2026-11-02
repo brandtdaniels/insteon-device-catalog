@@ -446,7 +446,7 @@
     "Insteon Device Categories (January 2014) gives 2732-432 and 2732-532 to the Zone Thermostat, 0x05/0x11 and 0x05/0x12."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "Insteon Device Categories (January 2014)",
     "Thermostat 2441TH Owner's Manual",
     "Thermostat for Heat Pump 2732 Quick Start Guide",

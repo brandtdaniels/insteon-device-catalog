@@ -330,7 +330,7 @@
     "It links to group 1 while cooling, group 2 while heating and group 3 while its fan runs; devices linked to group 239 (0xEF) get its status reports."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "Insteon Developer's Guide (2009)",
     "Thermostat Adapter 2441V Owner's Manual",
     "Thermostat Adapter 2441V Quick Start Guide",

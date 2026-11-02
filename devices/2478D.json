@@ -368,7 +368,7 @@
     "Returns its load and LEDs to their states before a power outage."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "Dimmer Switch 240V 2478D Owner's Manual",
     "Dimmer Switch 240V 2478D Quick Start Guide",
     "Insteon Developer's Guide (2009)"

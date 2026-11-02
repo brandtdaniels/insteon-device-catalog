@@ -23,7 +23,7 @@
       },
       "verification": {
         "status": "conflicting",
-        "note": "The iMeter Developer Notes describe the meter as i2CS but give 0x01, i2, as its Get Insteon Engine Version reply; the HouseLinc device catalog gives i2CS for firmware 0x30, which the catalog uses."
+        "note": "The iMeter Developer Notes describe the meter as i2CS but give 0x01, i2, as its Get Insteon Engine Version reply; the HouseLinc Device Definitions (version 2.9.87) gives i2CS for firmware 0x30, which the catalog uses."
       }
     }
   ],
@@ -106,7 +106,7 @@
     "Rated for 15 A."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "iMeter Developer Notes",
     "Power Meter 2423A1 Owner's Manual",
     "Power Meter 2423A1 Quick Start Guide"

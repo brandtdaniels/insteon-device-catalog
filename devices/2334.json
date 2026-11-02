@@ -491,7 +491,7 @@
     "Group 9 controls the load only while it's detached from group 1."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "insteon.com product catalog",
     "KeypadLinc Line Developer Notes",
     "Dimmer Keypad 2334 Owner's Manual",

@@ -428,7 +428,7 @@
     "Its owner's manual says the sensor sends its heartbeat once every 24 hours by default."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "insteon.com product catalog",
     "Hidden Door Sensor Developer Notes",
     "Hidden Door Sensor 2845 Owner's Manual"

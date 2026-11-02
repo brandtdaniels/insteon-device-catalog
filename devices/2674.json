@@ -279,7 +279,7 @@
     "Powers up on by default, and can be set to power up to its last state instead."
   ],
   "sources": [
-    "HouseLinc device catalog",
+    "HouseLinc Device Definitions (version 2.9.87)",
     "LED Bulb Developer Notes",
     "LED Bulb PAR38 2674 Owner's Manual",
     "LED Bulb PAR38 2674 Quick Start Guide",
