@@ -358,9 +358,22 @@
       }
     }
   ],
+  "linkingChanges": [
+    {
+      "flag": "momentary",
+      "verification": {
+        "status": "observed",
+        "firmware": [
+          "0x41"
+        ],
+        "note": "Seen on a device running firmware 0x41: with the momentary flag on, the relay returned to off soon after a Light On, before a link could finish, so a link made then recorded Data 1 as 0x00 whatever state the relay had been set to. With the flag off, a link made with the relay on recorded 0xFF and one made with it off recorded 0x00."
+      }
+    }
+  ],
   "notes": [
     "A later source marks bit 6 of the 0x00 reply as ignored; an earlier source reads it as the trigger reversal that 0x0E and 0x0F set.",
-    "An earlier source labels D5 and D6 of the reply the relay's X10 address and D7 and D8 the sensor's, where a later source has the input's and the output's."
+    "An earlier source labels D5 and D6 of the reply the relay's X10 address and D7 and D8 the sensor's, where a later source has the input's and the output's.",
+    "Seen on a device running firmware 0x41: a responder record's Data 1 is the relay's state when the link was made, 0x00 for off and 0xFF for on. A later On to the group sets the relay to that state, and an Off to the group sets it to the opposite state."
   ],
   "sources": [
     "Insteon Developer's Guide (2009)",
