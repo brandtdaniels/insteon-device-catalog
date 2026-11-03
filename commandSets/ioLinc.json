@@ -349,6 +349,24 @@
           "command": "lightOff"
         }
       ],
+      "linkData": {
+        "responder": [
+          {
+            "byte": 1,
+            "name": "onLevel",
+            "label": "On or off",
+            "description": "0x00 sets the relay off when the controller's On arrives, 0xFF on. A controller's Off sets the opposite state. This holds with the momentary flags off.",
+            "table": "onOff",
+            "verification": {
+              "status": "observed",
+              "firmware": [
+                "0x41"
+              ],
+              "note": "Seen on a device running firmware 0x41: linked to a Hub 2245 with the momentary flag off, the device wrote its responder record with Data 1 as 0x00 when the relay was off and 0xFF when it was on. A group On, Light ON (cmd1 0x11) with the group's number, then set the relay to the recorded state, and a group Off, Light OFF (cmd1 0x13), set it to the opposite state. With the momentary flag on, the relay returned to off soon after a Light ON, before a link could finish, and the record's Data 1 was 0x00 whatever state the relay had been set to."
+            }
+          }
+        ]
+      },
       "verification": {
         "status": "observed",
         "note": "Seen on a device running firmware 0x41: sent from a Hub 2245 with modem firmware 0xA5, with nothing wired to the relay, the On action, Light ON (cmd1 0x11), turned the relay on, and the Off action, Light OFF (cmd1 0x13), turned it off. Light Status Request answered with cmd2 0x00 while the relay was off, and with a value the ranges read as On while it was on. No document gives the I/O Linc's direct commands. The Insteon Developer's Guide gives Light ON (cmd1 0x11), Light OFF (cmd1 0x13) and Light Status Request (cmd1 0x19, cmd2 0x00) for categories 0x01 and 0x02, not for the I/O Linc's 0x07, and the I/O Module 2450 Owner's Manual says the output relay responds to Insteon ON and OFF commands; the relay's commands are read from those. That every nonzero reply means on is read from Light Status Request's on-level for on/off devices, as the Insteon Developer's Guide gives it, and isn't documented for the I/O Linc.",
@@ -358,12 +376,41 @@
       }
     }
   ],
+  "linkingChanges": [
+    {
+      "flag": "momentary",
+      "verification": {
+        "status": "observed",
+        "firmware": [
+          "0x41"
+        ],
+        "note": "Seen on a device running firmware 0x41: with the momentary flag on, the relay returned to off soon after a Light ON (cmd1 0x11), before a link could finish, so a link made then recorded Data 1 as 0x00 whatever state the relay had been set to. With the flag off, a link made with the relay on recorded 0xFF and one made with it off recorded 0x00."
+      }
+    }
+  ],
   "notes": [
     "A later source marks bit 6 of the 0x00 reply as ignored; an earlier source reads it as the trigger reversal that 0x0E and 0x0F set.",
-    "An earlier source labels D5 and D6 of the reply the relay's X10 address and D7 and D8 the sensor's, where a later source has the input's and the output's."
+    "An earlier source labels D5 and D6 of the reply the relay's X10 address and D7 and D8 the sensor's, where a later source has the input's and the output's.",
+    "Recording a relay state at link time needs the momentary flag off, and the relay left in the state to record. A relay wired to a door, lock or valve stays in that state until it is set back, and the momentary flag stays off until it is restored, so a flow restores both on every failure path, including cancellation."
   ],
   "sources": [
     "Insteon Developer's Guide (2009)",
     "I/O Module 2450 Owner's Manual"
+  ],
+  "valueTables": [
+    {
+      "name": "onOff",
+      "description": "Off and on, for a relay a record switches.",
+      "values": [
+        {
+          "value": "0x00",
+          "label": "Off"
+        },
+        {
+          "value": "0xFF",
+          "label": "On"
+        }
+      ]
+    }
   ]
 }
