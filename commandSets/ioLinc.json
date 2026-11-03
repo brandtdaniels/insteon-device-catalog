@@ -55,7 +55,7 @@
       "name": "momentaryOnBothCommands",
       "label": "Momentary on On and Off",
       "section": "Relay",
-      "description": "Both On and Off commands close the momentary relay (momentary B).",
+      "description": "Both a group On and a group Off close the momentary relay (momentary B). A direct Off doesn't.",
       "query": "0x00",
       "bit": "0x10",
       "on": "0x12",
@@ -311,7 +311,7 @@
     },
     {
       "name": "lightOff",
-      "description": "Turns the output relay off. In a momentary mode, the relay closes for the momentary time if the mode triggers on Off, and otherwise ignores it.",
+      "description": "Turns the output relay off. In a momentary mode, it doesn't close the relay; a group Off does that.",
       "command1": "0x13",
       "verification": {
         "status": "observed",
