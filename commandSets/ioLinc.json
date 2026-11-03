@@ -397,6 +397,25 @@
           }
         ]
       },
+      "stateHolding": {
+        "releasedBy": [
+          "momentary"
+        ],
+        "restState": "off",
+        "pulsesOnEveryCommandWhen": [
+          [
+            "momentary",
+            "momentaryOnBothCommands"
+          ]
+        ],
+        "verification": {
+          "status": "observed",
+          "firmware": [
+            "0x41"
+          ],
+          "note": "Seen on a device running firmware 0x41: sent from a Hub 2245 with modem firmware 0xA5, with nothing wired to the relay: with the momentary flag on, the relay returned to off after about the momentary time. With momentaryOnBothCommands also on, every group On and every group Off pulsed it whatever the responder record's Data 1 held. With the momentary flag off, momentaryOnBothCommands changed nothing and the relay held the state it was switched to."
+        }
+      },
       "verification": {
         "status": "observed",
         "note": "Seen on a device running firmware 0x41: sent from a Hub 2245 with modem firmware 0xA5, with nothing wired to the relay, the On action, Light ON (cmd1 0x11), turned the relay on, and the Off action, Light OFF (cmd1 0x13), turned it off. Light Status Request answered with cmd2 0x00 while the relay was off, and with a value the ranges read as On while it was on. No document gives the I/O Linc's direct commands. The Insteon Developer's Guide gives Light ON (cmd1 0x11), Light OFF (cmd1 0x13) and Light Status Request (cmd1 0x19, cmd2 0x00) for categories 0x01 and 0x02, not for the I/O Linc's 0x07, and the I/O Module 2450 Owner's Manual says the output relay responds to Insteon ON and OFF commands; the relay's commands are read from those. That every nonzero reply means on is read from Light Status Request's on-level for on/off devices, as the Insteon Developer's Guide gives it, and isn't documented for the I/O Linc.",
