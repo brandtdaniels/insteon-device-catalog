@@ -365,6 +365,36 @@
               "note": "Seen on a device running firmware 0x41: linked to a Hub 2245 with the momentary flag off, the device wrote its responder record with Data 1 as 0x00 when the relay was off and 0xFF when it was on. A group On, Light ON (cmd1 0x11) with the group's number, then set the relay to the recorded state, and a group Off, Light OFF (cmd1 0x13), set it to the opposite state. With the momentary flag on, the relay returned to off soon after a Light ON, before a link could finish, and the record's Data 1 was 0x00 whatever state the relay had been set to."
             }
           }
+        ],
+        "controller": [
+          {
+            "byte": 1,
+            "name": "data1",
+            "label": "Data 1",
+            "description": "Always 0x03 in the records the device writes.",
+            "value": "0x03",
+            "verification": {
+              "status": "observed",
+              "firmware": [
+                "0x41"
+              ],
+              "note": "Seen on a device running firmware 0x41: linked to a Hub 2245, and again linked by the Hub's modem with Enter Linking Mode, the device wrote its controller record for group 1, naming the modem, with Data 1 to 3 as 0x03 0x00 0x00 each time. With that record, a tap of the SET button sent a group 1 broadcast, Light ON (cmd1 0x11), then an ALL-Link cleanup message, Light ON again, addressed to the modem. With the same record written by hand as 0x00 0x00 0x00, the broadcast was sent but the cleanup was not addressed to the modem."
+            }
+          },
+          {
+            "byte": 2,
+            "name": "data2",
+            "label": "Data 2",
+            "description": "Always 0x00 in the records the device writes.",
+            "value": "0x00"
+          },
+          {
+            "byte": 3,
+            "name": "data3",
+            "label": "Data 3",
+            "description": "Always 0x00 in the records the device writes.",
+            "value": "0x00"
+          }
         ]
       },
       "verification": {
