@@ -42,17 +42,31 @@
       "query": "0x00",
       "bit": "0x08",
       "on": "0x06",
-      "off": "0x07"
+      "off": "0x07",
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running firmware 0x41: sent from a Hub 2245 with modem firmware 0xA5, with nothing wired to the relay, this flag on and the momentaryOnBothCommands flag (0x10) off, a group On pulsed the relay closed when the responder record's Data 1 was 0xFF, and a group Off did nothing; with Data 1 as 0x00, a group Off pulsed it closed and a group On did nothing. A load on the relay, a driven sensor input, the momentaryFollowsSensor flag (0x80) and the relayFollowsInput flag (0x04) weren't tried.",
+        "firmware": [
+          "0x41"
+        ]
+      }
     },
     {
       "name": "momentaryOnBothCommands",
       "label": "Momentary on On and Off",
       "section": "Relay",
-      "description": "Both On and Off commands close the momentary relay (momentary B).",
+      "description": "Both a group On and a group Off close the momentary relay (momentary B). A direct Off doesn't.",
       "query": "0x00",
       "bit": "0x10",
       "on": "0x12",
-      "off": "0x13"
+      "off": "0x13",
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running firmware 0x41: sent from a Hub 2245 with modem firmware 0xA5, with nothing wired to the relay, this flag changed the relay's behavior only while the momentary flag (0x08) was on. With both flags on, every group On and every group Off pulsed the relay closed, whatever the responder record's Data 1 held. With the momentary flag off and this flag on, the relay latched: with Data 1 as 0x00, a group Off closed the relay and it stayed closed for over 50 seconds, and a group On changed nothing.",
+        "firmware": [
+          "0x41"
+        ]
+      }
     },
     {
       "name": "triggerReversed",
@@ -62,7 +76,14 @@
       "query": "0x00",
       "bit": "0x40",
       "on": "0x0E",
-      "off": "0x0F"
+      "off": "0x0F",
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running firmware 0x41: sent from a Hub 2245 with modem firmware 0xA5, Get Operating Flags (cmd1 0x1F, cmd2 0x00) answered with cmd2 0x5A, with the ledOnTransmit (0x02), momentary (0x08), momentaryOnBothCommands (0x10) and triggerReversed (0x40) flags set, and with 0x1A once this flag was cleared, so bit 6 holds it. With nothing connected to the sensor input, Light Status Request with cmd2 0x01 (cmd1 0x19) answered with cmd2 0x00 for the input both with this flag set and with it cleared, so the flag's effect on the sensor wasn't seen.",
+        "firmware": [
+          "0x41"
+        ]
+      }
     },
     {
       "name": "momentaryFollowsSensor",
@@ -140,6 +161,13 @@
         "range": {
           "from": "0x00",
           "through": "0xFF"
+        },
+        "verification": {
+          "status": "observed",
+          "note": "Seen on a device running firmware 0x41: sent from a Hub 2245 with modem firmware 0xA5, with nothing wired to the relay and the momentary flag (0x08) on, the relay stayed closed for about the momentary time times this multiplier, in tenths of a second. With a momentary time of 0x64 (100), a multiplier of 0x01 held it closed for about 10 seconds and 0x02 for about 20 seconds, and 0x00 behaved like 0x01. The times were measured by polling Light Status Request (cmd1 0x19, cmd2 0x00), to within about 4 seconds.",
+          "firmware": [
+            "0x41"
+          ]
         }
       },
       {
@@ -237,7 +265,14 @@
             "position": 3,
             "value": "momentaryTime"
           }
-        ]
+        ],
+        "verification": {
+          "status": "observed",
+          "note": "Seen on a device running firmware 0x41: sent from a Hub 2245 with modem firmware 0xA5, writing a nonzero momentary time turned the momentary flag (0x08) on. Turning the flag off afterwards with Set Operating Flags (cmd2 0x07) left the momentary time as written.",
+          "firmware": [
+            "0x41"
+          ]
+        }
       },
       {
         "name": "momentaryPrescaler",
@@ -268,7 +303,7 @@
       },
       "verification": {
         "status": "observed",
-        "note": "Seen on a device running firmware 0x41: sent from a Hub 2245 with modem firmware 0xA5, with nothing wired to the relay, Light ON (cmd1 0x11) turned the relay on. No document gives the I/O Linc's direct commands. The Insteon Developer's Guide gives Light ON (cmd1 0x11), Light OFF (cmd1 0x13) and Light Status Request (cmd1 0x19, cmd2 0x00) for categories 0x01 and 0x02, not for the I/O Linc's 0x07, and the I/O Module 2450 Owner's Manual says the output relay responds to Insteon ON and OFF commands; the relay's commands are read from those.",
+        "note": "Seen on a device running firmware 0x41: sent from a Hub 2245 with modem firmware 0xA5, with nothing wired to the relay, Light ON (cmd1 0x11) turned the relay on. With the momentary flag (0x08) on, Light ON and Light ON Fast (cmd1 0x12) closed the relay, with the momentaryOnBothCommands flag (0x10) on or off. No document gives the I/O Linc's direct commands. The Insteon Developer's Guide gives Light ON (cmd1 0x11), Light OFF (cmd1 0x13) and Light Status Request (cmd1 0x19, cmd2 0x00) for categories 0x01 and 0x02, not for the I/O Linc's 0x07, and the I/O Module 2450 Owner's Manual says the output relay responds to Insteon ON and OFF commands; the relay's commands are read from those.",
         "firmware": [
           "0x41"
         ]
@@ -276,11 +311,11 @@
     },
     {
       "name": "lightOff",
-      "description": "Turns the output relay off. In a momentary mode, the relay closes for the momentary time if the mode triggers on Off, and otherwise ignores it.",
+      "description": "Turns the output relay off. In a momentary mode, it doesn't close the relay; a group Off does that.",
       "command1": "0x13",
       "verification": {
         "status": "observed",
-        "note": "Seen on a device running firmware 0x41: sent from a Hub 2245 with modem firmware 0xA5, with nothing wired to the relay, Light OFF (cmd1 0x13) turned the relay off. No document gives the I/O Linc's direct commands. The Insteon Developer's Guide gives Light ON (cmd1 0x11), Light OFF (cmd1 0x13) and Light Status Request (cmd1 0x19, cmd2 0x00) for categories 0x01 and 0x02, not for the I/O Linc's 0x07, and the I/O Module 2450 Owner's Manual says the output relay responds to Insteon ON and OFF commands; the relay's commands are read from those.",
+        "note": "Seen on a device running firmware 0x41: sent from a Hub 2245 with modem firmware 0xA5, with nothing wired to the relay, Light OFF (cmd1 0x13) turned the relay off. With the momentary flag (0x08) on, neither Light OFF nor Light OFF Fast (cmd1 0x14) closed the relay, with the momentaryOnBothCommands flag (0x10) on or off. No document gives the I/O Linc's direct commands. The Insteon Developer's Guide gives Light ON (cmd1 0x11), Light OFF (cmd1 0x13) and Light Status Request (cmd1 0x19, cmd2 0x00) for categories 0x01 and 0x02, not for the I/O Linc's 0x07, and the I/O Module 2450 Owner's Manual says the output relay responds to Insteon ON and OFF commands; the relay's commands are read from those.",
         "firmware": [
           "0x41"
         ]
@@ -297,7 +332,7 @@
       },
       "verification": {
         "status": "observed",
-        "note": "Seen on a device running firmware 0x41: sent from a Hub 2245 with modem firmware 0xA5, with nothing wired to the relay, Light Status Request (cmd1 0x19, cmd2 0x00) answered with cmd2 0x00 while the relay was off, and with a value the relay group type reads as On while it was on. No document gives the I/O Linc's direct commands. The Insteon Developer's Guide gives Light ON (cmd1 0x11), Light OFF (cmd1 0x13) and Light Status Request (cmd1 0x19, cmd2 0x00) for categories 0x01 and 0x02, not for the I/O Linc's 0x07, and the I/O Module 2450 Owner's Manual says the output relay responds to Insteon ON and OFF commands; the relay's commands are read from those.",
+        "note": "Seen on a device running firmware 0x41: sent from a Hub 2245 with modem firmware 0xA5, with nothing wired to the relay, Light Status Request (cmd1 0x19, cmd2 0x00) answered with cmd2 0x00 while the relay was off, and with 0xFF, a value the relay group type reads as On, while it was on. The acknowledgment's cmd1 held the ALL-Link database delta. No document gives the I/O Linc's direct commands. The Insteon Developer's Guide gives Light ON (cmd1 0x11), Light OFF (cmd1 0x13) and Light Status Request (cmd1 0x19, cmd2 0x00) for categories 0x01 and 0x02, not for the I/O Linc's 0x07, and the I/O Module 2450 Owner's Manual says the output relay responds to Insteon ON and OFF commands; the relay's commands are read from those.",
         "firmware": [
           "0x41"
         ]
