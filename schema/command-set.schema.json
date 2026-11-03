@@ -1184,6 +1184,46 @@
           },
           "minProperties": 1
         },
+        "stateHolding": {
+          "description": "For a relay group, which of the command set's operating flags decide whether the relay holds the state a command switches it to. Omitted, the catalog says nothing about it: an app assumes neither that the relay holds a state nor that it releases one.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "releasedBy",
+            "restState"
+          ],
+          "properties": {
+            "releasedBy": {
+              "description": "Operating flags of the command set. While any of them is set, the relay doesn't hold a commanded state: it returns to restState by itself after a time. While none is set, it holds the state it's switched to.",
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/name"
+              }
+            },
+            "restState": {
+              "description": "The action of the group type whose state the relay returns to, such as off.",
+              "$ref": "#/$defs/name"
+            },
+            "pulsesOnEveryCommandWhen": {
+              "description": "Sets of operating flags of the command set. While every flag of any one set is set, each group On and each group Off pulses the relay whatever a responder record's data holds, so a state recorded in the record means nothing.",
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "$ref": "#/$defs/name"
+                }
+              }
+            },
+            "verification": {
+              "$ref": "#/$defs/verification"
+            }
+          }
+        },
         "verification": {
           "$ref": "#/$defs/verification"
         }

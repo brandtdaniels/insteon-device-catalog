@@ -413,6 +413,33 @@ the same bytes:
   `category`, `subcategory` or `firmware`, as ALL-Linking Completed reports them.
 - A byte a list leaves out isn't known.
 
+**Whether a relay holds its state.** A `relay` group type's `stateHolding` says which of the
+command set's operating flags decide whether the relay holds the state a command switches it to.
+Its flag names are the command set's own `operatingFlags` names, and the build fails on one that
+isn't there. The I/O Linc's relay:
+
+```json
+"stateHolding": {
+  "releasedBy": ["momentary"],
+  "restState": "off",
+  "pulsesOnEveryCommandWhen": [["momentary", "momentaryOnBothCommands"]] }
+```
+
+- `releasedBy` lists flags any one of which, while set, keeps the relay from holding a
+  commanded state: it returns to `restState` by itself after a time, as a momentary relay
+  does.
+- `restState` names the group type's action whose state the relay returns to, here `off`.
+- `pulsesOnEveryCommandWhen` lists sets of flags. While every flag of any one set is set, each
+  group On and each group Off pulses the relay whatever the responder record's data holds, so
+  a state recorded at link time means nothing.
+
+An app evaluates it from the flags it last read from the device. With no `releasedBy` flag set,
+the relay holds the state it's switched to. With one set, it doesn't, and it ends in
+`restState`. With every flag of a `pulsesOnEveryCommandWhen` set also set, a recorded state
+means nothing either. A flag the app hasn't read leaves the answer unknown. A group type without
+`stateHolding` says nothing about it, so an app assumes neither that the relay holds a state nor
+that it releases one.
+
 **Settings.** Operating flags, readings and extended settings values can carry:
 
 - `label`: what to call the setting, such as "Beep on button press".

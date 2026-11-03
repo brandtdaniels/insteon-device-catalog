@@ -456,6 +456,21 @@ def presentation_problems(command_set):
         if len(names) != len(set(names)):
             problems.append(f"{label} names an action twice")
 
+        holding = group_type.get("stateHolding")
+
+        if holding is not None:
+            if group_type["kind"] != "relay":
+                problems.append(f"{label} has stateHolding, which only a relay group type has")
+
+            if holding["restState"] not in names:
+                problems.append(f"{label}'s stateHolding rests in {holding['restState']!r}, which isn't one of its actions")
+
+            flag_names = {flag["name"] for flag in command_set.get("operatingFlags", [])}
+
+            for name in holding["releasedBy"] + [name for flag_set in holding.get("pulsesOnEveryCommandWhen", []) for name in flag_set]:
+                if name not in flag_names:
+                    problems.append(f"{label}'s stateHolding names {name!r}, which isn't an operating flag")
+
         for action in group_type.get("actions", []):
             if action["command"] not in commands:
                 problems.append(f"{label}'s {action['name']} action names the command {action['command']!r}, which doesn't exist")
