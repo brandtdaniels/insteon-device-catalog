@@ -408,6 +408,14 @@
             }
           }
         ]
+      },
+      "stateHolding": {
+        "releasedBy": [],
+        "restState": "off",
+        "verification": {
+          "status": "inferred",
+          "note": "No document says whether this relay holds the state a command switches it to. It follows from the command set: none of its operating flags or flag commands is a momentary or pulse setting, so no flag makes the relay return to off by itself."
+        }
       }
     },
     {
@@ -458,6 +466,14 @@
             }
           }
         ]
+      },
+      "stateHolding": {
+        "releasedBy": [],
+        "restState": "off",
+        "verification": {
+          "status": "inferred",
+          "note": "No document says whether this relay holds the state a command switches it to. It follows from the command set: none of its operating flags or flag commands is a momentary or pulse setting, so no flag makes the relay return to off by itself."
+        }
       }
     }
   ],
