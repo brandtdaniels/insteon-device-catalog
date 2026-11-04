@@ -1194,9 +1194,8 @@
           ],
           "properties": {
             "releasedBy": {
-              "description": "Operating flags of the command set. While any of them is set, the relay doesn't hold a commanded state: it returns to restState by itself after a time. While none is set, it holds the state it's switched to.",
+              "description": "Operating flags of the command set. While any of them is set, the relay doesn't hold a commanded state: it returns to restState by itself after a time. While none is set, it holds the state it's switched to. Empty, no flag releases the relay, so it always holds the state it's switched to, and pulsesOnEveryCommandWhen is left out.",
               "type": "array",
-              "minItems": 1,
               "uniqueItems": true,
               "items": {
                 "$ref": "#/$defs/name"
