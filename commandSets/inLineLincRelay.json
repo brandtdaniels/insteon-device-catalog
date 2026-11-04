@@ -849,6 +849,14 @@
       "verification": {
         "status": "inferred",
         "note": "No document says that every nonzero level means on; the ranges are read from Light Status Request's level byte (cmd2), as the Insteon Developer's Guide describes it for on/off devices."
+      },
+      "stateHolding": {
+        "releasedBy": [],
+        "restState": "off",
+        "verification": {
+          "status": "inferred",
+          "note": "No document says whether this relay holds the state a command switches it to. It follows from the command set: none of its operating flags or flag commands is a momentary or pulse setting, so no flag makes the relay return to off by itself."
+        }
       }
     }
   ],
