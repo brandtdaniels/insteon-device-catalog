@@ -465,6 +465,9 @@ def presentation_problems(command_set):
             if holding["restState"] not in names:
                 problems.append(f"{label}'s stateHolding rests in {holding['restState']!r}, which isn't one of its actions")
 
+            if not holding["releasedBy"] and "pulsesOnEveryCommandWhen" in holding:
+                problems.append(f"{label}'s stateHolding has pulsesOnEveryCommandWhen, but no releasedBy flag releases the relay")
+
             flag_names = {flag["name"] for flag in command_set.get("operatingFlags", [])}
 
             for name in holding["releasedBy"] + [name for flag_set in holding.get("pulsesOnEveryCommandWhen", []) for name in flag_set]:

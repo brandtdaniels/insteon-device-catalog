@@ -433,8 +433,18 @@ isn't there. The I/O Linc's relay:
   group On and each group Off pulses the relay whatever the responder record's data holds, so
   a state recorded at link time means nothing.
 
+A relay that no flag releases has an empty `releasedBy`, and always holds the state it's switched
+to. Its `restState` still names its resting action, and it has no `pulsesOnEveryCommandWhen`;
+the build fails on one. The SwitchLinc Relay's load:
+
+```json
+"stateHolding": {
+  "releasedBy": [],
+  "restState": "off" }
+```
+
 An app evaluates it from the flags it last read from the device. With no `releasedBy` flag set,
-the relay holds the state it's switched to. With one set, it doesn't, and it ends in
+the relay holds the state it's switched to, so with `releasedBy` empty it needs to read none. With one set, it doesn't, and it ends in
 `restState`. With every flag of a `pulsesOnEveryCommandWhen` set also set, a recorded state
 means nothing either. A flag the app hasn't read leaves the answer unknown. A group type without
 `stateHolding` says nothing about it, so an app assumes neither that the relay holds a state nor
