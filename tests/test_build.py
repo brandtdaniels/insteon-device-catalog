@@ -105,6 +105,20 @@ class GuardedNameVariantTests(unittest.TestCase):
         self.assertEqual(problems(command_set), ["the checksumRequiredOn command turns a guarded flag on, so it needs guard 'never'"])
 
 
+class KeptFlagDefaultTests(unittest.TestCase):
+    def test_a_kept_flag_needs_a_default(self):
+        command_set = catalog_command_set("globalLine")
+        del next(flag for flag in command_set["operatingFlags"] if flag["name"] == "radioOff")["default"]
+
+        self.assertEqual(problems(command_set), ["the radioOff flag is kept, so it needs a default"])
+
+    def test_a_kept_flag_under_a_variant_name_needs_a_default(self):
+        command_set = catalog_command_set("globalLine")
+        del renamed(command_set, "operatingFlags", "checksumRequired", "checksumRequiredOn")["default"]
+
+        self.assertEqual(problems(command_set), ["the checksumRequiredOn flag is kept, so it needs a default"])
+
+
 class StateHoldingTests(unittest.TestCase):
     def test_a_relay_no_flag_releases_always_holds_its_state(self):
         command_set = io_linc_with({"releasedBy": [], "restState": "off"})

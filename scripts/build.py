@@ -528,6 +528,11 @@ def presentation_problems(command_set):
         if flag["name"] in GUARDED_FLAGS and flag.get("guard") != GUARDED_FLAGS[flag["name"]]:
             problems.append(f"the {flag['name']} flag needs guard {GUARDED_FLAGS[flag['name']]!r}")
 
+        undocumented = KEPT_WITHOUT_DOCUMENTED_DEFAULT.get(command_set["id"], set())
+
+        if GUARDED_FLAGS.get(flag["name"]) == "keep" and flag["name"] not in KEPT_MODES | undocumented and "default" not in flag:
+            problems.append(f"the {flag['name']} flag is kept, so it needs a default")
+
     # Set Operating Flags commands, found by the bytes they send: every flag command, and any
     # standard or extended command with cmd1 0x20. One that turns a guarded flag on, by its name or
     # by a cmd2 that the command set's own flags or named on-commands use for that, is never sent.
@@ -782,8 +787,21 @@ GUARDED_FLAGS = {
 }
 
 # Kept flags that are a supported mode rather than a fault: no Set Operating Flags command that
-# sets one is dangerous.
+# sets one is dangerous, and the flag needs no default.
 KEPT_MODES = {"extendedCommandsOnly"}
+
+# Kept flags whose command set's sources give no factory state, so they carry no default. Every
+# other kept flag needs one, so software can report a device whose flag differs from it.
+KEPT_WITHOUT_DOCUMENTED_DEFAULT = {
+    "fanLinc": {"checksumRequired"},
+    "inLineLinc": {"radioOff", "powerLineOff", "checksumRequired"},
+    "inLineLincRelay": {"checksumRequired"},
+    "keypadLinc": {"checksumRequired"},
+    "ledBulb": {"radioOff", "powerLineOff", "checksumRequired"},
+    "outletLinc": {"checksumRequired"},
+    "switchLincDimmer": {"radioOff", "powerLineOff", "checksumRequired"},
+    "switchLincRelay": {"radioOff", "powerLineOff", "checksumRequired"},
+}
 
 # Set Operating Flags commands that turn one of those on, which an app never sends.
 NEVER_SENT = {"programmingLockOn", "radioOff", "powerLineOff", "powerlineOff", "checksumOn", "checksumRequiredOn"}

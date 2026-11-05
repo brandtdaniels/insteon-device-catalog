@@ -479,7 +479,9 @@ The control follows from the setting:
 `guard` says how a write treats them:
 
 - `keep`: a write leaves the bit as it was read. Radio off, powerline off and checksum required
-  have it.
+  have it. Each carries `default` where its command set's sources give the factory state, so
+  software can report a device whose bit differs from it; the build requires it everywhere a
+  source gives one.
 - `keep` also covers the Thermostat Adapter 2441V's extended commands only flag: it changes
   the message form the adapter accepts, as checksum required does, so an app that flips it
   stops being understood.

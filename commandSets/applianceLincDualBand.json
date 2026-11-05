@@ -116,6 +116,7 @@
       "bit": "0x40",
       "on": "0x0C",
       "off": "0x0D",
+      "default": false,
       "guard": "keep"
     },
     {
@@ -128,6 +129,7 @@
       "bit": "0x80",
       "on": "0x0E",
       "off": "0x0F",
+      "default": false,
       "guard": "keep"
     },
     {
