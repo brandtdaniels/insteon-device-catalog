@@ -481,9 +481,21 @@ def presentation_problems(command_set):
                 problems.append(f"{label}'s {action['name']} action gives a value to {action['command']!r}, which takes none")
 
     extended = {command["name"] for command in command_set.get("extendedCommands", [])}
+    flag_names = {flag["name"] for flag in command_set.get("operatingFlags", [])}
+    # Extended message fields that hold the operating flags byte: a flags field with a bit named
+    # for one of the command set's operating flags.
+    flags_bytes = {
+        field["name"]
+        for command in command_set.get("extendedCommands", [])
+        for field in command.get("parameters", []) + command.get("reply", {}).get("values", [])
+        if any(bit["name"] in flag_names for bit in field.get("bits", []))
+    }
 
     for value in command_set.get("extendedSettings", {}).get("values", []):
         label = f"the {value['name']} value"
+
+        if (value["name"] == "operatingFlags" or value["name"] in flags_bytes) and "flagsQuery" not in value:
+            problems.append(f"{label} holds the operating flags byte, so it needs flagsQuery")
 
         if value.get("kind") == "buttons" and ("unit" in value or "table" in value):
             problems.append(f"{label} is buttons but has a unit or table")
@@ -516,12 +528,17 @@ def presentation_problems(command_set):
         if flag["name"] in GUARDED_FLAGS and flag.get("guard") != GUARDED_FLAGS[flag["name"]]:
             problems.append(f"the {flag['name']} flag needs guard {GUARDED_FLAGS[flag['name']]!r}")
 
+        undocumented = KEPT_WITHOUT_DOCUMENTED_DEFAULT.get(command_set["id"], set())
+
+        if GUARDED_FLAGS.get(flag["name"]) == "keep" and flag["name"] not in KEPT_MODES | undocumented and "default" not in flag:
+            problems.append(f"the {flag['name']} flag is kept, so it needs a default")
+
     # Set Operating Flags commands, found by the bytes they send: every flag command, and any
     # standard or extended command with cmd1 0x20. One that turns a guarded flag on, by its name or
     # by a cmd2 that the command set's own flags or named on-commands use for that, is never sent.
     set_flags = [command for command in command_set.get("flagCommands", [])]
     set_flags += [command for key in ("standardCommands", "extendedCommands") for command in command_set.get(key, []) if command["command1"] == "0x20" and "command2" in command]
-    dangerous = {flag["on"] for flag in command_set.get("operatingFlags", []) if flag["name"] in GUARDED_FLAGS and flag["name"] != "extendedCommandsOnly" and "on" in flag}
+    dangerous = {flag["on"] for flag in command_set.get("operatingFlags", []) if flag["name"] in GUARDED_FLAGS and flag["name"] not in KEPT_MODES and "on" in flag}
     dangerous |= {command["command2"] for command in set_flags if command["name"] in NEVER_SENT}
 
     for command in set_flags:
@@ -763,12 +780,31 @@ GUARDED_FLAGS = {
     "programmingLock": "neverSet",
     "radioOff": "keep",
     "powerLineOff": "keep",
+    "powerlineOff": "keep",
     "checksumRequired": "keep",
+    "checksumRequiredOn": "keep",
     "extendedCommandsOnly": "keep",
 }
 
+# Kept flags that are a supported mode rather than a fault: no Set Operating Flags command that
+# sets one is dangerous, and the flag needs no default.
+KEPT_MODES = {"extendedCommandsOnly"}
+
+# Kept flags whose command set's sources give no factory state, so they carry no default. Every
+# other kept flag needs one, so software can report a device whose flag differs from it.
+KEPT_WITHOUT_DOCUMENTED_DEFAULT = {
+    "fanLinc": {"checksumRequired"},
+    "inLineLinc": {"radioOff", "powerLineOff", "checksumRequired"},
+    "inLineLincRelay": {"checksumRequired"},
+    "keypadLinc": {"checksumRequired"},
+    "ledBulb": {"radioOff", "powerLineOff", "checksumRequired"},
+    "outletLinc": {"checksumRequired"},
+    "switchLincDimmer": {"radioOff", "powerLineOff", "checksumRequired"},
+    "switchLincRelay": {"radioOff", "powerLineOff", "checksumRequired"},
+}
+
 # Set Operating Flags commands that turn one of those on, which an app never sends.
-NEVER_SENT = {"programmingLockOn", "radioOff", "powerLineOff", "checksumOn"}
+NEVER_SENT = {"programmingLockOn", "radioOff", "powerLineOff", "powerlineOff", "checksumOn", "checksumRequiredOn"}
 
 
 # Forms CONVENTIONS.md rules out of the catalog's prose, and what to write instead.
