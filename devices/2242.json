@@ -84,6 +84,43 @@
       "port": 25105
     }
   ],
+  "commandSets": [
+    {
+      "commandSet": "hubModem",
+      "category": "0x03",
+      "subcategory": "0x2B"
+    },
+    {
+      "commandSet": "hubModem",
+      "category": "0x03",
+      "subcategory": "0x2E"
+    },
+    {
+      "commandSet": "hubModem",
+      "category": "0x03",
+      "subcategory": "0x2F"
+    },
+    {
+      "commandSet": "hubModem",
+      "category": "0x03",
+      "subcategory": "0x30"
+    },
+    {
+      "commandSet": "hubModem",
+      "category": "0x03",
+      "subcategory": "0x31"
+    },
+    {
+      "commandSet": "hubModem",
+      "category": "0x03",
+      "subcategory": "0x32"
+    },
+    {
+      "commandSet": "hubModem",
+      "category": "0x03",
+      "subcategory": "0x37"
+    }
+  ],
   "lifecycle": {
     "installation": {
       "steps": [
