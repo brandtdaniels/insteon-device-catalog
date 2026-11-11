@@ -555,20 +555,42 @@ The rest of a command set takes its effect from where it sits, so it carries no 
 | A keepAwake message | The named command's or flag's effect, or its own `effect` when given as bytes; the build requires `configuration` and idempotent. |
 | A lifecycle `send` step | None: it names a command for a person, by its Insteon Developer's Guide name. |
 
-The build also requires that a command with `guard` `never` is `destructive`, that no Set
-Operating Flags command (a flag command, or cmd1 `0x20`) and no extended Set (cmd1 `0x2E`, cmd2
-`0x00`, a D2 other than `0x00`) is `readOnly`, that a `readOnly` command is idempotent, and that
-Set Operating Flags entries sending the same cmd2, such as a flag and a standard command with
-cmd1 `0x20`, have the same effect. An effect never stands in for a guard: a destructive command
-that turns a guarded flag on needs `guard` `never` as well.
+The build also requires:
+
+- that a command with `guard` `never` is `destructive`;
+- that no Set Operating Flags command (a flag command, or cmd1 `0x20`), no extended Set (cmd1
+  `0x2E`, cmd2 `0x00`, a fixed D2 other than `0x00` or a D2 the caller gives), no properties
+  write (cmd1 `0x2E`, cmd2 `0x01`, D1 `0x02`) and no write with cmd1 `0x2F` and D2 `0x02` is
+  `readOnly`, and that a `readOnly` command is idempotent;
+- that entries one message can match have the same effect and `idempotent`: Set Operating Flags
+  entries sending the same cmd2, such as a flag and a standard command with cmd1 `0x20`, and
+  extended commands whose bytes can all agree, as [Reading effects](#reading-effects) matches
+  them;
+- that no `readOnly` extended command matches every message a command with another effect does;
+- and that a keepAwake message given as bytes has the effect of a standard or extended entry
+  with the same bytes.
+
+An effect never stands in for a guard: a destructive command that turns a guarded flag on needs
+`guard` `never` as well.
 
 ### Reading effects
 
-Software finds a message's effect by its bytes, not by the name it was sent under: a standard
-command by cmd1 and its fixed or parameter cmd2, an extended command by cmd1, cmd2 and its
-`fixed` bytes, a flag command or flag by cmd1 `0x20` and cmd2, and an extended settings write by
-cmd1 `0x2E`, cmd2 `0x00` and its selector in D2. It reads them so that anything it can't place
-fails closed:
+Software finds a message's effect by its bytes, not by the name it was sent under:
+
+- A standard command matches by cmd1 and its fixed cmd2, or any cmd2 its parameter allows.
+- An extended command matches by cmd1, cmd2 and every user data byte. A byte in `fixed` must
+  hold its value; a byte a parameter fills, D1 of a `perButton` command and the integrity bytes
+  (D14 for a checksum, D13 and D14 for a CRC) can hold any value; and every other byte must be
+  `0x00`, as the schema says of the rest. A message with a nonzero byte where an entry expects
+  `0x00` doesn't match that entry.
+- A flag command or an operating flag's `on` or `off` matches by cmd1 `0x20` and cmd2, sent as a
+  standard or an extended message.
+- An extended settings write matches by cmd1 `0x2E`, cmd2 `0x00` and its selector in D2.
+- A command sent in its `extendedWhen` form, an extended message with its cmd1 and cmd2 again in
+  D1 and D2 and the other user data bytes `0x00` apart from integrity, matches the standard
+  command or flag command it's the form of, as if it had been sent as a standard message.
+
+It reads them so that anything it can't place fails closed:
 
 1. An entry without an `effect`, or with a value the software doesn't know, is `destructive`.
 2. An entry without `idempotent` isn't idempotent.
