@@ -108,6 +108,134 @@ class EffectSchemaTests(unittest.TestCase):
         self.assertFalse(PROFILE_VALIDATOR.is_valid(profile))
 
 
+class EffectRuleTests(unittest.TestCase):
+    def test_a_command_never_sent_must_be_destructive(self):
+        command_set = catalog_command_set("outdoorApplianceLinc")
+        command(command_set, "radioOff")["effect"] = "configuration"
+
+        self.assertEqual(problems(command_set), ["the radioOff command is never sent, so its effect must be destructive"])
+
+    def test_a_flag_command_is_never_read_only(self):
+        command_set = catalog_command_set("globalLine")
+        command(command_set, "yakityYakOff")["effect"] = "readOnly"
+
+        self.assertEqual(problems(command_set), ["the yakityYakOff command is Set Operating Flags, which is never readOnly"])
+
+    def test_an_extended_command_with_cmd1_0x20_is_never_read_only(self):
+        command_set = catalog_command_set("tempLinc")
+        command(command_set, "beepOn")["effect"] = "readOnly"
+
+        self.assertEqual(problems(command_set), ["the beepOn command is Set Operating Flags, which is never readOnly"])
+
+    def test_an_extended_set_is_never_read_only(self):
+        command_set = catalog_command_set("hiddenDoorSensor")
+        command(command_set, "setHeartbeatInterval")["effect"] = "readOnly"
+
+        self.assertEqual(problems(command_set), ["the setHeartbeatInterval command is an extended Set, which is never readOnly"])
+
+    def test_an_extended_get_may_be_read_only(self):
+        command_set = catalog_command_set("hiddenDoorSensor")
+
+        self.assertEqual(command(command_set, "readSettings")["effect"], "readOnly")
+        self.assertEqual(problems(command_set), [])
+
+    def test_a_read_only_command_must_be_idempotent(self):
+        command_set = catalog_command_set("globalLine")
+        command(command_set, "readStatus")["idempotent"] = False
+
+        self.assertEqual(problems(command_set), ["the readStatus command is readOnly, so it must be idempotent"])
+
+    def test_a_command_an_action_names_must_be_actuation(self):
+        command_set = catalog_command_set("globalLine")
+        command(command_set, "lightOn")["effect"] = "configuration"
+
+        self.assertEqual(problems(command_set), [
+            "the light group type's on action names 'lightOn', which isn't actuation",
+            "the load group type's on action names 'lightOn', which isn't actuation",
+        ])
+
+    def test_a_command_a_group_type_reads_its_state_with_must_be_read_only(self):
+        command_set = catalog_command_set("globalLine")
+        command(command_set, "readStatus")["effect"] = "actuation"
+
+        self.assertEqual(problems(command_set), [
+            "the light group type reads its state with 'readStatus', which isn't readOnly",
+            "the load group type reads its state with 'readStatus', which isn't readOnly",
+        ])
+
+    def test_a_flag_on_command_must_be_configuration(self):
+        command_set = catalog_command_set("i3Dial")
+        command(command_set, "nightModeOn")["effect"] = "actuation"
+
+        self.assertEqual(problems(command_set), ["the nightMode flag's onCommand names 'nightModeOn', which isn't configuration"])
+
+    def test_a_value_write_command_must_be_configuration(self):
+        command_set = catalog_command_set("ledBulb")
+        command(command_set, "writeRampRate")["effect"] = "destructive"
+
+        self.assertEqual(problems(command_set), ["the rampRate value is written by 'writeRampRate', which isn't configuration"])
+
+    def test_a_named_keep_awake_command_must_be_idempotent(self):
+        command_set = catalog_command_set("openCloseSensor")
+        command(command_set, "stayAwake")["idempotent"] = False
+
+        self.assertEqual(build.from_hub_command_set_problems(catalog_profile("2843"), {"openCloseSensor": command_set}), [
+            "fromHub keepAwake send names 'stayAwake', which isn't configuration and idempotent in openCloseSensor",
+        ])
+
+    def test_a_named_keep_awake_command_must_be_configuration(self):
+        command_set = catalog_command_set("openCloseSensor")
+        command(command_set, "stayAwake")["effect"] = "actuation"
+
+        self.assertEqual(build.from_hub_command_set_problems(catalog_profile("2843"), {"openCloseSensor": command_set}), [
+            "fromHub keepAwake send names 'stayAwake', which isn't configuration and idempotent in openCloseSensor",
+        ])
+
+    def test_a_raw_keep_awake_message_must_be_configuration_and_idempotent(self):
+        profile = catalog_profile("2441ZTH")
+        profile["lifecycle"]["fromHub"]["keepAwake"]["send"]["effect"] = "actuation"
+        profile["lifecycle"]["fromHub"]["keepAwake"]["release"]["idempotent"] = False
+
+        self.assertEqual(build.from_hub_problems(profile), [
+            "fromHub keepAwake send must be configuration and idempotent",
+            "fromHub keepAwake release must be configuration and idempotent",
+        ])
+
+    def test_a_flag_command_and_an_extended_set_operating_flags_command_with_one_cmd2_need_one_effect(self):
+        command_set = catalog_command_set("globalLine")
+        command_set["extendedCommands"].append({
+            "name": "yakityYakOffNow", "description": "Turns the Yakity Yak signaling option off.",
+            "effect": "actuation", "idempotent": True, "command1": "0x20", "command2": "0x26",
+        })
+
+        self.assertEqual(problems(command_set), ["the yakityYakOff command and the yakityYakOffNow command both send Set Operating Flags with cmd2 0x26, so they need the same effect"])
+
+    def test_a_flag_and_a_standard_set_operating_flags_command_with_one_cmd2_need_one_effect(self):
+        command_set = catalog_command_set("globalLine")
+        command_set["standardCommands"].append({
+            "name": "keyBeepNow", "description": "Turns the key beep on.",
+            "effect": "actuation", "idempotent": True, "command1": "0x20", "command2": "0x0A",
+        })
+
+        self.assertEqual(problems(command_set), ["the keyBeep flag and the keyBeepNow command both send Set Operating Flags with cmd2 0x0A, so they need the same effect"])
+
+    def test_set_operating_flags_entries_with_one_cmd2_and_one_effect_pass(self):
+        command_set = catalog_command_set("globalLine")
+        command_set["standardCommands"].append({
+            "name": "keyBeepAgain", "description": "Turns the key beep on.",
+            "effect": "configuration", "idempotent": True, "command1": "0x20", "command2": "0x0A",
+        })
+
+        self.assertEqual(problems(command_set), [])
+
+    def test_a_destructive_command_that_turns_a_guarded_flag_on_needs_guard_never_too(self):
+        command_set = catalog_command_set("outdoorApplianceLinc")
+        del command(command_set, "radioOff")["guard"]
+
+        self.assertEqual(command(command_set, "radioOff")["effect"], "destructive")
+        self.assertEqual(problems(command_set), ["the radioOff command turns a guarded flag on, so it needs guard 'never'"])
+
+
 class OperatingFlagsByteTests(unittest.TestCase):
     def test_a_value_whose_reply_field_holds_operating_flags_needs_flags_query(self):
         command_set = catalog_command_set("openCloseSensor")
