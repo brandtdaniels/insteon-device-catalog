@@ -42,6 +42,13 @@
       "kind": "modem"
     }
   ],
+  "commandSets": [
+    {
+      "commandSet": "modem",
+      "category": "0x03",
+      "subcategory": "0x19"
+    }
+  ],
   "lifecycle": {
     "installation": {
       "steps": [

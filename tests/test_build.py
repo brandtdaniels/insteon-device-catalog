@@ -346,6 +346,162 @@ class EffectRuleGapTests(unittest.TestCase):
         ])
 
 
+def serial_command_set():
+    """An invented command set with serial commands, to change in a test."""
+    return {
+        "id": "invented", "name": "Invented", "description": "An invented modem.", "sources": ["An invented guide"],
+        "serialCommands": [
+            {"name": "readInfo", "description": "Asks for the identity.", "effect": "readOnly", "idempotent": True, "number": "0x60",
+             "reply": [{"name": "identity", "description": "The identity.", "bytes": [1, 2, 3]}]},
+            {"name": "startThing", "description": "Starts a thing.", "effect": "link", "idempotent": False, "number": "0x64",
+             "fixed": [{"position": 1, "value": "0x01"}], "parameters": [{"name": "group", "description": "The group.", "byte": 2}]},
+            {"name": "deleteThing", "description": "Deletes a thing.", "effect": "destructive", "idempotent": True, "number": "0x64",
+             "fixed": [{"position": 1, "value": "0xFF"}], "parameters": [{"name": "group", "description": "The group.", "byte": 2}]},
+        ],
+    }
+
+
+def serial_command(command_set, name):
+    """The command set's serial command called name."""
+    return next(item for item in command_set["serialCommands"] if item["name"] == name)
+
+
+class SerialCommandSchemaTests(unittest.TestCase):
+    def test_a_serial_command_set_passes(self):
+        self.assertEqual(problems(serial_command_set()), [])
+
+    def test_a_serial_command_without_an_effect_fails_the_schema(self):
+        command_set = serial_command_set()
+        serial_command(command_set, "readInfo").pop("effect")
+
+        self.assertEqual(problems(command_set), ["'effect' is a required property"])
+
+    def test_a_serial_command_without_idempotent_fails_the_schema(self):
+        command_set = serial_command_set()
+        serial_command(command_set, "readInfo").pop("idempotent")
+
+        self.assertEqual(problems(command_set), ["'idempotent' is a required property"])
+
+    def test_a_serial_command_without_a_number_fails_the_schema(self):
+        command_set = serial_command_set()
+        serial_command(command_set, "readInfo").pop("number")
+
+        self.assertEqual(problems(command_set), ["'number' is a required property"])
+
+    def test_a_serial_command_with_an_effect_the_schema_does_not_name_fails(self):
+        command_set = serial_command_set()
+        serial_command(command_set, "readInfo")["effect"] = "sideEffect"
+
+        self.assertEqual(problems(command_set), ["'sideEffect' is not one of ['readOnly', 'configuration', 'link', 'actuation', 'destructive']"])
+
+    def test_a_serial_command_has_no_cmd1(self):
+        command_set = serial_command_set()
+        serial_command(command_set, "readInfo")["command1"] = "0x11"
+
+        self.assertEqual(problems(command_set), ["Additional properties are not allowed ('command1' was unexpected)"])
+
+
+class SerialCommandRuleTests(unittest.TestCase):
+    def test_a_serial_command_never_sent_must_be_destructive(self):
+        command_set = serial_command_set()
+        serial_command(command_set, "startThing")["guard"] = "never"
+
+        self.assertEqual(problems(command_set), ["the startThing serial command is never sent, so its effect must be destructive"])
+
+    def test_a_read_only_serial_command_must_be_idempotent(self):
+        command_set = serial_command_set()
+        serial_command(command_set, "readInfo")["idempotent"] = False
+
+        self.assertEqual(problems(command_set), ["the readInfo serial command is readOnly, so it must be idempotent"])
+
+    def test_a_serial_command_that_carries_a_device_message_is_not_an_entry(self):
+        for number in ("0x61", "0x62"):
+            with self.subTest(number=number):
+                command_set = serial_command_set()
+                serial_command(command_set, "readInfo")["number"] = number
+
+                self.assertEqual(problems(command_set), [f"the readInfo serial command has number {number}, which carries a device message and so isn't an entry"])
+
+    def test_serial_commands_with_one_number_and_different_fixed_bytes_need_not_share_an_effect(self):
+        self.assertEqual(problems(serial_command_set()), [])
+
+    def test_serial_commands_that_send_the_same_number_and_fixed_bytes_fail(self):
+        command_set = serial_command_set()
+        serial_command(command_set, "deleteThing")["fixed"] = [{"position": 1, "value": "0x01"}]
+
+        self.assertEqual(problems(command_set), [
+            "two serial commands send the same number and fixed bytes",
+            "the startThing serial command and the deleteThing serial command can match the same frame, so they need the same effect and idempotent",
+        ])
+
+    def test_serial_commands_one_frame_can_match_need_one_effect_and_idempotent(self):
+        command_set = serial_command_set()
+        command_set["serialCommands"].append({
+            "name": "anyThing", "description": "Does a thing with any control byte.", "effect": "configuration", "idempotent": True, "number": "0x64",
+            "parameters": [{"name": "control", "description": "The control byte.", "byte": 1}, {"name": "group", "description": "The group.", "byte": 2}],
+        })
+
+        self.assertEqual(problems(command_set), [
+            "the startThing serial command and the anyThing serial command can match the same frame, so they need the same effect and idempotent",
+            "the deleteThing serial command and the anyThing serial command can match the same frame, so they need the same effect and idempotent",
+        ])
+
+    def test_a_read_only_serial_command_may_not_match_every_frame_a_write_does(self):
+        command_set = serial_command_set()
+        command_set["serialCommands"] += [
+            {"name": "readAny", "description": "Reads any.", "effect": "readOnly", "idempotent": True, "number": "0x6F",
+             "parameters": [{"name": "control", "description": "The control byte.", "byte": 1}]},
+            {"name": "writeOne", "description": "Writes one.", "effect": "destructive", "idempotent": True, "number": "0x6F",
+             "fixed": [{"position": 1, "value": "0x80"}]},
+        ]
+
+        self.assertEqual(problems(command_set), ["the readAny serial command is readOnly, but it matches every frame the writeOne serial command does"])
+
+    def test_serial_commands_with_one_number_need_one_payload_length(self):
+        command_set = serial_command_set()
+        serial_command(command_set, "deleteThing")["parameters"] = []
+
+        self.assertEqual(problems(command_set), ["the startThing and deleteThing serial commands share number 0x64 but differ in payload length"])
+
+    def test_a_payload_byte_must_be_fixed_or_a_parameter(self):
+        command_set = serial_command_set()
+        serial_command(command_set, "startThing")["fixed"] = []
+        serial_command(command_set, "deleteThing")["fixed"] = []
+        serial_command(command_set, "deleteThing")["number"] = "0x65"
+
+        self.assertEqual(problems(command_set), ["the startThing serial command: payload byte 1 is neither fixed nor a parameter", "the deleteThing serial command: payload byte 1 is neither fixed nor a parameter"])
+
+    def test_a_payload_byte_is_filled_once(self):
+        command_set = serial_command_set()
+        serial_command(command_set, "startThing")["parameters"][0]["byte"] = 1
+
+        self.assertEqual(problems(command_set), [
+            "the startThing serial command: it fills a payload byte twice",
+            "the startThing and deleteThing serial commands share number 0x64 but differ in payload length",
+        ])
+
+    def test_a_reply_reads_a_payload_byte_once(self):
+        command_set = serial_command_set()
+        serial_command(command_set, "readInfo")["reply"].append({"name": "again", "description": "Again.", "byte": 2})
+
+        self.assertEqual(problems(command_set), ["the readInfo serial command's reply reads a payload byte twice"])
+
+    def test_a_serial_command_value_names_a_payload_byte(self):
+        command_set = serial_command_set()
+        del serial_command(command_set, "startThing")["parameters"][0]["byte"]
+
+        self.assertEqual(problems(command_set), [
+            "the startThing serial command: the group value needs a byte or bytes",
+            "the startThing and deleteThing serial commands share number 0x64 but differ in payload length",
+        ])
+
+    def test_a_serial_command_name_is_not_used_twice(self):
+        command_set = serial_command_set()
+        command_set["standardCommands"] = [{"name": "readInfo", "description": "A clash.", "effect": "readOnly", "idempotent": True, "command1": "0x19"}]
+
+        self.assertEqual(problems(command_set), ["a command or message name appears more than once"])
+
+
 class OperatingFlagsByteTests(unittest.TestCase):
     def test_a_value_whose_reply_field_holds_operating_flags_needs_flags_query(self):
         command_set = catalog_command_set("openCloseSensor")

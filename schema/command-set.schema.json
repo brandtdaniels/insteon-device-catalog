@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://brandtdaniels.github.io/insteon-device-catalog/v0/command-set.schema.json",
   "title": "Insteon command set",
-  "description": "The settings and messages a family of Insteon products shares, in the Insteon protocol's own terms: operating flags read with Get Operating Flags (cmd1 0x1F) and set with Set Operating Flags (cmd1 0x20), values read and written with extended Get and Set (cmd1 0x2E), other standard and extended direct commands, and the direct messages the products send on their own. Profiles name the command sets their identities and firmware versions use.",
+  "description": "The settings and messages a family of Insteon products shares, in the Insteon protocol's own terms: operating flags read with Get Operating Flags (cmd1 0x1F) and set with Set Operating Flags (cmd1 0x20), values read and written with extended Get and Set (cmd1 0x2E), other standard and extended direct commands, serial commands for a modem, and the direct messages the products send on their own. Profiles name the command sets their identities and firmware versions use.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -92,6 +92,13 @@
       "type": "array",
       "items": {
         "$ref": "#/$defs/extendedCommand"
+      }
+    },
+    "serialCommands": {
+      "description": "Serial commands, for a modem: a command a host sends over the modem's serial port as 0x02, a command number and a payload whose length the number fixes, answered by an echo of the command and an ACK (0x06) or NAK (0x15). Commands that differ only by a control byte, such as the link code of Start ALL-Linking, are separate entries told apart by their fixed bytes. Send Insteon Standard or Extended Message (0x62) and Send ALL-Link Command (0x61) carry a device message, so they are not entries: the device's own command set describes what they carry.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/serialCommand"
       }
     },
     "directMessages": {
@@ -486,7 +493,7 @@
       }
     },
     "dataByte": {
-      "description": "A user data byte, from D1 through D14.",
+      "description": "A user data byte, from D1 through D14. In a serial command, the payload byte of that number.",
       "type": "integer",
       "minimum": 1,
       "maximum": 14
@@ -844,6 +851,68 @@
         },
         "guard": {
           "description": "never: an app never sends the command, because it's a Set Operating Flags command (cmd1 0x20) that turns radio off, powerline off, checksum required or the programming lock on.",
+          "enum": [
+            "never"
+          ]
+        }
+      }
+    },
+    "serialCommand": {
+      "description": "A serial command: a modem command number, a payload of bytes numbered from 1 after the number, and the echo that answers it.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "description",
+        "effect",
+        "idempotent",
+        "number"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/name"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "effect": {
+          "$ref": "#/$defs/effect"
+        },
+        "idempotent": {
+          "$ref": "#/$defs/idempotent"
+        },
+        "number": {
+          "$ref": "#/$defs/byte",
+          "description": "The command number, the byte after 0x02."
+        },
+        "fixed": {
+          "description": "The command's fixed payload bytes, numbered from 1. Every payload byte is fixed or a parameter, and a frame matches the command only when its fixed bytes hold these values.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/fixedByte"
+          }
+        },
+        "parameters": {
+          "description": "The values the caller gives, and the payload bytes each goes in.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/field"
+          }
+        },
+        "reply": {
+          "description": "The values the modem returns after the command number, before the ACK or NAK, numbered from 1 as the payload is. A command whose echo repeats its payload needs none.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/field"
+          }
+        },
+        "verification": {
+          "$ref": "#/$defs/verification"
+        },
+        "guard": {
+          "description": "never: an app never sends the command.",
           "enum": [
             "never"
           ]

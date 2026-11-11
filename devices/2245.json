@@ -107,6 +107,44 @@
       "port": 25105
     }
   ],
+  "commandSets": [
+    {
+      "commandSet": "hubModem",
+      "category": "0x03",
+      "subcategory": "0x33",
+      "verification": {
+        "status": "inferred",
+        "note": "The Insteon Hub Developer's Guide describes the Hub 2242's modem, and no document describes the Hub 2245's. A Hub 2245 answered Get IM Info with its modem's firmware, 0xA5."
+      }
+    },
+    {
+      "commandSet": "hubModem",
+      "category": "0x03",
+      "subcategory": "0x34",
+      "verification": {
+        "status": "inferred",
+        "note": "The Insteon Hub Developer's Guide describes the Hub 2242's modem, and no document describes the Hub 2245's. A Hub 2245 answered Get IM Info with its modem's firmware, 0xA5."
+      }
+    },
+    {
+      "commandSet": "hubModem",
+      "category": "0x03",
+      "subcategory": "0x35",
+      "verification": {
+        "status": "inferred",
+        "note": "The Insteon Hub Developer's Guide describes the Hub 2242's modem, and no document describes the Hub 2245's. A Hub 2245 answered Get IM Info with its modem's firmware, 0xA5."
+      }
+    },
+    {
+      "commandSet": "hubModem",
+      "category": "0x03",
+      "subcategory": "0x36",
+      "verification": {
+        "status": "inferred",
+        "note": "The Insteon Hub Developer's Guide describes the Hub 2242's modem, and no document describes the Hub 2245's. A Hub 2245 answered Get IM Info with its modem's firmware, 0xA5."
+      }
+    }
+  ],
   "lifecycle": {
     "installation": {
       "steps": [
