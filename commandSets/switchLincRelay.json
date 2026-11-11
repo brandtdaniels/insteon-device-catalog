@@ -649,7 +649,7 @@
     {
       "name": "remoteSetButtonTap",
       "description": "Acts as a tap of the device's SET button.",
-      "effect": "destructive",
+      "effect": "configuration",
       "idempotent": false,
       "command1": "0x25",
       "parameter": {
@@ -804,7 +804,8 @@
   ],
   "notes": [
     "The 2477S Developer Notes also list resume dim, bit 2 of the 0x00 reply set with 0x04 and 0x05, which the catalog leaves out for this relay.",
-    "The 2477S Developer Notes list the ramp rate and on-level in the extended Get reply and their Sets, though the relay only switches its load."
+    "The 2477S Developer Notes list the ramp rate and on-level in the extended Get reply and their Sets, though the relay only switches its load.",
+    "remoteSetButtonTap, as the 2477S Developer Notes give it, sets the on-level with cmd2 0x00 or the ramp rate with 0x02, and the Insteon Command Tables (2007) give cmd2 as a count of taps of the SET button; neither describes linking, so it's configuration, and not idempotent, since a second tap may undo what the first set."
   ],
   "sources": [
     "Insteon Developer's Guide (2009)",

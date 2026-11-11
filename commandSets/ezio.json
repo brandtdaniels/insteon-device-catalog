@@ -623,8 +623,8 @@
     {
       "name": "setOutputTimers",
       "description": "Set Output Timers: sets the timers of outputs 1 through 8. A timer greater than 0 turns its output off when it runs out, while the Configuration Port's outputTimersEnabled bit is set; the outputTimersInSeconds bit picks seconds or minutes.",
-      "effect": "destructive",
-      "idempotent": false,
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x4D",
       "command2": "0x00",
       "parameters": [
@@ -673,8 +673,8 @@
     {
       "name": "setAlarms0",
       "description": "Set Sensor/Analog Alarms for sensor or analog input 0x00: D1 through D4 hold the alarm values, 2 bytes for sensors S1 to S4 or 4 bytes for analog inputs AN1 to AN3.",
-      "effect": "destructive",
-      "idempotent": false,
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x4B",
       "command2": "0x00",
       "parameters": [
@@ -707,8 +707,8 @@
     {
       "name": "setAlarms1",
       "description": "Set Sensor/Analog Alarms for sensor or analog input 0x01: D1 through D4 hold the alarm values, 2 bytes for sensors S1 to S4 or 4 bytes for analog inputs AN1 to AN3.",
-      "effect": "destructive",
-      "idempotent": false,
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x4B",
       "command2": "0x01",
       "parameters": [
@@ -741,8 +741,8 @@
     {
       "name": "setAlarms2",
       "description": "Set Sensor/Analog Alarms for sensor or analog input 0x02: D1 through D4 hold the alarm values, 2 bytes for sensors S1 to S4 or 4 bytes for analog inputs AN1 to AN3.",
-      "effect": "destructive",
-      "idempotent": false,
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x4B",
       "command2": "0x02",
       "parameters": [
@@ -775,8 +775,8 @@
     {
       "name": "setAlarms3",
       "description": "Set Sensor/Analog Alarms for sensor or analog input 0x03: D1 through D4 hold the alarm values, 2 bytes for sensors S1 to S4 or 4 bytes for analog inputs AN1 to AN3.",
-      "effect": "destructive",
-      "idempotent": false,
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x4B",
       "command2": "0x03",
       "parameters": [

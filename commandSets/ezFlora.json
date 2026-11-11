@@ -1066,8 +1066,8 @@
     {
       "name": "writeTimersManual",
       "description": "Set Sprinkler Timers for the manual (default) valve timers: D1 through D8 hold the timers of valves 1 to 8; D9 through D14 are ignored.",
-      "effect": "destructive",
-      "idempotent": false,
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x40",
       "command2": "0x00",
       "parameters": [
@@ -1128,8 +1128,8 @@
     {
       "name": "writeTimersProgram1",
       "description": "Set Sprinkler Timers for program 1: D1 through D8 hold the timers of valves 1 to 8; D9 through D14 are ignored.",
-      "effect": "destructive",
-      "idempotent": false,
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x40",
       "command2": "0x01",
       "parameters": [
@@ -1190,8 +1190,8 @@
     {
       "name": "writeTimersProgram2",
       "description": "Set Sprinkler Timers for program 2: D1 through D8 hold the timers of valves 1 to 8; D9 through D14 are ignored.",
-      "effect": "destructive",
-      "idempotent": false,
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x40",
       "command2": "0x02",
       "parameters": [
@@ -1252,8 +1252,8 @@
     {
       "name": "writeTimersProgram3",
       "description": "Set Sprinkler Timers for program 3: D1 through D8 hold the timers of valves 1 to 8; D9 through D14 are ignored.",
-      "effect": "destructive",
-      "idempotent": false,
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x40",
       "command2": "0x03",
       "parameters": [
@@ -1314,8 +1314,8 @@
     {
       "name": "writeTimersProgram4",
       "description": "Set Sprinkler Timers for program 4: D1 through D8 hold the timers of valves 1 to 8; D9 through D14 are ignored.",
-      "effect": "destructive",
-      "idempotent": false,
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x40",
       "command2": "0x04",
       "parameters": [

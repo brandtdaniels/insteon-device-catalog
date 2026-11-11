@@ -468,8 +468,8 @@
     {
       "name": "writeMeterId",
       "description": "Sets the ID of the meter, or modem, in the group in D1. A modem linked this way receives the display's meter reads.",
-      "effect": "destructive",
-      "idempotent": false,
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2F",
       "command2": "0x01",
       "perButton": true,
@@ -502,7 +502,8 @@
     "Here cmd1 0x2F with cmd2 0x01 reads and writes the meter in each group, not the ALL-Link database.",
     "The Energy Display Developer Notes don't say whether the extended Sets carry a checksum.",
     "The Energy Display 2448A2 Owner's Manual gives 10 cents a kilowatt-hour as the default cost.",
-    "restartAverageCost, as the Energy Display Developer Notes give it, restarts the averages of cost and energy, discarding the ones the display has accumulated, which nothing can restore, so it's destructive and idempotent."
+    "restartAverageCost, as the Energy Display Developer Notes give it, restarts the averages of cost and energy, discarding the ones the display has accumulated, which nothing can restore, so it's destructive and idempotent.",
+    "writeMeterId, as the Energy Display Developer Notes give it, writes the meter or modem in a group, which the display keeps and reads its reports from, and adds no ALL-Link record, so it's configuration and idempotent."
   ],
   "sources": [
     "Energy Display Developer Notes",
