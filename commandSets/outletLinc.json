@@ -420,11 +420,15 @@
     {
       "name": "smartHopsOn",
       "description": "Starts each message with the hop count of the last acknowledgment received (smart hops).",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x1C"
     },
     {
       "name": "smartHopsOff",
       "description": "Starts each message with one hop.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x1D"
     }
   ],
@@ -587,6 +591,8 @@
     {
       "name": "lightOn",
       "description": "Turns the load on to the level in cmd2 at the saved ramp rate.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x11",
       "parameter": {
         "name": "onLevel",
@@ -600,6 +606,8 @@
     {
       "name": "lightOnFast",
       "description": "Turns the load on to the level in cmd2 instantly.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x12",
       "parameter": {
         "name": "onLevel",
@@ -613,26 +621,36 @@
     {
       "name": "lightOff",
       "description": "Turns the load off at the saved ramp rate. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x13"
     },
     {
       "name": "lightOffFast",
       "description": "Turns the load off instantly. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x14"
     },
     {
       "name": "brightenOneStep",
       "description": "Brightens the load one step of 32 from off to full. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x15"
     },
     {
       "name": "dimOneStep",
       "description": "Dims the load one step of 32 from off to full. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x16"
     },
     {
       "name": "startManualChange",
       "description": "Starts brightening or dimming the load until a stop manual change command.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x17",
       "parameter": {
         "name": "direction",
@@ -644,11 +662,15 @@
     {
       "name": "stopManualChange",
       "description": "Stops a manual change. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x18"
     },
     {
       "name": "readStatus",
       "description": "Reads the load's level. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x00",
       "reply": {
@@ -661,6 +683,8 @@
     {
       "name": "readKeyLock",
       "description": "Reads whether a key lock is present. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x01",
       "reply": {
@@ -672,6 +696,8 @@
     {
       "name": "readTargetLevel",
       "description": "Reads the level the load is moving to.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x02",
       "reply": {
@@ -682,6 +708,8 @@
     {
       "name": "readTemperature",
       "description": "Reads the temperature sensor.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x03",
       "reply": {
@@ -692,6 +720,8 @@
     {
       "name": "instantChange",
       "description": "Sets the load to the level in cmd2 instantly.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x21",
       "parameter": {
         "name": "onLevel",
@@ -705,6 +735,8 @@
     {
       "name": "remoteSetButtonTap",
       "description": "Acts as a tap of the device's SET button.",
+      "effect": "destructive",
+      "idempotent": false,
       "command1": "0x25",
       "parameter": {
         "name": "setting",
@@ -720,6 +752,8 @@
     {
       "name": "onAtRampRate",
       "description": "Turns the load on to a level at a ramp rate, both given in cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x2E",
       "parameter": {
         "name": "levelAndRampRate",
@@ -729,6 +763,8 @@
     {
       "name": "offAtRampRate",
       "description": "Turns the load off at a ramp rate given in cmd2. Bits 4 through 7 are 0.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x2F",
       "parameter": {
         "name": "rampRate",
@@ -739,6 +775,8 @@
     {
       "name": "beep",
       "description": "Beeps once, as pressing the SET button does. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x30"
     }
   ],
@@ -746,6 +784,8 @@
     {
       "name": "triggerGroup",
       "description": "Sends group D1's command to the group as if its button were pressed, and sets the local load as D2 through D6 say. The device doesn't parse the command it sends, so to turn the local load off, put 0x01 in D2 and 0x00 in D3.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x30",
       "command2": "0x00",
       "perButton": true,

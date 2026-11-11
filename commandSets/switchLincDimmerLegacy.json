@@ -258,11 +258,15 @@
     {
       "name": "cleanupReportOff",
       "description": "Turns cleanup success reports off.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x0A"
     },
     {
       "name": "cleanupReportOn",
       "description": "Turns cleanup success reports on.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x0B"
     }
   ],
@@ -410,6 +414,8 @@
     {
       "name": "lightOn",
       "description": "Turns the load on to the level in cmd2 at the saved ramp rate.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x11",
       "parameter": {
         "name": "onLevel",
@@ -423,11 +429,15 @@
     {
       "name": "lightOff",
       "description": "Turns the load off at the saved ramp rate.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x13"
     },
     {
       "name": "readStatus",
       "description": "Reads the load's level. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x00",
       "reply": {

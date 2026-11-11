@@ -6,6 +6,8 @@
     {
       "name": "readSettings",
       "description": "Reads the trigger threshold, holdoff and hysteresis.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -65,6 +67,8 @@
     {
       "name": "setSettings",
       "description": "Sets the trigger threshold, holdoff and hysteresis.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [

@@ -145,6 +145,8 @@
     {
       "name": "soundAlert",
       "description": "Sounds the alert, armed or not, at once or after the delay its cmd2 sets.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x11",
       "parameter": {
         "name": "delayAndDuration",
@@ -154,11 +156,15 @@
     {
       "name": "stopAlert",
       "description": "Stops the alert.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x13"
     },
     {
       "name": "readStatus",
       "description": "Reads how long the alert has left to sound. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x00",
       "reply": {
@@ -174,6 +180,8 @@
     {
       "name": "readArmedState",
       "description": "Reads whether the siren is armed or arming, in which modes, and how long the arming countdown has left. The acknowledgment's cmd1 is 0x19.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x03",
       "reply": {
@@ -201,6 +209,8 @@
     {
       "name": "beep",
       "description": "Beeps once.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x30",
       "command2": "0x01"
     }
@@ -209,6 +219,8 @@
     {
       "name": "arm",
       "description": "Arms the siren at once, with no countdown.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x20",
       "command2": "0x05",
       "parameters": [

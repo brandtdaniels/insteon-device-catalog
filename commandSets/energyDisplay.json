@@ -90,11 +90,15 @@
     {
       "name": "stayAwakeOn",
       "description": "Keeps the display awake for 4 minutes, so it can be programmed.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x06"
     },
     {
       "name": "stayAwakeOff",
       "description": "Lets the display sleep.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x07"
     }
   ],
@@ -102,6 +106,8 @@
     {
       "name": "readSettings",
       "description": "Reads the display's settings, temperature and battery.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "reply": {
@@ -196,6 +202,8 @@
     {
       "name": "writeMainDisplay",
       "description": "Sets which meter group the main display shows.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -219,6 +227,8 @@
     {
       "name": "writeDisplayMode",
       "description": "Sets what the main display shows.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -240,6 +250,8 @@
     {
       "name": "writeTemperatureFormat",
       "description": "Sets the temperature scale.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -261,6 +273,8 @@
     {
       "name": "writeCost",
       "description": "Sets the cost of a kilowatt-hour.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -287,6 +301,8 @@
     {
       "name": "writeTemperatureCalibration",
       "description": "Sets the temperature calibration.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -314,6 +330,8 @@
     {
       "name": "restartAverageCost",
       "description": "Restarts the averages, of cost and of energy, of the chosen meter groups.",
+      "effect": "destructive",
+      "idempotent": false,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -348,6 +366,8 @@
     {
       "name": "readMeter",
       "description": "Reads what the display holds for the meter group in D1.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x01",
       "perButton": true,
@@ -402,6 +422,8 @@
     {
       "name": "readMeterIds",
       "description": "Reads the IDs of the meters in groups 1 to 3.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x2F",
       "command2": "0x01",
       "reply": {
@@ -446,6 +468,8 @@
     {
       "name": "writeMeterId",
       "description": "Sets the ID of the meter, or modem, in the group in D1. A modem linked this way receives the display's meter reads.",
+      "effect": "destructive",
+      "idempotent": false,
       "command1": "0x2F",
       "command2": "0x01",
       "perButton": true,

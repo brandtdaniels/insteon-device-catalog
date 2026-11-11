@@ -161,6 +161,8 @@
     {
       "name": "programmingLockOn",
       "description": "Locks out linking and programming from the adapter itself.",
+      "effect": "destructive",
+      "idempotent": true,
       "command2": "0x04",
       "extendedWhen": "extendedCommandsOnly",
       "guard": "never"
@@ -168,6 +170,8 @@
     {
       "name": "programmingLockOff",
       "description": "Allows linking and programming from the adapter itself.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x05",
       "extendedWhen": "extendedCommandsOnly"
     }
@@ -176,6 +180,8 @@
     {
       "name": "raiseSetpoint",
       "description": "Raises the setpoint.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x68",
       "parameter": {
         "name": "change",
@@ -188,6 +194,8 @@
     {
       "name": "lowerSetpoint",
       "description": "Lowers the setpoint.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x69",
       "parameter": {
         "name": "change",
@@ -200,6 +208,8 @@
     {
       "name": "readTemperature",
       "description": "Reads the temperature.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x6A",
       "command2": "0x00",
       "reply": {
@@ -212,6 +222,8 @@
     {
       "name": "readSetpoints",
       "description": "Reads the setpoints. The acknowledgment carries the heat setpoint, or the only one, and in a mode with two setpoints a second message carries the cool setpoint.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x6A",
       "command2": "0x20",
       "reply": {
@@ -230,6 +242,8 @@
     {
       "name": "readAmbientTemperature",
       "description": "Reads the temperature, as readTemperature does.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x6B",
       "command2": "0x03",
       "reply": {
@@ -242,6 +256,8 @@
     {
       "name": "readHumidity",
       "description": "Reads the relative humidity.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x6A",
       "command2": "0x60",
       "reply": {
@@ -253,6 +269,8 @@
     {
       "name": "readMode",
       "description": "Reads the mode.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x6B",
       "command2": "0x02",
       "reply": {
@@ -265,6 +283,8 @@
     {
       "name": "readEquipment",
       "description": "Reads whether cooling or heating is running.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x6B",
       "command2": "0x0D",
       "reply": {
@@ -286,6 +306,8 @@
     {
       "name": "setMode",
       "description": "Sets the mode or the fan.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x6B",
       "parameter": {
         "name": "mode",
@@ -298,6 +320,8 @@
     {
       "name": "setCoolSetpoint",
       "description": "Sets the cool setpoint.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x6C",
       "parameter": {
         "name": "coolSetpoint",
@@ -310,6 +334,8 @@
     {
       "name": "setHeatSetpoint",
       "description": "Sets the heat setpoint.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x6D",
       "parameter": {
         "name": "heatSetpoint",
@@ -322,6 +348,8 @@
     {
       "name": "readFan",
       "description": "Reads the thermostat's fan byte, at address 0x4B of its data map.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0xF0",
       "command2": "0x4B",
       "reply": {
@@ -341,6 +369,8 @@
     {
       "name": "readStatus",
       "description": "Reads the mode, humidity, temperature, setpoints, LED and fan with an extended Get.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [

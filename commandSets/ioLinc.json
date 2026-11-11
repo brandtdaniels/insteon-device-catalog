@@ -130,21 +130,29 @@
     {
       "name": "sendX10OnWhenOff",
       "description": "The I/O Linc sends X10 On when its input turns off.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x0C"
     },
     {
       "name": "sendX10OnWhenOn",
       "description": "The I/O Linc sends X10 On when its input turns on.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x0D"
     },
     {
       "name": "x10OnTurnsOff",
       "description": "A received X10 On turns the relay off.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x10"
     },
     {
       "name": "x10OnTurnsOn",
       "description": "A received X10 On turns the relay on.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x11"
     }
   ],
@@ -292,6 +300,8 @@
     {
       "name": "lightOn",
       "description": "Turns the output relay on. The device isn't documented to read cmd2; send 0xFF. In a momentary mode, the relay closes for the momentary time, or not at all if the mode ignores On.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x11",
       "parameter": {
         "name": "onLevel",
@@ -312,6 +322,8 @@
     {
       "name": "lightOff",
       "description": "Turns the output relay off. In a momentary mode, it doesn't close the relay; a group Off does that.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x13",
       "verification": {
         "status": "observed",
@@ -324,6 +336,8 @@
     {
       "name": "readStatus",
       "description": "Reads whether the output relay is on. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x00",
       "reply": {
@@ -341,6 +355,8 @@
     {
       "name": "beep",
       "description": "Asks the device to beep once.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x30",
       "verification": {
         "status": "observed",

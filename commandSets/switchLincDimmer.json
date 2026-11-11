@@ -420,31 +420,43 @@
     {
       "name": "yakityYakOff",
       "description": "Turns the Yakity Yak signaling option off.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x26"
     },
     {
       "name": "yakityYakOn",
       "description": "Turns the Yakity Yak signaling option on.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x27"
     },
     {
       "name": "modSyncFailureNoHop",
       "description": "When modulation sync fails, the device doesn't hop the message.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x28"
     },
     {
       "name": "modSyncFailureOwnZeroCrossing",
       "description": "When modulation sync fails, the device uses its own zero crossing.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x29"
     },
     {
       "name": "pushHopsToRadioOn",
       "description": "The device repeats every powerline hop over RF.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x2A"
     },
     {
       "name": "pushHopsToRadioOff",
       "description": "The device doesn't repeat every powerline hop over RF.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x2B"
     }
   ],
@@ -640,6 +652,8 @@
     {
       "name": "lightOn",
       "description": "Turns the load on to the level in cmd2 at the saved ramp rate.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x11",
       "parameter": {
         "name": "onLevel",
@@ -653,6 +667,8 @@
     {
       "name": "lightOnFast",
       "description": "Turns the load on to the level in cmd2 instantly.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x12",
       "parameter": {
         "name": "onLevel",
@@ -666,16 +682,22 @@
     {
       "name": "lightOff",
       "description": "Turns the load off at the saved ramp rate. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x13"
     },
     {
       "name": "lightOffFast",
       "description": "Turns the load off instantly. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x14"
     },
     {
       "name": "readStatus",
       "description": "Reads the load's level. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x00",
       "reply": {
@@ -688,6 +710,8 @@
     {
       "name": "instantChange",
       "description": "Sets the load to the level in cmd2 instantly.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x21",
       "parameter": {
         "name": "onLevel",
@@ -701,6 +725,8 @@
     {
       "name": "remoteSetButtonTap",
       "description": "Acts as a tap of the SET button: sets the on-level or the ramp rate from the load's present level, so turn the load to that level first.",
+      "effect": "destructive",
+      "idempotent": false,
       "command1": "0x25",
       "parameter": {
         "name": "setting",
@@ -716,6 +742,8 @@
     {
       "name": "onAtRampRate",
       "description": "Turns the load on to a level at a ramp rate, both given in cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x2E",
       "parameter": {
         "name": "levelAndRampRate",
@@ -729,6 +757,8 @@
     {
       "name": "offAtRampRate",
       "description": "Turns the load off at a ramp rate given in cmd2. Bits 4 through 7 are 0.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x2F",
       "parameter": {
         "name": "rampRate",
@@ -743,6 +773,8 @@
     {
       "name": "beep",
       "description": "Beeps once, as pressing the SET button does. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x30",
       "verification": {
         "status": "inferred",
@@ -754,6 +786,8 @@
     {
       "name": "triggerGroup",
       "description": "Acts as if group D1's button had been pressed: sends the cmd1 and cmd2 in D4 and D5 to group D1, and sets the local load as D2, D3 and D6 say. The device doesn't parse the command it sends, so to turn the local load off, put 0x01 in D2 and 0x00 in D3.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x30",
       "command2": "0x00",
       "perButton": true,

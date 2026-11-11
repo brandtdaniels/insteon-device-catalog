@@ -15,6 +15,7 @@ import build  # noqa: E402
 import jsonschema  # noqa: E402
 
 VALIDATOR = jsonschema.Draft202012Validator(json.loads((build.ROOT / "schema" / "command-set.schema.json").read_text()))
+PROFILE_VALIDATOR = jsonschema.Draft202012Validator(json.loads((build.ROOT / "schema" / "device-profile.schema.json").read_text()))
 
 
 def problems(command_set):
@@ -47,6 +48,16 @@ def renamed(command_set, key, old_name, new_name):
     return item
 
 
+def catalog_profile(model):
+    """A copy of one of the catalog's device profiles, to change in a test."""
+    return copy.deepcopy(json.loads((build.ROOT / "devices" / f"{model}.json").read_text()))
+
+
+def command(command_set, name):
+    """The command set's flag, standard or extended command called name."""
+    return next(item for key in ("flagCommands", "standardCommands", "extendedCommands") for item in command_set.get(key, []) if item["name"] == name)
+
+
 def extended_value(command_set, name):
     """The command set's extended settings value called name."""
     return next(value for value in command_set["extendedSettings"]["values"] if value["name"] == name)
@@ -57,6 +68,44 @@ class CatalogTests(unittest.TestCase):
         for path in sorted((build.ROOT / "commandSets").glob("*.json")):
             with self.subTest(command_set=path.stem):
                 self.assertEqual(problems(json.loads(path.read_text())), [])
+
+
+class EffectSchemaTests(unittest.TestCase):
+    def test_a_flag_command_without_an_effect_fails_the_schema(self):
+        command_set = catalog_command_set("globalLine")
+        command(command_set, "yakityYakOff").pop("effect", None)
+
+        self.assertEqual(problems(command_set), ["'effect' is a required property"])
+
+    def test_a_standard_command_without_idempotent_fails_the_schema(self):
+        command_set = catalog_command_set("globalLine")
+        command(command_set, "lightOn").pop("idempotent", None)
+
+        self.assertEqual(problems(command_set), ["'idempotent' is a required property"])
+
+    def test_an_extended_command_with_an_effect_the_schema_does_not_name_fails(self):
+        command_set = catalog_command_set("globalLine")
+        command(command_set, "triggerGroup")["effect"] = "sideEffect"
+
+        self.assertEqual(problems(command_set), ["'sideEffect' is not one of ['readOnly', 'configuration', 'link', 'actuation', 'destructive']"])
+
+    def test_a_raw_keep_awake_message_without_an_effect_fails_the_schema(self):
+        profile = catalog_profile("2441ZTH")
+        profile["lifecycle"]["fromHub"]["keepAwake"]["send"].pop("effect", None)
+
+        self.assertFalse(PROFILE_VALIDATOR.is_valid(profile))
+
+    def test_a_raw_keep_awake_message_without_idempotent_fails_the_schema(self):
+        profile = catalog_profile("2441ZTH")
+        profile["lifecycle"]["fromHub"]["keepAwake"]["release"].pop("idempotent", None)
+
+        self.assertFalse(PROFILE_VALIDATOR.is_valid(profile))
+
+    def test_a_named_keep_awake_message_carries_no_effect_of_its_own(self):
+        profile = catalog_profile("2852")
+        profile["lifecycle"]["fromHub"]["keepAwake"]["send"]["effect"] = "configuration"
+
+        self.assertFalse(PROFILE_VALIDATOR.is_valid(profile))
 
 
 class OperatingFlagsByteTests(unittest.TestCase):

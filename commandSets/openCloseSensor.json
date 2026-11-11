@@ -149,6 +149,8 @@
     {
       "name": "readSettings",
       "description": "Reads the LED's brightness and the configuration byte.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -221,6 +223,8 @@
     {
       "name": "stayAwake",
       "description": "Keeps the sensor awake.",
+      "effect": "destructive",
+      "idempotent": false,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [

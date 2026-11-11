@@ -16,94 +16,130 @@
     {
       "name": "programmingLockOn",
       "description": "Turns the programming lock on: linking and programming from the device are locked out.",
+      "effect": "destructive",
+      "idempotent": true,
       "command2": "0x00",
       "guard": "never"
     },
     {
       "name": "programmingLockOff",
       "description": "Turns the programming lock off.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x01"
     },
     {
       "name": "ledOnTransmitOn",
       "description": "The LED blinks when the device sends an Insteon message.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x02"
     },
     {
       "name": "ledOnTransmitOff",
       "description": "The LED doesn't blink when the device sends an Insteon message.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x03"
     },
     {
       "name": "keyBeepOn",
       "description": "The device beeps when a button is pressed.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x0A"
     },
     {
       "name": "keyBeepOff",
       "description": "The device doesn't beep when a button is pressed.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x0B"
     },
     {
       "name": "radioOff",
       "description": "The device doesn't originate RF messages. It still repeats the RF messages it hears.",
+      "effect": "destructive",
+      "idempotent": true,
       "command2": "0x0C",
       "guard": "never"
     },
     {
       "name": "radioOn",
       "description": "The device originates RF messages.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x0D"
     },
     {
       "name": "powerLineOff",
       "description": "Turns Insteon communication over the powerline off. The device turns it back on whenever it powers up.",
+      "effect": "destructive",
+      "idempotent": true,
       "command2": "0x0E",
       "guard": "never"
     },
     {
       "name": "powerLineOn",
       "description": "Turns Insteon communication over the powerline on.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x0F"
     },
     {
       "name": "x10Off",
       "description": "Turns X10 sending and receiving off.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x12"
     },
     {
       "name": "x10On",
       "description": "Turns X10 sending and receiving on.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x13"
     },
     {
       "name": "errorBlinkOff",
       "description": "The LED doesn't blink when a communication error occurs.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x14"
     },
     {
       "name": "errorBlinkOn",
       "description": "The LED blinks when a communication error occurs.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x15"
     },
     {
       "name": "cleanupReportOff",
       "description": "Turns cleanup success reports off.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x16"
     },
     {
       "name": "cleanupReportOn",
       "description": "Turns cleanup success reports on.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x17"
     },
     {
       "name": "checksumOff",
       "description": "Extended Set and ALL-Link database write messages needn't carry a checksum in D14.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x18"
     },
     {
       "name": "checksumOn",
       "description": "Extended Set and ALL-Link database write messages must carry a checksum in D14.",
+      "effect": "destructive",
+      "idempotent": true,
       "command2": "0x19",
       "guard": "never"
     }
@@ -131,6 +167,8 @@
     {
       "name": "lightOn",
       "description": "Turns the load on to the level in cmd2 at the saved ramp rate.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x11",
       "parameter": {
         "name": "onLevel",
@@ -144,21 +182,29 @@
     {
       "name": "lightOnFast",
       "description": "Turns the load on instantly. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x12"
     },
     {
       "name": "lightOff",
       "description": "Turns the load off at the saved ramp rate. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x13"
     },
     {
       "name": "lightOffFast",
       "description": "Turns the load off instantly. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x14"
     },
     {
       "name": "readStatus",
       "description": "Reads the load's level. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x00",
       "reply": {
@@ -169,6 +215,8 @@
     {
       "name": "instantChange",
       "description": "Sets the load to the level in cmd2 instantly.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x21",
       "parameter": {
         "name": "onLevel",

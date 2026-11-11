@@ -119,6 +119,8 @@
     {
       "name": "raiseSetpoint",
       "description": "Raises the setpoint.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x68",
       "parameter": {
         "name": "change",
@@ -130,6 +132,8 @@
     {
       "name": "lowerSetpoint",
       "description": "Lowers the setpoint.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x69",
       "parameter": {
         "name": "change",
@@ -141,6 +145,8 @@
     {
       "name": "setMode",
       "description": "Sets the mode or the fan.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x6B",
       "parameter": {
         "name": "mode",
@@ -152,6 +158,8 @@
     {
       "name": "setCoolSetpoint",
       "description": "Sets the cool setpoint.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x6C",
       "parameter": {
         "name": "coolSetpoint",
@@ -163,6 +171,8 @@
     {
       "name": "setHeatSetpoint",
       "description": "Sets the heat setpoint.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x6D",
       "parameter": {
         "name": "heatSetpoint",
@@ -176,6 +186,8 @@
     {
       "name": "readStatus",
       "description": "Reads the clock, mode, setpoints, humidity, temperature and what's running.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x02",
       "integrity": "crc",
@@ -282,6 +294,8 @@
     {
       "name": "readSettings",
       "description": "Reads the first page of settings.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -404,6 +418,8 @@
     {
       "name": "readMoreSettings",
       "description": "Reads the second page of settings.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -477,6 +493,8 @@
     {
       "name": "setTemperatureOffset",
       "description": "Sets the correction added to the temperature it measures.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -508,6 +526,8 @@
     {
       "name": "setHumidityOffset",
       "description": "Sets the correction added to the humidity it measures.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -539,6 +559,8 @@
     {
       "name": "setFlags",
       "description": "Sets the thermostat's settings all at once.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -595,6 +617,8 @@
     {
       "name": "setBacklight",
       "description": "Sets how long the backlight stays on.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -624,6 +648,8 @@
     {
       "name": "setHysteresis",
       "description": "Sets the least time between turning the system on and off.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -653,6 +679,8 @@
     {
       "name": "setEnergySetback",
       "description": "Sets how far energy saving moves the setpoints.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -682,6 +710,8 @@
     {
       "name": "enableStatusReports",
       "description": "Has the thermostat check its group 0xFE links, after software links a device to it in group 0xFE, so it sends that device status reports.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -699,6 +729,8 @@
     {
       "name": "setStageOneMinutes",
       "description": "Sets how long stage 1 runs before stage 2 starts.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -728,6 +760,8 @@
     {
       "name": "setHumidityHigh",
       "description": "Sets the humidity above which it dehumidifies.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -757,6 +791,8 @@
     {
       "name": "setHumidityLow",
       "description": "Sets the humidity below which it humidifies.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -786,6 +822,8 @@
     {
       "name": "programmingLockOn",
       "description": "Locks out linking and programming from the thermostat itself. A Set Operating Flags command.",
+      "effect": "destructive",
+      "idempotent": true,
       "command1": "0x20",
       "command2": "0x00",
       "integrity": "checksum",
@@ -794,6 +832,8 @@
     {
       "name": "programmingLockOff",
       "description": "Allows linking and programming from the thermostat itself. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x20",
       "command2": "0x01",
       "integrity": "checksum"
@@ -801,6 +841,8 @@
     {
       "name": "beepOn",
       "description": "Turns the button beep on. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x20",
       "command2": "0x02",
       "integrity": "checksum"
@@ -808,6 +850,8 @@
     {
       "name": "beepOff",
       "description": "Turns the button beep off. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x20",
       "command2": "0x03",
       "integrity": "checksum"
@@ -815,6 +859,8 @@
     {
       "name": "buttonLockOn",
       "description": "Locks the buttons. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x20",
       "command2": "0x04",
       "integrity": "checksum"
@@ -822,6 +868,8 @@
     {
       "name": "buttonLockOff",
       "description": "Unlocks the buttons. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x20",
       "command2": "0x05",
       "integrity": "checksum"
@@ -829,6 +877,8 @@
     {
       "name": "setDisplayCelsius",
       "description": "Displays Celsius. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x20",
       "command2": "0x06",
       "integrity": "checksum"
@@ -836,6 +886,8 @@
     {
       "name": "setDisplayFahrenheit",
       "description": "Displays Fahrenheit. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x20",
       "command2": "0x07",
       "integrity": "checksum"
@@ -843,6 +895,8 @@
     {
       "name": "setClock24Hour",
       "description": "Shows a 24-hour clock. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x20",
       "command2": "0x08",
       "integrity": "checksum"
@@ -850,6 +904,8 @@
     {
       "name": "setClock12Hour",
       "description": "Shows a 12-hour clock. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x20",
       "command2": "0x09",
       "integrity": "checksum"
@@ -857,6 +913,8 @@
     {
       "name": "softwareButtonLockOn",
       "description": "Locks the buttons from software. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x20",
       "command2": "0x0A",
       "integrity": "checksum"
@@ -864,6 +922,8 @@
     {
       "name": "softwareButtonLockOff",
       "description": "Unlocks the buttons from software. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x20",
       "command2": "0x0B",
       "integrity": "checksum"
@@ -871,6 +931,8 @@
     {
       "name": "heatCoolLedOn",
       "description": "Turns the heat and cool LEDs on. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x20",
       "command2": "0x0C",
       "integrity": "checksum"
@@ -878,6 +940,8 @@
     {
       "name": "heatCoolLedOff",
       "description": "Turns the heat and cool LEDs off. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x20",
       "command2": "0x0D",
       "integrity": "checksum"

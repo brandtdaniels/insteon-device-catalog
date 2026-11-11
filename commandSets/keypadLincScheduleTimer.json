@@ -240,72 +240,100 @@
     {
       "name": "programmingLockOn",
       "description": "Turns the programming lock on: linking and programming from the keypad are locked out.",
+      "effect": "destructive",
+      "idempotent": true,
       "command2": "0x00",
       "guard": "never"
     },
     {
       "name": "programmingLockOff",
       "description": "Turns the programming lock off.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x01"
     },
     {
       "name": "ledOnTransmitOn",
       "description": "The status LED blinks when the keypad sends an Insteon message.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x02"
     },
     {
       "name": "ledOnTransmitOff",
       "description": "The status LED doesn't blink when the keypad sends an Insteon message.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x03"
     },
     {
       "name": "resumeDimOn",
       "description": "Turning the load on at the keypad restores its last level instead of the on-level.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x04"
     },
     {
       "name": "resumeDimOff",
       "description": "Turning the load on at the keypad goes to the on-level.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x05"
     },
     {
       "name": "eightButtonLayout",
       "description": "Sets the 8-button layout.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x06"
     },
     {
       "name": "sixButtonLayout",
       "description": "Sets the 6-button layout.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x07"
     },
     {
       "name": "backlightOff",
       "description": "Turns the status LEDs and button backlights off.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x08"
     },
     {
       "name": "backlightOn",
       "description": "Turns the status LEDs and button backlights on.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x09"
     },
     {
       "name": "keyBeepOn",
       "description": "The keypad beeps when a button is pressed.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x0A"
     },
     {
       "name": "keyBeepOff",
       "description": "The keypad doesn't beep when a button is pressed.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x0B"
     },
     {
       "name": "errorBlinkOff",
       "description": "The status LED doesn't blink when a communication error occurs.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x14"
     },
     {
       "name": "errorBlinkOn",
       "description": "The status LED blinks when a communication error occurs.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x15"
     }
   ],
@@ -649,6 +677,8 @@
     {
       "name": "lightOn",
       "description": "Turns the load on: a dimmer to the level in cmd2 at the saved ramp rate, an on/off model to full on.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x11",
       "parameter": {
         "name": "onLevel",
@@ -662,11 +692,15 @@
     {
       "name": "lightOff",
       "description": "Turns the load off at the saved ramp rate.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x13"
     },
     {
       "name": "readStatus",
       "description": "Reads the load's level. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x00",
       "reply": {
