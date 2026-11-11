@@ -145,7 +145,7 @@
     {
       "name": "setMode",
       "description": "Sets the mode or the fan.",
-      "effect": "configuration",
+      "effect": "actuation",
       "idempotent": true,
       "command1": "0x6B",
       "parameter": {
@@ -1011,7 +1011,8 @@
     "Insteon's documents don't give the units of the first page's own temperature, the zone temperatures, or the external temperature report, cmd1 0x73.",
     "Earlier sources read the extended Get with the temperature in D3 and D4, and a second page chosen by D2 0x10; later sources, used here, choose pages by D3.",
     "Extended Get and Set take 0x01 in D1; other values are also accepted.",
-    "setMode, setCoolSetpoint and setHeatSetpoint, as the Thermostat Developer Notes and the Wireless Thermostat Developer Notes give them, set the mode or a setpoint that the thermostat keeps and acts on, as a dimmer keeps its on-level, so each is configuration and idempotent.",
+    "setCoolSetpoint and setHeatSetpoint, as the Thermostat Developer Notes and the Wireless Thermostat Developer Notes give them, set a setpoint that the thermostat keeps and acts on, as a dimmer keeps its on-level, so each is configuration and idempotent.",
+    "setMode, as the Thermostat Developer Notes and the Wireless Thermostat Developer Notes give it, sets the mode or the fan, and fan on and fan off act at once, so it's actuation and idempotent.",
     "raiseSetpoint and lowerSetpoint, as the Thermostat Developer Notes and the Wireless Thermostat Developer Notes give them, move the kept setpoint by the change in cmd2 from wherever it is, so each is configuration and not idempotent: sending one twice moves the setpoint twice."
   ],
   "sources": [

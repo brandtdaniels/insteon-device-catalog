@@ -59,7 +59,7 @@
     {
       "name": "writeCodeRecord",
       "description": "EZSnsRF Control, Write a code record: saves the code record buffer as the record of the last code received.",
-      "effect": "configuration",
+      "effect": "destructive",
       "idempotent": true,
       "command1": "0xF0",
       "command2": "0x01"
@@ -110,7 +110,8 @@
     "Peek and Poke addresses, with Set Address MSB 0x00: 0x00 configuration (r), 0x02 firmware revision (r), 0x03 EEPROM loaded (r), 0x04 to 0x0B the code record buffer (rw).",
     "The device answers an ID Request with an acknowledgment and a SET Button Pressed broadcast, without entering linking mode.",
     "Its Poke description says to follow a Poke with Load EEPROM from RAM, which its command table doesn't list.",
-    "setAddressMsb and peek, as the EZSnsRF Insteon Messages/Commands give them, only choose and read the address that Peek One Byte and Poke One Byte use, which matters only to those requests, so each is readOnly and idempotent; Poke One Byte writes, and is destructive."
+    "setAddressMsb and peek, as the EZSnsRF Insteon Messages/Commands give them, only choose and read the address that Peek One Byte and Poke One Byte use, which matters only to those requests, so each is readOnly and idempotent; Poke One Byte writes, and is destructive.",
+    "writeCodeRecord, as the EZSnsRF Insteon Messages/Commands give it, saves the code record buffer over a stored code record, and no message restores the record it replaces, so it's destructive and idempotent."
   ],
   "sources": [
     "EZSnsRF Insteon Messages/Commands",

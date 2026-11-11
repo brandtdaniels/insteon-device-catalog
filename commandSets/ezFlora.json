@@ -407,7 +407,7 @@
     {
       "name": "enablePump",
       "description": "Sprinkler Control, Enable Pump: sets output V8 up for pump control.",
-      "effect": "configuration",
+      "effect": "actuation",
       "idempotent": true,
       "command1": "0x44",
       "command2": "0x07",
@@ -447,7 +447,7 @@
     {
       "name": "disablePump",
       "description": "Sprinkler Control, Disable Pump: returns output V8 to valve 8.",
-      "effect": "configuration",
+      "effect": "actuation",
       "idempotent": true,
       "command1": "0x44",
       "command2": "0x08",
@@ -1627,7 +1627,8 @@
     "inhibit and resume, as the EZFlora Insteon and X10 Messages/Commands give them, change whether the EZFlora accepts valve and program ON commands, a state it keeps and acts on later, so each is configuration and idempotent; inhibit stops only valve and program ON commands, so resume undoes it and neither needs a guard.",
     "writeMeterCountLsb and writeMeterCountMsb, as the EZFlora Insteon and X10 Messages/Commands give them, overwrite the water meter count, which nothing can restore, as resetMeterCount does, so each is destructive and idempotent.",
     "setAddressMsb and peek, as the EZFlora Insteon and X10 Messages/Commands give them, only choose and read the address that Peek One Byte and Poke One Byte use, which matters only to those requests, so each is readOnly and idempotent; Poke One Byte writes, and is destructive.",
-    "valveOn, as the EZFlora Insteon and X10 Messages/Commands give it, turns a valve on for its timer, and they don't say whether a second one restarts the timer, so it's actuation and not idempotent."
+    "valveOn, as the EZFlora Insteon and X10 Messages/Commands give it, turns a valve on for its timer, and they don't say whether a second one restarts the timer, so it's actuation and not idempotent.",
+    "enablePump and disablePump, as the EZFlora Insteon and X10 Messages/Commands give them, switch output V8 between pump control and valve 8, which changes what the output does at once, so each is actuation and idempotent. What each does to a valve that's running is unverified."
   ],
   "sources": [
     "EZFlora Insteon and X10 Messages/Commands",

@@ -755,7 +755,7 @@
     {
       "name": "remoteSetButtonTap",
       "description": "Acts as a tap of the device's SET button.",
-      "effect": "configuration",
+      "effect": "actuation",
       "idempotent": false,
       "command1": "0x25",
       "parameter": {
@@ -911,7 +911,7 @@
   "notes": [
     "The 2475SDB Developer Notes call the product the 277V In-LineLinc Relay, and its examples show category 0x01 and subcategory 0x0E, which the catalog gives to the 2457D2.",
     "The 2475SDB Developer Notes list no status request; Insteon's 2007 command tables give cmd1 0x19 for every on/off device.",
-    "remoteSetButtonTap, as the 2475SDB Developer Notes give it, sets the on-level with cmd2 0x00 or the ramp rate with 0x02, and the Insteon Command Tables (2007) give cmd2 as a count of taps of the SET button; neither describes linking, so it's configuration, and not idempotent, since a second tap may undo what the first set.",
+    "remoteSetButtonTap: the 2475SDB Developer Notes give cmd2 0x00 to set the on-level and 0x02 the ramp rate, and the Insteon Command Tables (2007) give cmd2 as a count of taps of the SET button. The sources conflict and neither describes linking; a tap of a relay's SET button can switch its load, so it's actuation and not idempotent, the reading that fails closed.",
     "triggerGroup, as the 2475SDB Developer Notes give it, sends a group command to the group's responders, and a responder's reply to a second one, such as a toggle or a momentary relay acting again, isn't something the sender can see, so it's actuation and not idempotent."
   ],
   "sources": [
