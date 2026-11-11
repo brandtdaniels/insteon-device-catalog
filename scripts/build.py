@@ -145,8 +145,9 @@ def from_hub_problems(profile):
 def from_hub_command_set_problems(profile, command_sets):
     """Reports fromHub names that aren't in every command set the profile uses: allGroupsWhen
     flags, and keepAwake commands and flags; keepAwake commands that aren't configuration and
-    idempotent; and raw keepAwake bytes where a command set entry sends the same Set Operating
-    Flags command."""
+    idempotent; raw keepAwake bytes where a command set entry sends the same Set Operating Flags
+    command; and raw keepAwake bytes whose effect differs from a standard or extended entry with
+    those bytes."""
     from_hub = profile.get("lifecycle", {}).get("fromHub")
 
     if from_hub is None:
@@ -193,6 +194,12 @@ def from_hub_command_set_problems(profile, command_sets):
 
                 if message["command2"] in sent:
                     problems.append(f"fromHub keepAwake {key} gives raw bytes for a Set Operating Flags command {used_id} names; name it instead")
+
+                kind = "extendedCommands" if message.get("extended") else "standardCommands"
+
+                for entry in cs.get(kind, []):
+                    if entry["command1"] == "0x20" and entry.get("command2") == message["command2"] and (entry["effect"], entry["idempotent"]) != (message["effect"], message["idempotent"]):
+                        problems.append(f"fromHub keepAwake {key} has the bytes of {used_id}'s {entry['name']}, so it needs the same effect and idempotent")
 
     return problems
 
@@ -343,8 +350,9 @@ def effect_problems(command_set):
     set says about them: a command never sent that isn't destructive, a Set Operating Flags
     command or an extended Set that's readOnly, a readOnly command that isn't idempotent, a
     command a group type acts or reads its state with, or a flag or value is set with, that isn't
-    actuation, readOnly or configuration, and Set Operating Flags entries with the same cmd2 and
-    different effects."""
+    actuation, readOnly or configuration, and entries one message can match with different
+    effects or idempotent: Set Operating Flags entries with the same cmd2, and extended commands
+    whose bytes overlap."""
     problems = []
     entries = {kind: command_set.get(kind, []) for kind in ("flagCommands", "standardCommands", "extendedCommands")}
     effects = {command["name"]: command["effect"] for commands in entries.values() for command in commands}
@@ -354,7 +362,12 @@ def effect_problems(command_set):
             label = f"the {command['name']} command"
             set_flags = kind == "flagCommands" or command["command1"] == "0x20"
             fixed = {byte["position"]: byte["value"] for byte in command.get("fixed", [])}
-            extended_set = kind == "extendedCommands" and command["command1"] == "0x2E" and command["command2"] == "0x00" and fixed.get(2, "0x00") != "0x00"
+            given = {position for field in command.get("parameters", []) for position in ([field["byte"]] if "byte" in field else field.get("bytes", []))}
+            extended = kind == "extendedCommands"
+            selector = fixed.get(2, "0x00") != "0x00" or 2 in given
+            extended_set = extended and command["command1"] == "0x2E" and command["command2"] == "0x00" and selector
+            properties_write = extended and command["command1"] == "0x2E" and command["command2"] == "0x01" and fixed.get(1) == "0x02"
+            database_write = extended and command["command1"] == "0x2F" and (fixed.get(2) == "0x02" or 2 in given)
 
             if command.get("guard") == "never" and command["effect"] != "destructive":
                 problems.append(f"{label} is never sent, so its effect must be destructive")
@@ -363,6 +376,10 @@ def effect_problems(command_set):
                 problems.append(f"{label} is Set Operating Flags, which is never readOnly")
             elif command["effect"] == "readOnly" and extended_set:
                 problems.append(f"{label} is an extended Set, which is never readOnly")
+            elif command["effect"] == "readOnly" and properties_write:
+                problems.append(f"{label} writes properties (cmd1 0x2E, cmd2 0x01, D1 0x02), which is never readOnly")
+            elif command["effect"] == "readOnly" and database_write:
+                problems.append(f"{label} writes with cmd1 0x2F and D2 0x02, which is never readOnly")
 
             if command["effect"] == "readOnly" and not command["idempotent"]:
                 problems.append(f"{label} is readOnly, so it must be idempotent")
@@ -392,8 +409,8 @@ def effect_problems(command_set):
     # with cmd1 0x20. A flag command goes as a standard or an extended message, so it can match
     # entries of either kind.
     enumerations = {enumeration["name"]: enumeration for enumeration in command_set.get("enumerations", [])}
-    senders = [(f"the {flag['name']} flag", {flag[key] for key in ("on", "off") if key in flag}, "configuration") for flag in command_set.get("operatingFlags", []) if "on" in flag or "off" in flag]
-    senders += [(f"the {command['name']} command", {command["command2"]}, command["effect"]) for command in entries["flagCommands"]]
+    senders = [(f"the {flag['name']} flag", {flag[key] for key in ("on", "off") if key in flag}, ("configuration", True)) for flag in command_set.get("operatingFlags", []) if "on" in flag or "off" in flag]
+    senders += [(f"the {command['name']} command", {command["command2"]}, (command["effect"], command["idempotent"])) for command in entries["flagCommands"]]
 
     for command in entries["standardCommands"] + entries["extendedCommands"]:
         if command["command1"] != "0x20":
@@ -405,7 +422,7 @@ def effect_problems(command_set):
         else:
             sent = {command.get("command2", "0x00")}
 
-        senders.append((f"the {command['name']} command", sent, command["effect"]))
+        senders.append((f"the {command['name']} command", sent, (command["effect"], command["idempotent"])))
 
     for index, (label, sent, effect) in enumerate(senders):
         for other_label, other_sent, other_effect in senders[index + 1:]:
@@ -413,9 +430,60 @@ def effect_problems(command_set):
 
             if effect != other_effect and (shared is None or shared):
                 where = "any cmd2" if shared is None else "cmd2 " + ", ".join(sorted(shared))
-                problems.append(f"{label} and {other_label} both send Set Operating Flags with {where}, so they need the same effect")
+                problems.append(f"{label} and {other_label} both send Set Operating Flags with {where}, so they need the same effect and idempotent")
+
+    # Extended commands one message can match: an unfixed user data byte that isn't a parameter,
+    # a perButton D1 or integrity is 0x00, so commands overlap only where every byte can agree.
+    extended = entries["extendedCommands"]
+
+    for index, command in enumerate(extended):
+        for other in extended[index + 1:]:
+            if (command["effect"], command["idempotent"]) == (other["effect"], other["idempotent"]) or not extended_overlap(command, other):
+                continue
+
+            if command["effect"] == "readOnly" and extended_covers(command, other):
+                problems.append(f"the {command['name']} command is readOnly, but it matches every message the {other['name']} command does")
+            elif other["effect"] == "readOnly" and extended_covers(other, command):
+                problems.append(f"the {other['name']} command is readOnly, but it matches every message the {command['name']} command does")
+            else:
+                problems.append(f"the {command['name']} command and the {other['name']} command can match the same extended message, so they need the same effect and idempotent")
 
     return problems
+
+
+def extended_bytes(command):
+    """What an extended command's user data bytes D1 through D14 can hold: a fixed value, None
+    for any value (a parameter, a perButton D1 or integrity), and 0x00 for every other byte."""
+    found = {position: "0x00" for position in range(1, 15)}
+
+    for field in command.get("parameters", []):
+        for position in [field["byte"]] if "byte" in field else field.get("bytes", []):
+            found[position] = None
+
+    if command.get("perButton"):
+        found[1] = None
+
+    for position in {"checksum": [14], "crc": [13, 14]}.get(command.get("integrity"), []):
+        found[position] = None
+
+    for byte in command.get("fixed", []):
+        found[byte["position"]] = byte["value"]
+
+    return found
+
+
+def extended_overlap(command, other):
+    """Whether one extended message can match both commands."""
+    mine, theirs = extended_bytes(command), extended_bytes(other)
+
+    return (command["command1"], command["command2"]) == (other["command1"], other["command2"]) and all(mine[p] is None or theirs[p] is None or mine[p] == theirs[p] for p in mine)
+
+
+def extended_covers(command, other):
+    """Whether every extended message that matches other also matches command."""
+    mine, theirs = extended_bytes(command), extended_bytes(other)
+
+    return (command["command1"], command["command2"]) == (other["command1"], other["command2"]) and all(mine[p] is None or mine[p] == theirs[p] for p in mine)
 
 
 def presentation_problems(command_set):

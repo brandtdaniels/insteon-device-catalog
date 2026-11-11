@@ -208,7 +208,7 @@ class EffectRuleTests(unittest.TestCase):
             "effect": "actuation", "idempotent": True, "command1": "0x20", "command2": "0x26",
         })
 
-        self.assertEqual(problems(command_set), ["the yakityYakOff command and the yakityYakOffNow command both send Set Operating Flags with cmd2 0x26, so they need the same effect"])
+        self.assertEqual(problems(command_set), ["the yakityYakOff command and the yakityYakOffNow command both send Set Operating Flags with cmd2 0x26, so they need the same effect and idempotent"])
 
     def test_a_flag_and_a_standard_set_operating_flags_command_with_one_cmd2_need_one_effect(self):
         command_set = catalog_command_set("globalLine")
@@ -217,7 +217,7 @@ class EffectRuleTests(unittest.TestCase):
             "effect": "actuation", "idempotent": True, "command1": "0x20", "command2": "0x0A",
         })
 
-        self.assertEqual(problems(command_set), ["the keyBeep flag and the keyBeepNow command both send Set Operating Flags with cmd2 0x0A, so they need the same effect"])
+        self.assertEqual(problems(command_set), ["the keyBeep flag and the keyBeepNow command both send Set Operating Flags with cmd2 0x0A, so they need the same effect and idempotent"])
 
     def test_set_operating_flags_entries_with_one_cmd2_and_one_effect_pass(self):
         command_set = catalog_command_set("globalLine")
@@ -234,6 +234,116 @@ class EffectRuleTests(unittest.TestCase):
 
         self.assertEqual(command(command_set, "radioOff")["effect"], "destructive")
         self.assertEqual(problems(command_set), ["the radioOff command turns a guarded flag on, so it needs guard 'never'"])
+
+
+class EffectRuleGapTests(unittest.TestCase):
+    def test_a_standard_command_never_sent_must_be_destructive(self):
+        command_set = catalog_command_set("globalLine")
+        command_set["standardCommands"].append({
+            "name": "exampleLockOn", "description": "Locks the device.", "effect": "configuration", "idempotent": True,
+            "command1": "0x20", "command2": "0x7F", "guard": "never",
+        })
+
+        self.assertEqual(problems(command_set), ["the exampleLockOn command is never sent, so its effect must be destructive"])
+
+    def test_an_extended_command_never_sent_must_be_destructive(self):
+        command_set = catalog_command_set("tempLinc")
+        command(command_set, "programmingLockOn")["effect"] = "configuration"
+
+        self.assertEqual(problems(command_set), ["the programmingLockOn command is never sent, so its effect must be destructive"])
+
+    def test_a_standard_command_with_cmd1_0x20_is_never_read_only(self):
+        command_set = catalog_command_set("globalLine")
+        command_set["standardCommands"].append({
+            "name": "exampleFlagOn", "description": "Sets a flag.", "effect": "readOnly", "idempotent": True,
+            "command1": "0x20", "command2": "0x7F",
+        })
+
+        self.assertEqual(problems(command_set), ["the exampleFlagOn command is Set Operating Flags, which is never readOnly"])
+
+    def test_a_properties_write_is_never_read_only(self):
+        command_set = catalog_command_set("i3Dial")
+        command(command_set, "writeProperties")["effect"] = "readOnly"
+
+        self.assertEqual(problems(command_set), ["the writeProperties command writes properties (cmd1 0x2E, cmd2 0x01, D1 0x02), which is never readOnly"])
+
+    def test_a_cmd1_0x2f_write_is_never_read_only(self):
+        command_set = catalog_command_set("energyDisplay")
+        command(command_set, "writeMeterId")["effect"] = "readOnly"
+
+        self.assertEqual(problems(command_set), ["the writeMeterId command writes with cmd1 0x2F and D2 0x02, which is never readOnly"])
+
+    def test_an_extended_set_whose_selector_is_a_parameter_is_never_read_only(self):
+        command_set = catalog_command_set("hiddenDoorSensor")
+        write = command(command_set, "setHeartbeatInterval")
+        write["effect"] = "readOnly"
+        write["fixed"] = [{"position": 1, "value": "0x02"}]
+        write["parameters"].append({"name": "selector", "description": "The setting to write.", "byte": 2})
+
+        self.assertEqual(problems(command_set), ["the setHeartbeatInterval command is an extended Set, which is never readOnly"])
+
+    def test_a_parameterized_set_operating_flags_command_needs_the_effect_of_every_flag_it_can_send(self):
+        command_set = catalog_command_set("globalLine")
+        command_set["standardCommands"].append({
+            "name": "anyFlag", "description": "Sends any Set Operating Flags cmd2.", "effect": "actuation", "idempotent": True,
+            "command1": "0x20", "parameter": {"name": "cmd2", "description": "The cmd2."},
+        })
+
+        self.assertIn("the yakityYakOff command and the anyFlag command both send Set Operating Flags with cmd2 0x26, so they need the same effect and idempotent", problems(command_set))
+        self.assertIn("the keyBeep flag and the anyFlag command both send Set Operating Flags with cmd2 0x0A, 0x0B, so they need the same effect and idempotent", problems(command_set))
+
+    def test_set_operating_flags_entries_with_one_cmd2_need_one_idempotent(self):
+        command_set = catalog_command_set("globalLine")
+        command_set["standardCommands"].append({
+            "name": "keyBeepToggle", "description": "Turns the key beep on.", "effect": "configuration", "idempotent": False,
+            "command1": "0x20", "command2": "0x0A",
+        })
+
+        self.assertEqual(problems(command_set), ["the keyBeep flag and the keyBeepToggle command both send Set Operating Flags with cmd2 0x0A, so they need the same effect and idempotent"])
+
+    def test_extended_commands_one_message_can_match_need_one_effect_and_idempotent(self):
+        command_set = catalog_command_set("tempLinc")
+        command_set["extendedCommands"].append({
+            "name": "writePage", "description": "Writes a page of settings.", "effect": "configuration", "idempotent": True,
+            "command1": "0x2E", "command2": "0x00", "fixed": [{"position": 1, "value": "0x01"}],
+            "parameters": [{"name": "page", "description": "The page.", "byte": 3}], "integrity": "checksum",
+        })
+
+        self.assertEqual(problems(command_set), [
+            "the readSettings command and the writePage command can match the same extended message, so they need the same effect and idempotent",
+            "the readMoreSettings command and the writePage command can match the same extended message, so they need the same effect and idempotent",
+        ])
+
+    def test_an_unfixed_byte_must_be_0x00_so_differing_fixed_bytes_do_not_overlap(self):
+        command_set = catalog_command_set("energyDisplay")
+
+        self.assertEqual(command(command_set, "readMeterIds")["effect"], "readOnly")
+        self.assertEqual(problems(command_set), [])
+
+    def test_a_read_only_extended_command_may_not_match_every_message_a_write_does(self):
+        command_set = catalog_command_set("globalLine")
+        command_set["extendedCommands"] += [
+            {"name": "readThing", "description": "Reads a thing.", "effect": "readOnly", "idempotent": True,
+             "command1": "0x50", "command2": "0x00", "parameters": [{"name": "thing", "description": "The thing.", "byte": 1}]},
+            {"name": "writeThing", "description": "Writes a thing.", "effect": "configuration", "idempotent": True,
+             "command1": "0x50", "command2": "0x00", "fixed": [{"position": 1, "value": "0x01"}]},
+        ]
+
+        self.assertEqual(problems(command_set), ["the readThing command is readOnly, but it matches every message the writeThing command does"])
+
+    def test_a_keep_awake_flag_needs_no_effect_of_its_own(self):
+        profile = catalog_profile("2444A2WH4")
+
+        self.assertEqual(profile["lifecycle"]["fromHub"]["keepAwake"]["send"], {"flag": "stayAwake", "set": True})
+        self.assertEqual(build.from_hub_command_set_problems(profile, {"remoteLinc2": catalog_command_set("remoteLinc2")}), [])
+
+    def test_raw_keep_awake_bytes_need_the_effect_of_the_command_set_entry_with_those_bytes(self):
+        command_set = catalog_command_set("tempLinc")
+        command(command_set, "setDisplayCelsius")["effect"] = "actuation"
+
+        self.assertEqual(build.from_hub_command_set_problems(catalog_profile("2441ZTH"), {"tempLinc": command_set}), [
+            "fromHub keepAwake send has the bytes of tempLinc's setDisplayCelsius, so it needs the same effect and idempotent",
+        ])
 
 
 class OperatingFlagsByteTests(unittest.TestCase):
