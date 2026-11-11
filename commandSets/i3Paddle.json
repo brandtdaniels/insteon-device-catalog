@@ -1325,7 +1325,8 @@
     "The load settings reply (readLoadSettings) starts with the same bytes as the extended Get reply, so wait for one before asking for the other.",
     "The extended Get request carries no checksum.",
     "Inferred: seen on two i2CS devices (Outdoor On/Off Plug 2634-222 firmware 0x42, On/Off Plug 2635-222 firmware 0x48) linked to a Hub 2245, the device itself writes its responder record when it's linked remotely or with the SET button, and takes Data 1 from the load's state at that moment: the two plugs wrote 0x00 when the load was off and 0xFF when it was on. So Data 1 (on-level) of the light group's responder records is the state the load was in when the device was linked. The On/Off Plug 2635-222 Owner's Manual says to make sure the module is on before linking it as a responder. The values its link data give are what to write when writing the record by hand.",
-    "groupOn, groupOff and triggerGroup, as the i3 Paddle/Dial (Insteon Developer Documentation, October 2025) gives them, broadcast a group command and clean it up with every responder, and a responder's reply to a second one, such as a toggle or a momentary relay acting again, isn't something the sender can see, so each is actuation and not idempotent."
+    "groupOn, groupOff and triggerGroup, as the i3 Paddle/Dial (Insteon Developer Documentation, October 2025) gives them, broadcast a group command and clean it up with every responder, and a responder's reply to a second one, such as a toggle or a momentary relay acting again, isn't something the sender can see, so each is actuation and not idempotent.",
+    "nightModeOn and nightModeOff are configuration as direct commands. Sent as group commands, they set night mode on every responder at once, which the direct commands' effect doesn't describe."
   ],
   "sources": [
     "i3 Paddle/Dial (Insteon Developer Documentation, October 2025)"

@@ -312,7 +312,8 @@
     "An alert record's data holds the delay and duration, the alert type and a record type; an arm record's data holds a record type. The Siren Module Developer Notes also say linking to an arm group stores the countdown behavior.",
     "The siren adds or modifies a record with ALL-Link database command D2 0x03, matching on group and ID, and answers 0x2F with NAK 0xF9 when its database is full.",
     "The Siren Module Developer Notes give arm as Set Operating Flags with cmd2 0x05, which arms the siren at once, so it's actuation rather than configuration; it starts no countdown that a second one could restart, so it's idempotent.",
-    "soundAlert, as the Siren Module Developer Notes give it, sounds the alert at once or after the delay its cmd2 sets, and they don't say whether a second one restarts the delay or the sound, so it's actuation and not idempotent."
+    "soundAlert, as the Siren Module Developer Notes give it, sounds the alert at once or after the delay its cmd2 sets, and they don't say whether a second one restarts the delay or the sound, so it's actuation and not idempotent.",
+    "The disarmed flag's on, Set Operating Flags with cmd2 0x04, disarms the siren, and like every operating flag write it's configuration, so software that grants configuration can disarm it: the catalog has no field that gives an operating flag another effect."
   ],
   "sources": [
     "Siren Module Developer Notes"
