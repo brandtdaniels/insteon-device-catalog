@@ -14,7 +14,7 @@
     {
       "name": "setAddressMsb",
       "description": "Set Address MSB: sets the high byte of the address Peek and Poke use. It must be 0x00 for the addresses the notes list.",
-      "effect": "configuration",
+      "effect": "readOnly",
       "idempotent": true,
       "command1": "0x28",
       "parameter": {
@@ -36,8 +36,8 @@
     {
       "name": "peek",
       "description": "Peek One Byte: sets the address to cmd2, and reads the byte there.",
-      "effect": "destructive",
-      "idempotent": false,
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x2B",
       "parameter": {
         "name": "address",
@@ -109,7 +109,8 @@
     "The EZX10RF Insteon Messages/Commands give the record's timer in 0.5-second steps; the Quick-Start Guide EZX10RF Wireless Sensor Receiver Insteon EZX10RF—Model #5010G adds half a minute for each tap of the SET button, for 0.5 to 15.5 minutes.",
     "Peek and Poke addresses, with Set Address MSB 0x00: 0x00 the last X10 house and unit code received (r), 0x01 the last X10 command received (r), 0x02 firmware revision (r), 0x03 EEPROM loaded (r), 0x04 to 0x23 the X10 address filter, 16 by 16 bits, 0x24 to 0x2B the code record buffer (rw). The EZX10RF Insteon Messages/Commands give these addresses without a prefix, as 04-35 and 36-43; read as decimal, they match the filter's 32 bytes and the buffer's 8.",
     "The device answers an ID Request with an acknowledgment and a SET Button Pressed broadcast, without entering linking mode.",
-    "Its Poke description says to follow a Poke with Load EEPROM from RAM, which its command table doesn't list."
+    "Its Poke description says to follow a Poke with Load EEPROM from RAM, which its command table doesn't list.",
+    "setAddressMsb and peek, as the EZX10RF Insteon Messages/Commands give them, only choose and read the address that Peek One Byte and Poke One Byte use, which matters only to those requests, so each is readOnly and idempotent; Poke One Byte writes, and is destructive."
   ],
   "sources": [
     "EZX10RF Insteon Messages/Commands",

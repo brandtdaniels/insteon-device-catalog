@@ -119,7 +119,7 @@
     {
       "name": "raiseSetpoint",
       "description": "Raises the setpoint.",
-      "effect": "actuation",
+      "effect": "configuration",
       "idempotent": false,
       "command1": "0x68",
       "parameter": {
@@ -132,7 +132,7 @@
     {
       "name": "lowerSetpoint",
       "description": "Lowers the setpoint.",
-      "effect": "actuation",
+      "effect": "configuration",
       "idempotent": false,
       "command1": "0x69",
       "parameter": {
@@ -1010,7 +1010,9 @@
     "The TempLinc's Get Operating Flags reply isn't documented; read its settings from readSettings.",
     "Insteon's documents don't give the units of the first page's own temperature, the zone temperatures, or the external temperature report, cmd1 0x73.",
     "Earlier sources read the extended Get with the temperature in D3 and D4, and a second page chosen by D2 0x10; later sources, used here, choose pages by D3.",
-    "Extended Get and Set take 0x01 in D1; other values are also accepted."
+    "Extended Get and Set take 0x01 in D1; other values are also accepted.",
+    "setMode, setCoolSetpoint and setHeatSetpoint, as the Thermostat Developer Notes and the Wireless Thermostat Developer Notes give them, set the mode or a setpoint that the thermostat keeps and acts on, as a dimmer keeps its on-level, so each is configuration and idempotent.",
+    "raiseSetpoint and lowerSetpoint, as the Thermostat Developer Notes and the Wireless Thermostat Developer Notes give them, move the kept setpoint by the change in cmd2 from wherever it is, so each is configuration and not idempotent: sending one twice moves the setpoint twice."
   ],
   "sources": [
     "Thermostat Developer Notes",

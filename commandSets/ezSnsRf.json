@@ -14,7 +14,7 @@
     {
       "name": "setAddressMsb",
       "description": "Set Address MSB: sets the high byte of the address Peek and Poke use. It must be 0x00 for the addresses the notes list.",
-      "effect": "configuration",
+      "effect": "readOnly",
       "idempotent": true,
       "command1": "0x28",
       "parameter": {
@@ -36,8 +36,8 @@
     {
       "name": "peek",
       "description": "Peek One Byte: sets the address to cmd2, and reads the byte there.",
-      "effect": "destructive",
-      "idempotent": false,
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x2B",
       "parameter": {
         "name": "address",
@@ -109,7 +109,8 @@
     "The EZSnsRF Insteon Messages/Commands give the record's timer in 0.5-second steps; the Quick-Start Guide EZSnsRF Wireless Sensor Receiver Model #5010E adds half a minute for each tap of the SET button, for 0.5 to 15.5 minutes.",
     "Peek and Poke addresses, with Set Address MSB 0x00: 0x00 configuration (r), 0x02 firmware revision (r), 0x03 EEPROM loaded (r), 0x04 to 0x0B the code record buffer (rw).",
     "The device answers an ID Request with an acknowledgment and a SET Button Pressed broadcast, without entering linking mode.",
-    "Its Poke description says to follow a Poke with Load EEPROM from RAM, which its command table doesn't list."
+    "Its Poke description says to follow a Poke with Load EEPROM from RAM, which its command table doesn't list.",
+    "setAddressMsb and peek, as the EZSnsRF Insteon Messages/Commands give them, only choose and read the address that Peek One Byte and Poke One Byte use, which matters only to those requests, so each is readOnly and idempotent; Poke One Byte writes, and is destructive."
   ],
   "sources": [
     "EZSnsRF Insteon Messages/Commands",

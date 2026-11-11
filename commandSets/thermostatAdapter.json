@@ -180,7 +180,7 @@
     {
       "name": "raiseSetpoint",
       "description": "Raises the setpoint.",
-      "effect": "actuation",
+      "effect": "configuration",
       "idempotent": false,
       "command1": "0x68",
       "parameter": {
@@ -194,7 +194,7 @@
     {
       "name": "lowerSetpoint",
       "description": "Lowers the setpoint.",
-      "effect": "actuation",
+      "effect": "configuration",
       "idempotent": false,
       "command1": "0x69",
       "parameter": {
@@ -502,7 +502,9 @@
     "The adapter sends its reports as direct messages to each device linked to it while it was off.",
     "Insteon's documents don't say how to read whether the thermostat displays Celsius, so displayDegrees here are Fahrenheit unless the app knows otherwise.",
     "Earlier firmware doesn't support cmd2 0x0D of cmd1 0x6B; later firmware does.",
-    "The Insteon Developer's Guide calls cmd2 0x08 of cmd1 0x6B fan off; other sources call it fan auto."
+    "The Insteon Developer's Guide calls cmd2 0x08 of cmd1 0x6B fan off; other sources call it fan auto.",
+    "setMode, setCoolSetpoint and setHeatSetpoint, as the Insteon Developer's Guide (2009) gives them, set the mode or a setpoint that the thermostat keeps and acts on, as a dimmer keeps its on-level, so each is configuration and idempotent.",
+    "raiseSetpoint and lowerSetpoint, as the Insteon Developer's Guide (2009) gives them, move the kept setpoint by the change in cmd2 from wherever it is, so each is configuration and not idempotent: sending one twice moves the setpoint twice."
   ],
   "sources": [
     "Insteon Developer's Guide (2009)"
