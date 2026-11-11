@@ -237,6 +237,8 @@
     {
       "name": "readSettings",
       "description": "Reads the remote's intervals, trigger buttons, retries and battery level.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [

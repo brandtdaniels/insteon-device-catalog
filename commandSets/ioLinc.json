@@ -130,21 +130,29 @@
     {
       "name": "sendX10OnWhenOff",
       "description": "The I/O Linc sends X10 On when its input turns off.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x0C"
     },
     {
       "name": "sendX10OnWhenOn",
       "description": "The I/O Linc sends X10 On when its input turns on.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x0D"
     },
     {
       "name": "x10OnTurnsOff",
       "description": "A received X10 On turns the relay off.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x10"
     },
     {
       "name": "x10OnTurnsOn",
       "description": "A received X10 On turns the relay on.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x11"
     }
   ],
@@ -292,6 +300,8 @@
     {
       "name": "lightOn",
       "description": "Turns the output relay on. The device isn't documented to read cmd2; send 0xFF. In a momentary mode, the relay closes for the momentary time, or not at all if the mode ignores On.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x11",
       "parameter": {
         "name": "onLevel",
@@ -312,6 +322,8 @@
     {
       "name": "lightOff",
       "description": "Turns the output relay off. In a momentary mode, it doesn't close the relay; a group Off does that.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x13",
       "verification": {
         "status": "observed",
@@ -324,6 +336,8 @@
     {
       "name": "readStatus",
       "description": "Reads whether the output relay is on. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x00",
       "reply": {
@@ -341,6 +355,8 @@
     {
       "name": "beep",
       "description": "Asks the device to beep once.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x30",
       "verification": {
         "status": "observed",
@@ -475,7 +491,8 @@
   "notes": [
     "A later source marks bit 6 of the 0x00 reply as ignored; an earlier source reads it as the trigger reversal that 0x0E and 0x0F set.",
     "An earlier source labels D5 and D6 of the reply the relay's X10 address and D7 and D8 the sensor's, where a later source has the input's and the output's.",
-    "Recording a relay state at link time needs the momentary flag off, and the relay left in the state to record. A relay wired to a door, lock or valve stays in that state until it is set back, and the momentary flag stays off until it is restored, so a flow restores both on every failure path, including cancellation."
+    "Recording a relay state at link time needs the momentary flag off, and the relay left in the state to record. A relay wired to a door, lock or valve stays in that state until it is set back, and the momentary flag stays off until it is restored, so a flow restores both on every failure path, including cancellation.",
+    "lightOn and lightOff, as the Insteon Developer's Guide (2009) and the I/O Module 2450 Owner's Manual give them, act on the relay as its momentary flags say, and in a momentary mode lightOn closes the relay for the momentary time, so a second one closes it again; the flags are a stored setting a sender can't see when it sends, so each is actuation and not idempotent."
   ],
   "sources": [
     "Insteon Developer's Guide (2009)",

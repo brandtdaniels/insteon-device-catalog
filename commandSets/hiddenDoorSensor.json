@@ -106,11 +106,15 @@
     {
       "name": "stayAwakeOn",
       "description": "Keeps the sensor awake, with 0xFF as its awake interval.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x18"
     },
     {
       "name": "stayAwakeOff",
       "description": "Lets the sensor sleep again.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x19"
     }
   ],
@@ -195,6 +199,8 @@
     {
       "name": "readDoorState",
       "description": "Reads whether the door is open.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x00",
       "reply": {
@@ -207,6 +213,8 @@
     {
       "name": "readBatteryLevel",
       "description": "Reads the battery level.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x01",
       "reply": {
@@ -219,6 +227,8 @@
     {
       "name": "readSettings",
       "description": "Reads the operating flags, battery level, door state, heartbeat interval and low battery level.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -308,6 +318,8 @@
     {
       "name": "setHeartbeatInterval",
       "description": "Sets the heartbeat interval.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [

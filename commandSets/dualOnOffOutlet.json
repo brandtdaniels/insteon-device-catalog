@@ -262,6 +262,8 @@
     {
       "name": "topOutletOn",
       "description": "Switches the top outlet.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x11",
       "parameter": {
         "name": "state",
@@ -271,11 +273,15 @@
     {
       "name": "topOutletOff",
       "description": "Turns the top outlet off.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x13"
     },
     {
       "name": "readStatus",
       "description": "Reads the top outlet's level. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x00",
       "reply": {
@@ -286,6 +292,8 @@
     {
       "name": "readOutlets",
       "description": "Reads which outlets are on. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x01",
       "reply": {
@@ -307,11 +315,15 @@
     {
       "name": "beep",
       "description": "Beeps once, as pressing the SET button does. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x30"
     },
     {
       "name": "groupOn",
       "description": "Turns on an outlet as a group On would.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x32",
       "parameter": {
         "name": "outlet",
@@ -323,6 +335,8 @@
     {
       "name": "groupOff",
       "description": "Turns off an outlet as a group Off would.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x33",
       "parameter": {
         "name": "outlet",
@@ -336,6 +350,8 @@
     {
       "name": "bottomOutletOn",
       "description": "Turns the bottom outlet on. Any cmd2 from 0x01 through 0xFF turns it on, and 0x00 off.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x11",
       "command2": "0xFF",
       "fixed": [
@@ -349,6 +365,8 @@
     {
       "name": "bottomOutletOff",
       "description": "Turns the bottom outlet off.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x13",
       "command2": "0x00",
       "fixed": [

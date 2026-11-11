@@ -70,6 +70,8 @@
     {
       "name": "beep",
       "description": "Beeps the bridge's beeper once.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x30",
       "command2": "0x01"
     }
@@ -78,6 +80,8 @@
     {
       "name": "readSmokeAlarmId",
       "description": "Reads the Insteon ID of the smoke alarm the bridge is paired with.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x2F",
       "command2": "0x00",
       "fixed": [

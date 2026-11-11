@@ -268,6 +268,8 @@
       "required": [
         "name",
         "description",
+        "effect",
+        "idempotent",
         "command2"
       ],
       "properties": {
@@ -277,6 +279,12 @@
         "description": {
           "type": "string",
           "minLength": 1
+        },
+        "effect": {
+          "$ref": "#/$defs/effect"
+        },
+        "idempotent": {
+          "$ref": "#/$defs/idempotent"
         },
         "command2": {
           "$ref": "#/$defs/byte",
@@ -682,6 +690,8 @@
       "required": [
         "name",
         "description",
+        "effect",
+        "idempotent",
         "command1"
       ],
       "properties": {
@@ -691,6 +701,12 @@
         "description": {
           "type": "string",
           "minLength": 1
+        },
+        "effect": {
+          "$ref": "#/$defs/effect"
+        },
+        "idempotent": {
+          "$ref": "#/$defs/idempotent"
         },
         "command1": {
           "$ref": "#/$defs/byte"
@@ -740,6 +756,8 @@
       "required": [
         "name",
         "description",
+        "effect",
+        "idempotent",
         "command1",
         "command2"
       ],
@@ -750,6 +768,12 @@
         "description": {
           "type": "string",
           "minLength": 1
+        },
+        "effect": {
+          "$ref": "#/$defs/effect"
+        },
+        "idempotent": {
+          "$ref": "#/$defs/idempotent"
         },
         "command1": {
           "$ref": "#/$defs/byte"
@@ -763,7 +787,7 @@
           "default": false
         },
         "fixed": {
-          "description": "The command's fixed user data bytes. The rest are 0x00, apart from parameters and integrity.",
+          "description": "The command's fixed user data bytes. The rest are 0x00, apart from parameters, a perButton D1 and integrity, and a message matches the command only when they are.",
           "type": "array",
           "items": {
             "$ref": "#/$defs/fixedByte"
@@ -825,6 +849,20 @@
           ]
         }
       }
+    },
+    "effect": {
+      "description": "What the message does to the device or modem it's sent to, the addressee. readOnly: it asks for state; the addressee answers, with an acknowledgment, an extended reply or a direct or broadcast report such as a database checksum, and changes nothing it keeps or does, apart from state that lasts only for the request, such as Peek One Byte's address. configuration: it changes a setting the addressee keeps and acts on later, such as operating flags, extended Set values, setpoints, timers or registers, and nothing it does at once. link: it puts the addressee in or out of ALL-Linking mode, or adds an ALL-Link record. actuation: it changes what the addressee does at once: a load, an output, a valve, a sound, a program, or a group broadcast from the addressee. destructive: it removes or overwrites ALL-Link records, memory or counters, restores factory settings, or leaves the addressee unable to communicate with the modem until a person acts. Software treats a value it doesn't know as destructive.",
+      "enum": [
+        "readOnly",
+        "configuration",
+        "link",
+        "actuation",
+        "destructive"
+      ]
+    },
+    "idempotent": {
+      "description": "Whether sending the identical message twice leaves the addressee in the same state as sending it once: true for a command that sets a level or value, false for a relative step such as Brighten One Step, a start that restarts such as Start Manual Change, and a toggle. Software that meets a message without it treats it as false.",
+      "type": "boolean"
     },
     "directMessage": {
       "description": "A standard direct message the device sends on its own, with a value in cmd2.",

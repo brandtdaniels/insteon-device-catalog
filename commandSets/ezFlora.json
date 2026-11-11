@@ -39,6 +39,8 @@
     {
       "name": "valveOn",
       "description": "Sprinkler Valve ON: turns on the valve in cmd2. The acknowledgment carries 0x00 instead of the status byte for an invalid valve or while commands are inhibited.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x40",
       "parameter": {
         "name": "valve",
@@ -84,6 +86,8 @@
     {
       "name": "valveOff",
       "description": "Sprinkler Valve OFF: turns off the valve in cmd2. The acknowledgment carries 0xFF for an invalid valve.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x41",
       "parameter": {
         "name": "valve",
@@ -97,6 +101,8 @@
     {
       "name": "programOn",
       "description": "Sprinkler Program ON: starts the program in cmd2. The acknowledgment carries 0x00 instead of the status byte for an invalid program or while commands are inhibited.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x42",
       "parameter": {
         "name": "program",
@@ -142,6 +148,8 @@
     {
       "name": "programOff",
       "description": "Sprinkler Program OFF: stops the program in cmd2. The acknowledgment carries 0xFF for an invalid program.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x43",
       "parameter": {
         "name": "program",
@@ -159,6 +167,8 @@
     {
       "name": "factoryReset",
       "description": "Sprinkler Control, Reset: resets the EZFlora to its factory settings.",
+      "effect": "destructive",
+      "idempotent": true,
       "command1": "0x44",
       "command2": "0x00",
       "reply": {
@@ -197,6 +207,8 @@
     {
       "name": "readValveStatus",
       "description": "Sprinkler Control, Get Valve Status: reads the valve status byte.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x44",
       "command2": "0x02",
       "reply": {
@@ -235,6 +247,8 @@
     {
       "name": "inhibit",
       "description": "Sprinkler Control, Inhibit Command Acceptance: stops accepting valve and program ON commands.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x44",
       "command2": "0x03",
       "reply": {
@@ -273,6 +287,8 @@
     {
       "name": "resume",
       "description": "Sprinkler Control, Resume Command Acceptance: accepts commands again.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x44",
       "command2": "0x04",
       "reply": {
@@ -311,6 +327,8 @@
     {
       "name": "skipForward",
       "description": "Sprinkler Control, Skip Forward: turns off the active valve and goes on to the program's next valve.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x44",
       "command2": "0x05",
       "reply": {
@@ -349,6 +367,8 @@
     {
       "name": "skipBack",
       "description": "Sprinkler Control, Skip Back: turns off the active valve and goes on to the program's previous valve.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x44",
       "command2": "0x06",
       "reply": {
@@ -387,6 +407,8 @@
     {
       "name": "enablePump",
       "description": "Sprinkler Control, Enable Pump: sets output V8 up for pump control.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x44",
       "command2": "0x07",
       "reply": {
@@ -425,6 +447,8 @@
     {
       "name": "disablePump",
       "description": "Sprinkler Control, Disable Pump: returns output V8 to valve 8.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x44",
       "command2": "0x08",
       "reply": {
@@ -463,6 +487,8 @@
     {
       "name": "enableValveStatusMessage",
       "description": "Sprinkler Control, Enable Valve Status Change Message: broadcasts each time the valves change.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x44",
       "command2": "0x09",
       "reply": {
@@ -501,6 +527,8 @@
     {
       "name": "disableValveStatusMessage",
       "description": "Sprinkler Control, Disable Valve Status Change Message: stops the valve broadcasts.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x44",
       "command2": "0x0A",
       "reply": {
@@ -539,6 +567,8 @@
     {
       "name": "armRainSensor",
       "description": "Sprinkler Control, Arm rain sensor input: lets the rain sensor inhibit watering.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x44",
       "command2": "0x0B",
       "reply": {
@@ -577,6 +607,8 @@
     {
       "name": "disarmRainSensor",
       "description": "Sprinkler Control, Disarm rain sensor: stops the rain sensor inhibiting watering.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x44",
       "command2": "0x0C",
       "reply": {
@@ -615,6 +647,8 @@
     {
       "name": "enableMeterCountMessage",
       "description": "Sprinkler Control, Enable Meter Count Change Message: broadcasts each time the meter count changes.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x44",
       "command2": "0x0D",
       "reply": {
@@ -653,6 +687,8 @@
     {
       "name": "disableMeterCountMessage",
       "description": "Sprinkler Control, Disable Meter Count Change Message: stops the meter broadcasts.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x44",
       "command2": "0x0E",
       "reply": {
@@ -691,6 +727,8 @@
     {
       "name": "resetMeterCount",
       "description": "Sprinkler Control, Reset meter count: sets the meter count to zero.",
+      "effect": "destructive",
+      "idempotent": true,
       "command1": "0x44",
       "command2": "0x0F",
       "reply": {
@@ -729,6 +767,8 @@
     {
       "name": "startDiagnostics",
       "description": "Sprinkler Control, Start diagnostics: turns the valves on one after another, for 1 second each.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x44",
       "command2": "0xFE",
       "reply": {
@@ -767,6 +807,8 @@
     {
       "name": "stopDiagnostics",
       "description": "Sprinkler Control, Stop diagnostics: stops the diagnostics sequence.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x44",
       "command2": "0xFF",
       "reply": {
@@ -805,6 +847,8 @@
     {
       "name": "readTimers",
       "description": "Get Sprinkler Timers Request: asks for a timer bank. The EZFlora answers with an extended Get Sprinkler Timers Response (cmd1 0x41, cmd2 the bank), D1 through D8 the timers of valves 1 to 8 in minutes.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x45",
       "parameter": {
         "name": "bank",
@@ -820,6 +864,8 @@
     {
       "name": "readConfiguration",
       "description": "Get Configuration Register: reads the configuration register, which also shows the rain sensor input.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0xF0",
       "command2": "0x00",
       "reply": {
@@ -868,6 +914,8 @@
     {
       "name": "writeConfiguration",
       "description": "Set Configuration Register: sets the configuration register.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0xF1",
       "parameter": {
         "name": "configuration",
@@ -915,6 +963,8 @@
     {
       "name": "readMeterCountLsb",
       "description": "Get LS Meter Count: reads the low byte of the water meter count.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0xF2",
       "command2": "0x00",
       "reply": {
@@ -925,6 +975,8 @@
     {
       "name": "readMeterCountMsb",
       "description": "Get MS Meter Count: reads the high byte of the water meter count.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0xF3",
       "command2": "0x00",
       "reply": {
@@ -935,6 +987,8 @@
     {
       "name": "writeMeterCountLsb",
       "description": "Set LS Meter Count: sets the low byte of the water meter count to cmd2.",
+      "effect": "destructive",
+      "idempotent": true,
       "command1": "0xF4",
       "parameter": {
         "name": "meterCountLsb",
@@ -948,6 +1002,8 @@
     {
       "name": "writeMeterCountMsb",
       "description": "Set MS Meter Count: sets the high byte of the water meter count to cmd2.",
+      "effect": "destructive",
+      "idempotent": true,
       "command1": "0xF5",
       "parameter": {
         "name": "meterCountMsb",
@@ -961,6 +1017,8 @@
     {
       "name": "setAddressMsb",
       "description": "Set Address MSB: sets the high byte of the address Peek and Poke use, 0x00 for the EZFlora's own locations and 0xFF for the ALL-Link database.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x28",
       "parameter": {
         "name": "addressMsb",
@@ -970,6 +1028,8 @@
     {
       "name": "poke",
       "description": "Poke One Byte: writes a timer, in minutes, to the location Peek One Byte last set, then moves to the next location.",
+      "effect": "destructive",
+      "idempotent": false,
       "command1": "0x29",
       "parameter": {
         "name": "minutes",
@@ -980,6 +1040,8 @@
     {
       "name": "peek",
       "description": "Peek One Byte: sets the timer location to cmd2 and reads the timer there. Only the address's low byte is used. Locations 0x00 to 0x07 hold the manual timers of valves 1 to 8, 0x08 to 0x0F program 1's, 0x10 to 0x17 program 2's, 0x18 to 0x1F program 3's and 0x20 to 0x27 program 4's.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x2B",
       "parameter": {
         "name": "location",
@@ -1004,6 +1066,8 @@
     {
       "name": "writeTimersManual",
       "description": "Set Sprinkler Timers for the manual (default) valve timers: D1 through D8 hold the timers of valves 1 to 8; D9 through D14 are ignored.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x40",
       "command2": "0x00",
       "parameters": [
@@ -1064,6 +1128,8 @@
     {
       "name": "writeTimersProgram1",
       "description": "Set Sprinkler Timers for program 1: D1 through D8 hold the timers of valves 1 to 8; D9 through D14 are ignored.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x40",
       "command2": "0x01",
       "parameters": [
@@ -1124,6 +1190,8 @@
     {
       "name": "writeTimersProgram2",
       "description": "Set Sprinkler Timers for program 2: D1 through D8 hold the timers of valves 1 to 8; D9 through D14 are ignored.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x40",
       "command2": "0x02",
       "parameters": [
@@ -1184,6 +1252,8 @@
     {
       "name": "writeTimersProgram3",
       "description": "Set Sprinkler Timers for program 3: D1 through D8 hold the timers of valves 1 to 8; D9 through D14 are ignored.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x40",
       "command2": "0x03",
       "parameters": [
@@ -1244,6 +1314,8 @@
     {
       "name": "writeTimersProgram4",
       "description": "Set Sprinkler Timers for program 4: D1 through D8 hold the timers of valves 1 to 8; D9 through D14 are ignored.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x40",
       "command2": "0x04",
       "parameters": [
@@ -1550,7 +1622,13 @@
     "The EZFlora answers an ID Request with an acknowledgment and a SET Button Pressed broadcast, and a Ping (cmd1 0x0F) with an acknowledgment. Enter Linking Mode (cmd1 0x09) is the same as holding the SET button 4 seconds, and Enter Unlinking Mode (cmd1 0x0A) as holding it 10 seconds. ALL-Link Recall (cmd1 0x11, an ALL-Link command) recalls groups 0 to 15.",
     "Configuration register bit 2 isn't documented. Bit 7 of the register and bit 6 of the valve status byte both show the pump option.",
     "X10: units 1 to 8 turn valves 1 to 8 on and off; units 9 to 12 start and stop programs 1 to 4; unit 13 On inhibits commands and Off resumes them; unit 14 On skips forward and Off skips back; unit 16 On enables the pump on V8 and Off disables it.",
-    "The accessory connector (RJ-45) isn't for data: pin 1 input 1 (not used), pin 2 +5 V auxiliary (50 mA maximum), pins 3, 5 and 7 ground, pin 4 water meter pulse input (with a built-in pull-up), pin 6 rain sensor (must be pulled up to inhibit), pin 8 no connection."
+    "The accessory connector (RJ-45) isn't for data: pin 1 input 1 (not used), pin 2 +5 V auxiliary (50 mA maximum), pins 3, 5 and 7 ground, pin 4 water meter pulse input (with a built-in pull-up), pin 6 rain sensor (must be pulled up to inhibit), pin 8 no connection.",
+    "programOn starts a program, and the EZFlora Insteon and X10 Messages/Commands don't say whether it restarts a running program, so it's actuation and not idempotent. programOff and stopDiagnostics stop what's running, so each is actuation and idempotent; startDiagnostics restarts the valve sequence, so it's actuation and not idempotent.",
+    "inhibit and resume, as the EZFlora Insteon and X10 Messages/Commands give them, change whether the EZFlora accepts valve and program ON commands, a state it keeps and acts on later, so each is configuration and idempotent; inhibit stops only valve and program ON commands, so resume undoes it and neither needs a guard.",
+    "writeMeterCountLsb and writeMeterCountMsb, as the EZFlora Insteon and X10 Messages/Commands give them, overwrite the water meter count, which nothing can restore, as resetMeterCount does, so each is destructive and idempotent.",
+    "setAddressMsb and peek, as the EZFlora Insteon and X10 Messages/Commands give them, only choose and read the address that Peek One Byte and Poke One Byte use, which matters only to those requests, so each is readOnly and idempotent; Poke One Byte writes, and is destructive.",
+    "valveOn, as the EZFlora Insteon and X10 Messages/Commands give it, turns a valve on for its timer, and they don't say whether a second one restarts the timer, so it's actuation and not idempotent.",
+    "enablePump and disablePump, as the EZFlora Insteon and X10 Messages/Commands give them, switch output V8 between pump control and valve 8, which changes what the output does at once, so each is actuation and idempotent. What each does to a valve that's running is unverified."
   ],
   "sources": [
     "EZFlora Insteon and X10 Messages/Commands",

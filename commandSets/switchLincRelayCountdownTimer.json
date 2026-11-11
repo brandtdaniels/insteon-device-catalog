@@ -191,6 +191,8 @@
     {
       "name": "lightOn",
       "description": "Turns the load on. The device doesn't read cmd2; send 0xFF.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x11",
       "parameter": {
         "name": "onLevel",
@@ -204,11 +206,15 @@
     {
       "name": "lightOff",
       "description": "Turns the load off.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x13"
     },
     {
       "name": "readStatus",
       "description": "Reads whether the load is on. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x00",
       "reply": {
@@ -272,7 +278,8 @@
     }
   ],
   "notes": [
-    "Insteon's documents call the local warning 1 minute in the Set Operating Flags table and 2 minutes in the Get Operating Flags table."
+    "Insteon's documents call the local warning 1 minute in the Set Operating Flags table and 2 minutes in the Get Operating Flags table.",
+    "lightOn, as the Insteon Developer's Guide (2009) gives it, turns the load on, and on this device the load can be held by a countdown timer; it doesn't say whether a second one restarts the countdown, so it's actuation and not idempotent."
   ],
   "sources": [
     "Insteon Developer's Guide (2009)"

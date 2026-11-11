@@ -149,6 +149,8 @@
     {
       "name": "readSettings",
       "description": "Reads the LED's brightness and the configuration byte.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -221,6 +223,8 @@
     {
       "name": "stayAwake",
       "description": "Keeps the sensor awake.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -253,7 +257,8 @@
     "Direct commands from a device that isn't in the sensor's ALL-Link database get a NAK with 0xFF in cmd2.",
     "The Open/Close Sensor's configuration byte is 0x43 by default, and the Leak Sensor's is 0x4F.",
     "The guides give D4 and D5 of the extended Get reply as 0x01 and 0x23 without saying what they hold.",
-    "The guides document no Set Operating Flags commands for these sensors. Write the configuration byte with an extended Set instead."
+    "The guides document no Set Operating Flags commands for these sensors. Write the configuration byte with an extended Set instead.",
+    "stayAwake, as the Open/Close Sensor Developer Notes and the Leak Sensor Developer Notes give it, keeps the sensor awake for the seconds in D3; it changes no load or output, and as a keepAwake message it's configuration and idempotent."
   ],
   "sources": [
     "Open/Close Sensor Developer Notes",

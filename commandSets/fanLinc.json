@@ -342,11 +342,15 @@
     {
       "name": "smartHopsOn",
       "description": "Starts each message with the hop count of the last acknowledgment received (smart hops).",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x1C"
     },
     {
       "name": "smartHopsOff",
       "description": "Starts each message with one hop.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x1D"
     }
   ],
@@ -454,6 +458,8 @@
     {
       "name": "lightOn",
       "description": "Turns the light on to the level in cmd2 at the saved ramp rate.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x11",
       "parameter": {
         "name": "onLevel",
@@ -467,11 +473,15 @@
     {
       "name": "lightOff",
       "description": "Turns the light off at the saved ramp rate.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x13"
     },
     {
       "name": "readStatus",
       "description": "Reads the light's level. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x00",
       "reply": {
@@ -484,6 +494,8 @@
     {
       "name": "readFanSpeed",
       "description": "Reads the fan speed. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x03",
       "reply": {
@@ -496,6 +508,8 @@
     {
       "name": "fanLow",
       "description": "Turns the fan on low. Any cmd2 from 0x01 through 0x7F sets low.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x11",
       "command2": "0x01",
       "fixed": [
@@ -508,6 +522,8 @@
     {
       "name": "fanMedium",
       "description": "Turns the fan on medium. Any cmd2 from 0x80 through 0xFE sets medium.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x11",
       "command2": "0x80",
       "fixed": [
@@ -520,6 +536,8 @@
     {
       "name": "fanHigh",
       "description": "Turns the fan on high.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x11",
       "command2": "0xFF",
       "fixed": [
@@ -532,6 +550,8 @@
     {
       "name": "fanOff",
       "description": "Turns the fan off.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x13",
       "command2": "0x00",
       "fixed": [
