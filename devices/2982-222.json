@@ -203,7 +203,8 @@
             "note": "Assembled from this profile's linking steps and the standard Insteon commands Start ALL-Linking, ID Request, Enter Linking Mode and Ping; no document describes adding this product to a Hub."
           },
           "notes": [
-            "Link each further group the device controls the same way, with the modem starting ALL-Linking as the responder and then Enter Linking Mode naming that group in cmd2; fromHub lists every leg."
+            "Link each further group the device controls the same way, with the modem starting ALL-Linking as the responder and then Enter Linking Mode naming that group in cmd2; fromHub lists every leg.",
+            "Seen on a device running firmware 0x43, which had been added to another Hub: its ALL-Link database held a controller record for each of groups 1 to 7, naming that Hub, each with Data 1 to 3 as 0x03 0x1F 0x00, at 0x0FEF down to 0x0FBF in order, and a responder record for that Hub's group 254 with Data 1 to 3 as 0x00 0x1C 0x00 at 0x0F97. It held no controller record for group 10, the heartbeat group. How that Hub wrote the records, by linking mode or by writing the database, wasn't seen."
           ]
         }
       ]
