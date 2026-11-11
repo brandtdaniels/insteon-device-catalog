@@ -384,6 +384,30 @@ def effect_problems(command_set):
             if command["effect"] == "readOnly" and not command["idempotent"]:
                 problems.append(f"{label} is readOnly, so it must be idempotent")
 
+    serial = command_set.get("serialCommands", [])
+
+    for command in serial:
+        label = f"the {command['name']} serial command"
+
+        if command.get("guard") == "never" and command["effect"] != "destructive":
+            problems.append(f"{label} is never sent, so its effect must be destructive")
+
+        if command["effect"] == "readOnly" and not command["idempotent"]:
+            problems.append(f"{label} is readOnly, so it must be idempotent")
+
+    # Serial commands one frame can match: the same number and no fixed byte that differs.
+    for index, command in enumerate(serial):
+        for other in serial[index + 1:]:
+            if (command["effect"], command["idempotent"]) == (other["effect"], other["idempotent"]) or not serial_overlap(command, other):
+                continue
+
+            if command["effect"] == "readOnly" and serial_covers(command, other):
+                problems.append(f"the {command['name']} serial command is readOnly, but it matches every frame the {other['name']} serial command does")
+            elif other["effect"] == "readOnly" and serial_covers(other, command):
+                problems.append(f"the {other['name']} serial command is readOnly, but it matches every frame the {command['name']} serial command does")
+            else:
+                problems.append(f"the {command['name']} serial command and the {other['name']} serial command can match the same frame, so they need the same effect and idempotent")
+
     for group_type in command_set.get("groupTypes", []):
         label = f"the {group_type['name']} group type"
         state = group_type.get("state")
@@ -484,6 +508,86 @@ def extended_covers(command, other):
     mine, theirs = extended_bytes(command), extended_bytes(other)
 
     return (command["command1"], command["command2"]) == (other["command1"], other["command2"]) and all(mine[p] is None or mine[p] == theirs[p] for p in mine)
+
+
+def serial_bytes(command):
+    """What a serial command's payload bytes can hold: a fixed value, or None for any value (a
+    parameter). A byte that is neither is missing from the result."""
+    found = {}
+
+    for field in command.get("parameters", []):
+        for position in [field["byte"]] if "byte" in field else field.get("bytes", []):
+            found[position] = None
+
+    for byte in command.get("fixed", []):
+        found[byte["position"]] = byte["value"]
+
+    return found
+
+
+def serial_overlap(command, other):
+    """Whether one serial frame can match both commands."""
+    mine, theirs = serial_bytes(command), serial_bytes(other)
+
+    return command["number"] == other["number"] and all(mine[p] is None or theirs[p] is None or mine[p] == theirs[p] for p in mine.keys() & theirs.keys())
+
+
+def serial_covers(command, other):
+    """Whether every serial frame that matches other also matches command."""
+    mine, theirs = serial_bytes(command), serial_bytes(other)
+
+    return command["number"] == other["number"] and all(mine[p] is None or mine[p] == theirs.get(p) for p in mine)
+
+
+def serial_command_problems(command, field_problems, positions, overlaps, unit):
+    """Reports a serial command whose number carries a device message, whose values name no
+    payload byte or fill one twice, whose payload has a byte nothing fills, or whose reply reads a
+    byte twice."""
+    owner = f"the {command['name']} serial command"
+    found = []
+
+    if command["number"] in ("0x61", "0x62"):
+        found.append(f"{owner} has number {command['number']}, which carries a device message and so isn't an entry")
+
+    parameters = command.get("parameters", [])
+
+    for field in parameters:
+        found += field_problems(field, owner, True)
+
+    filled = positions(parameters) + [(byte["position"], 0xFF) for byte in command.get("fixed", [])]
+
+    if overlaps(filled):
+        found.append(f"{owner}: it fills a {unit} twice")
+
+    for position in range(1, max(serial_bytes(command), default=0) + 1):
+        if position not in serial_bytes(command):
+            found.append(f"{owner}: {unit} {position} is neither fixed nor a parameter")
+
+    if "reply" in command:
+        for field in command["reply"]:
+            found += field_problems(field, f"{owner}'s reply", True)
+
+        if overlaps(positions(command["reply"])):
+            found.append(f"{owner}'s reply reads a {unit} twice")
+
+    return found
+
+
+def serial_frame_problems(serial):
+    """Reports serial commands that send the same number and fixed bytes, and commands with one
+    number but different payload lengths, which no frame could tell apart."""
+    found = []
+    keys = [(command["number"], tuple(sorted((byte["position"], byte["value"]) for byte in command.get("fixed", [])))) for command in serial]
+
+    if len(keys) != len(set(keys)):
+        found.append("two serial commands send the same number and fixed bytes")
+
+    for index, command in enumerate(serial):
+        for other in serial[index + 1:]:
+            if command["number"] == other["number"] and max(serial_bytes(command), default=0) != max(serial_bytes(other), default=0):
+                found.append(f"the {command['name']} and {other['name']} serial commands share number {command['number']} but differ in payload length")
+
+    return found
 
 
 def presentation_problems(command_set):
@@ -748,10 +852,11 @@ def message_problems(command_set):
     standard = command_set.get("standardCommands", [])
     extended = command_set.get("extendedCommands", [])
     direct = command_set.get("directMessages", [])
+    serial = command_set.get("serialCommands", [])
     enumerations = {enumeration["name"]: enumeration for enumeration in command_set.get("enumerations", [])}
     flag_names = {flag["name"] for flag in command_set.get("operatingFlags", [])}
 
-    names = [item["name"] for item in standard + extended + direct]
+    names = [item["name"] for item in standard + extended + direct + serial]
 
     if len(names) != len(set(names)):
         problems.append("a command or message name appears more than once")
@@ -891,6 +996,11 @@ def message_problems(command_set):
 
             if overlaps(read):
                 problems.append(f"{owner}'s reply reads a user data byte twice")
+
+    for command in serial:
+        problems += serial_command_problems(command, field_problems, positions, overlaps, "payload byte")
+
+    problems += serial_frame_problems(serial)
 
     for message in direct:
         problems += field_problems(message["value"], f"the {message['name']} message", False)
