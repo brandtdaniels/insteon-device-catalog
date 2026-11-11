@@ -24,8 +24,8 @@ Each product has a profile in [`devices/`](devices), named by its model number. 
 - **Engines:** where a source states it, the Insteon engine (i1, i2 or i2CS) the product runs
   under each identity and firmware version.
 - **Command sets:** where a source states it, the command set the product uses under each
-  identity: its operating flags, extended settings, other standard and extended commands, and
-  the direct messages it sends, which [`commandSets/`](commandSets) describes once for every
+  identity: its operating flags, extended settings, other standard and extended commands, a
+  modem's serial commands, and the direct messages it sends, which [`commandSets/`](commandSets) describes once for every
   product that shares them.
 - **Lifecycle:** how to install the product, link and unlink it, wake it, reset it and take it
   out of service, as steps a person or an app follows.

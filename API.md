@@ -269,6 +269,8 @@ versions use it. A command set is organized by Insteon's own message types:
   `0x00`. Each gives its `command1` and `command2`, its `fixed` user data bytes, the
   `parameters` the caller fills in, its `integrity`, and the extended `reply` that answers it,
   which its `match` bytes tell apart, with the `values` it carries.
+- **Serial commands**: for a modem, the commands a host sends over its serial port, as
+  [Serial commands](#serial-commands) describes.
 - **Direct messages**: standard direct messages the device sends on its own, such as a
   thermostat's reports, each a `command1` with a `value` in cmd2.
 - **Notes** on where Insteon's documents disagree, and the `sources` the values come from.
@@ -307,6 +309,43 @@ And a TempLinc Thermostat, which uses `tempLinc`, reports a new temperature with
 message whose cmd1 is `0x6E` and whose cmd2 is the temperature in half degrees of the scale it
 displays. Its `readStatus` extended command asks for its status, and the reply carries the
 temperature in D9 and D10, in tenths of a degree Celsius whatever the display shows.
+
+### Serial commands
+
+A modem is a device like any other, so its profile names a command set in `commandSets` and the
+command set describes how it speaks. A modem speaks over its serial port, where a command is
+`0x02`, a command number and a payload whose length the number fixes, and the modem answers with
+an echo of the command ending in an ACK (`0x06`) or a NAK (`0x15`). A command set's
+`serialCommands` describe them:
+
+```json
+{ "name": "deleteAllLink", "description": "Deletes the ALL-Link to a device for a group.",
+  "effect": "destructive", "idempotent": true, "number": "0x64",
+  "fixed": [{ "position": 1, "value": "0xFF" }],
+  "parameters": [{ "name": "group", "description": "The ALL-Link group to delete.", "byte": 2 }] }
+```
+
+- `number` is the command number, the byte after `0x02`.
+- `fixed` and `parameters` number the payload bytes from 1, as an extended command numbers user
+  data bytes. Every payload byte is fixed or a parameter, since the number fixes the payload's
+  length, so there is no byte left to be `0x00`.
+- `reply` gives the values the modem returns after the command number and before the ACK or NAK,
+  numbered from 1 as the payload is. A command whose echo only repeats the payload needs none.
+- `effect`, `idempotent`, `guard` and `verification` mean what they do for other commands.
+
+Commands that differ only by a control byte, such as the link code of Start ALL-Linking or the
+control code of Manage ALL-Link Record, are separate entries told apart by `fixed`, because their
+effects differ: one number can be a link, a read and a deletion.
+
+Send Insteon Standard or Extended Message (`0x62`) and Send ALL-Link Command (`0x61`) are frames
+that carry a device message, so they are not entries: the command set of the device the message
+goes to describes what the frame carries.
+
+A profile names a modem's command set under each identity, as for any product: `modem` for the
+2412 and 2413 powerline modems, which the Insteon Modem Developer's Guide describes, and
+`hubModem` for the Hub 2242, whose Insteon Hub Developer's Guide adds commands. Where no document
+describes a modem's serial commands, its profile names none, and software treats every serial
+command it sends as undescribed.
 
 ## Settings pages and device controls
 
@@ -518,7 +557,7 @@ changes what a link records; until then a command set has no `linkingChanges`.
 
 ## What a command does
 
-Every flag command, standard command and extended command carries an `effect` and
+Every flag command, standard command, extended command and serial command carries an `effect` and
 `idempotent`, so software decides from the catalog whether a message needs a person's consent
 and whether it may be sent again:
 
@@ -558,6 +597,9 @@ The rest of a command set takes its effect from where it sits, so it carries no 
 The build also requires:
 
 - that a command with `guard` `never` is `destructive`;
+- that a serial command's number isn't `0x61` or `0x62`, every payload byte is fixed or a
+  parameter exactly once, entries with one number have one payload length, and no two entries
+  send the same number and fixed bytes;
 - that no Set Operating Flags command (a flag command, or cmd1 `0x20`), no extended Set (cmd1
   `0x2E`, cmd2 `0x00`, a fixed D2 other than `0x00` or a D2 the caller gives), no properties
   write (cmd1 `0x2E`, cmd2 `0x01`, D1 `0x02`) and no write with cmd1 `0x2F` and D2 `0x02` is
@@ -567,6 +609,9 @@ The build also requires:
   extended commands whose bytes can all agree, as [Reading effects](#reading-effects) matches
   them;
 - that no `readOnly` extended command matches every message a command with another effect does;
+- that serial commands one frame can match (the same number, and no fixed byte that differs)
+  have the same effect and `idempotent`, and that no `readOnly` serial command matches every
+  frame a command with another effect does;
 - and that a keepAwake message given as bytes has the effect of a standard or extended entry
   with the same bytes.
 
@@ -590,6 +635,9 @@ Software finds a message's effect by its bytes, not by the name it was sent unde
   D1 and D2 and the other user data bytes `0x00` apart from integrity, matches the standard
   command or flag command it's the form of, as if it had been sent as a standard message.
 
+- A serial command matches a frame by its command number and every fixed payload byte; a
+  payload byte a parameter fills can hold any value.
+
 It reads them so that anything it can't place fails closed:
 
 1. An entry without an `effect`, or with a value the software doesn't know, is `destructive`.
@@ -597,7 +645,8 @@ It reads them so that anything it can't place fails closed:
 3. A message no entry describes is undescribed: neither readOnly nor any other effect, and sent
    only by an operation that sends bytes a person typed.
 4. A device without a command set has every message undescribed, apart from those whose effect
-   the protocol itself fixes, such as Ping and ID Request.
+   the protocol itself fixes, such as Ping and ID Request. So does a modem without one, for every
+   serial command.
 5. A message several entries describe takes the strictest of their effects, and is idempotent
    only if all of them are.
 6. A downloaded catalog that gives a command known from the copy the software ships a weaker
