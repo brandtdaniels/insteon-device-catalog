@@ -352,6 +352,8 @@
     {
       "name": "linkOnPowerUpOff",
       "description": "Turns linking at power-up off.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x08",
       "verification": {
         "status": "inferred",
@@ -361,6 +363,8 @@
     {
       "name": "linkOnPowerUpOn",
       "description": "Turns linking at power-up on.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x09",
       "verification": {
         "status": "inferred",
@@ -370,11 +374,15 @@
     {
       "name": "smartHopsOn",
       "description": "Starts each message with the hop count of the last acknowledgment received (smart hops).",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x1C"
     },
     {
       "name": "smartHopsOff",
       "description": "Starts each message with one hop.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x1D"
     }
   ],
@@ -462,6 +470,8 @@
     {
       "name": "lightOn",
       "description": "Turns the bulb on to the level in cmd2 at its ramp rate.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x11",
       "parameter": {
         "name": "onLevel",
@@ -475,21 +485,29 @@
     {
       "name": "lightOnFast",
       "description": "Turns the bulb full on instantly. The bulb ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x12"
     },
     {
       "name": "lightOff",
       "description": "Turns the bulb off at its ramp rate.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x13"
     },
     {
       "name": "lightOffFast",
       "description": "Turns the bulb off instantly.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x14"
     },
     {
       "name": "readStatus",
       "description": "Reads the bulb's level. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x00",
       "reply": {
@@ -502,6 +520,8 @@
     {
       "name": "instantChange",
       "description": "Sets the bulb to the level in cmd2 instantly.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x21",
       "parameter": {
         "name": "onLevel",
@@ -515,6 +535,8 @@
     {
       "name": "onAtRampRate",
       "description": "Turns the bulb on to a level at a ramp rate, both given in cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x34",
       "parameter": {
         "name": "levelAndRampRate",
@@ -524,6 +546,8 @@
     {
       "name": "offAtRampRate",
       "description": "Turns the bulb off at a ramp rate given in cmd2. The bulb ignores bits 4 through 7.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x35",
       "parameter": {
         "name": "rampRate",
@@ -536,6 +560,8 @@
     {
       "name": "writeRampRate",
       "description": "Sets the ramp rate. The bulb takes D1 0x00 here, where most devices take 0x01.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [

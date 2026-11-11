@@ -448,31 +448,43 @@
     {
       "name": "yakityYakOff",
       "description": "Turns the Yakity Yak signaling option off.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x26"
     },
     {
       "name": "yakityYakOn",
       "description": "Turns the Yakity Yak signaling option on.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x27"
     },
     {
       "name": "modSyncFailureNoHop",
       "description": "When modulation sync fails, the device doesn't hop the message.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x28"
     },
     {
       "name": "modSyncFailureOwnZeroCrossing",
       "description": "When modulation sync fails, the device uses its own zero crossing.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x29"
     },
     {
       "name": "pushHopsToRadioOn",
       "description": "The device repeats every powerline hop over RF.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x2A"
     },
     {
       "name": "pushHopsToRadioOff",
       "description": "The device doesn't repeat every powerline hop over RF.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x2B"
     }
   ],
@@ -752,6 +764,8 @@
     {
       "name": "lightOn",
       "description": "Turns the load on to the level in cmd2 at the saved ramp rate.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x11",
       "parameter": {
         "name": "onLevel",
@@ -765,6 +779,8 @@
     {
       "name": "lightOnFast",
       "description": "Turns the load on to the level in cmd2 instantly.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x12",
       "parameter": {
         "name": "onLevel",
@@ -778,26 +794,36 @@
     {
       "name": "lightOff",
       "description": "Turns the load off at the saved ramp rate. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x13"
     },
     {
       "name": "lightOffFast",
       "description": "Turns the load off instantly. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x14"
     },
     {
       "name": "brightenOneStep",
       "description": "Brightens the load one step of 32 from off to full. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x15"
     },
     {
       "name": "dimOneStep",
       "description": "Dims the load one step of 32 from off to full. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x16"
     },
     {
       "name": "startManualChange",
       "description": "Starts brightening or dimming the load until a stop manual change command.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x17",
       "parameter": {
         "name": "direction",
@@ -809,11 +835,15 @@
     {
       "name": "stopManualChange",
       "description": "Stops a manual change. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x18"
     },
     {
       "name": "readStatus",
       "description": "Reads the load's level. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x00",
       "reply": {
@@ -826,6 +856,8 @@
     {
       "name": "readLeds",
       "description": "Reads which button LEDs are on. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x01",
       "reply": {
@@ -871,6 +903,8 @@
     {
       "name": "readTargetLevel",
       "description": "Reads the level the load is moving to.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x02",
       "reply": {
@@ -881,6 +915,8 @@
     {
       "name": "readLineFrequencyCount",
       "description": "Reads the 50/60 Hz count.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x03",
       "reply": {
@@ -891,6 +927,8 @@
     {
       "name": "instantChange",
       "description": "Sets the load to the level in cmd2 instantly.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x21",
       "parameter": {
         "name": "onLevel",
@@ -904,6 +942,8 @@
     {
       "name": "onAtRampRate",
       "description": "Turns the load on to a level at a ramp rate, both given in cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x2E",
       "parameter": {
         "name": "levelAndRampRate",
@@ -913,6 +953,8 @@
     {
       "name": "offAtRampRate",
       "description": "Turns the load off at a ramp rate given in cmd2. Bits 4 through 7 are 0.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x2F",
       "parameter": {
         "name": "rampRate",
@@ -923,6 +965,8 @@
     {
       "name": "beep",
       "description": "Beeps once, as pressing the SET button does. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x30"
     }
   ],
@@ -930,6 +974,8 @@
     {
       "name": "triggerGroup",
       "description": "Sends group D1's command to the group as if its button were pressed, and sets the local load as D2 through D6 say. The device doesn't parse the command it sends, so to turn the local load off, put 0x01 in D2 and 0x00 in D3.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x30",
       "command2": "0x00",
       "perButton": true,
@@ -1143,7 +1189,9 @@
     "In the 6-button layout, the On and Off buttons are group 1 and the four small buttons groups 3 through 6; in the 8-button layout, the buttons are groups 1 through 8.",
     "With the load detached, group 9 controls the load: cmd1 0x19 with cmd2 0x00 reads its level, D11 of the extended Get reply holds the LEDs of groups 1 through 8, a group 1 On or Off sets the group 1 LEDs, and the LED mask Set sets the others.",
     "To make buttons act as radio buttons, set both the on mask and the off mask of each button to the other buttons in the group, and link each button as a controller with an off-only link (on-level 0x00) to the devices the other buttons control.",
-    "Inferred: seen on two i2CS devices (Outdoor On/Off Plug 2634-222 firmware 0x42, On/Off Plug 2635-222 firmware 0x48) linked to a Hub 2245, the device itself writes its responder record when it's linked remotely or with the SET button, and takes Data 1 from the load's state at that moment: the two plugs wrote 0x00 when the load was off and 0xFF when it was on. So Data 1 (on-level) of the light and load groups' responder records is the state the load was in when the device was linked. The On/Off Plug 2635-222 Owner's Manual says to make sure the module is on before linking it as a responder; the Dimmer Keypad 2334 Owner's Manual, the Dimmer Keypad, 6 Buttons 2486DWH6 Owner's Manual, the Dimmer Keypad, 8 Buttons 2486DWH8 Owner's Manual and the On/Off Keypad 2487S Owner's Manual say to set the load to the state the link should recall before linking it as a responder. The values its link data give are what to write when writing the record by hand."
+    "Inferred: seen on two i2CS devices (Outdoor On/Off Plug 2634-222 firmware 0x42, On/Off Plug 2635-222 firmware 0x48) linked to a Hub 2245, the device itself writes its responder record when it's linked remotely or with the SET button, and takes Data 1 from the load's state at that moment: the two plugs wrote 0x00 when the load was off and 0xFF when it was on. So Data 1 (on-level) of the light and load groups' responder records is the state the load was in when the device was linked. The On/Off Plug 2635-222 Owner's Manual says to make sure the module is on before linking it as a responder; the Dimmer Keypad 2334 Owner's Manual, the Dimmer Keypad, 6 Buttons 2486DWH6 Owner's Manual, the Dimmer Keypad, 8 Buttons 2486DWH8 Owner's Manual and the On/Off Keypad 2487S Owner's Manual say to set the load to the state the link should recall before linking it as a responder. The values its link data give are what to write when writing the record by hand.",
+    "triggerGroup, as the KeypadLinc Line Developer Notes give it, sends a group command to the group's responders, and a responder's reply to a second one, such as a toggle or a momentary relay acting again, isn't something the sender can see, so it's actuation and not idempotent.",
+    "The ledMask write is an extended Set, so it's configuration, though it turns LEDs on and off at once: the catalog has no field that gives an extended settings write another effect."
   ],
   "sources": [
     "Insteon Developer's Guide (2009)",

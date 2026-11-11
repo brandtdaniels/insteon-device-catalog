@@ -72,11 +72,15 @@
     {
       "name": "cleanupReportOff",
       "description": "Turns cleanup success reports off.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x0A"
     },
     {
       "name": "cleanupReportOn",
       "description": "Turns cleanup success reports on.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x0B"
     }
   ],
@@ -139,6 +143,8 @@
     {
       "name": "lightOn",
       "description": "Turns the load on. The device doesn't read cmd2; send 0xFF.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x11",
       "parameter": {
         "name": "onLevel",
@@ -152,11 +158,15 @@
     {
       "name": "lightOff",
       "description": "Turns the load off.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x13"
     },
     {
       "name": "readStatus",
       "description": "Reads whether the load is on. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x00",
       "reply": {

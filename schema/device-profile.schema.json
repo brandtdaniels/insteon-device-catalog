@@ -838,7 +838,7 @@
       }
     },
     "hubMessage": {
-      "description": "A direct message the modem sends the device: a command set entry by name, so the command set gives its bytes, engine handling and parameters; an operating flag to set or clear with Set Operating Flags; or, only where no command set entry exists, its bytes.",
+      "description": "A direct message the modem sends the device: a command set entry by name, so the command set gives its bytes, engine handling and parameters; an operating flag to set or clear with Set Operating Flags; or, only where no command set entry exists, its bytes, with the effect and idempotent a command set entry would carry.",
       "oneOf": [
         {
           "type": "object",
@@ -877,7 +877,9 @@
           "additionalProperties": false,
           "required": [
             "command1",
-            "command2"
+            "command2",
+            "effect",
+            "idempotent"
           ],
           "properties": {
             "command1": {
@@ -921,6 +923,20 @@
                 "checksum"
               ],
               "default": "none"
+            },
+            "effect": {
+              "description": "What the message does to the device, as a command set entry's effect says: readOnly, configuration, link, actuation or destructive. A keepAwake message is configuration. Software treats a value it doesn't know as destructive.",
+              "enum": [
+                "readOnly",
+                "configuration",
+                "link",
+                "actuation",
+                "destructive"
+              ]
+            },
+            "idempotent": {
+              "description": "Whether sending the identical message twice leaves the device in the same state as sending it once, as a command set entry's idempotent says. A keepAwake message is idempotent. Software that meets a message without it treats it as false.",
+              "type": "boolean"
             }
           }
         }

@@ -560,6 +560,8 @@
     {
       "name": "lightOn",
       "description": "Turns the load on to the level in cmd2 at the saved ramp rate.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x11",
       "parameter": {
         "name": "onLevel",
@@ -573,6 +575,8 @@
     {
       "name": "lightOnFast",
       "description": "Turns the load on to the level in cmd2 instantly.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x12",
       "parameter": {
         "name": "onLevel",
@@ -586,26 +590,36 @@
     {
       "name": "lightOff",
       "description": "Turns the load off at the saved ramp rate.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x13"
     },
     {
       "name": "lightOffFast",
       "description": "Turns the load off instantly.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x14"
     },
     {
       "name": "brightenOneStep",
       "description": "Brightens the load one step.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x15"
     },
     {
       "name": "dimOneStep",
       "description": "Dims the load one step.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x16"
     },
     {
       "name": "startManualChange",
       "description": "Starts brightening or dimming the load until a stop manual change command.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x17",
       "parameter": {
         "name": "direction",
@@ -617,11 +631,15 @@
     {
       "name": "stopManualChange",
       "description": "Stops a manual change.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x18"
     },
     {
       "name": "readStatus",
       "description": "Reads the load's level. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x00",
       "reply": {
@@ -634,6 +652,8 @@
     {
       "name": "readTargetLevel",
       "description": "Reads the level the load is moving to.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x02",
       "reply": {
@@ -644,6 +664,8 @@
     {
       "name": "readRadioFirmware",
       "description": "Reads the version of the RF firmware, which is separate from the device's firmware version.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x04",
       "reply": {
@@ -654,6 +676,8 @@
     {
       "name": "readLightingDirectorIndex",
       "description": "Reads the load's level as an index into the device's Lighting Director profile, which must be written first.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x05",
       "reply": {
@@ -668,6 +692,8 @@
     {
       "name": "readLevelPercent",
       "description": "Reads the load's level as a percentage of the way from the minimum on-level to the maximum.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x06",
       "reply": {
@@ -683,12 +709,16 @@
     {
       "name": "requestDatabaseChecksum",
       "description": "Has the device broadcast its ALL-Link database checksum (cmd1 0x3A) after the acknowledgment, with a 3-byte Fletcher checksum in the To address. It leaves out the hop counts, the fast fail bits and inactive records, so it changes only when the links do.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x07"
     },
     {
       "name": "instantChange",
       "description": "Sets the load to the level in cmd2 instantly, ignoring the ramp rate.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x21",
       "parameter": {
         "name": "onLevel",
@@ -702,11 +732,15 @@
     {
       "name": "beep",
       "description": "Beeps once.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x30"
     },
     {
       "name": "readSuccessReport",
       "description": "Reads how many cleanups failed after the last press.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x31",
       "reply": {
         "name": "failures",
@@ -716,6 +750,8 @@
     {
       "name": "groupOn",
       "description": "Acts as if a button had been pressed on: the device broadcasts and cleans up the group's On command.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x32",
       "parameter": {
         "name": "group",
@@ -729,6 +765,8 @@
     {
       "name": "groupOff",
       "description": "Acts as if a button had been pressed off: the device broadcasts and cleans up the group's Off command.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x33",
       "parameter": {
         "name": "group",
@@ -742,6 +780,8 @@
     {
       "name": "onAtRampRate",
       "description": "Turns the load on to a level at a ramp rate, both given in cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x34",
       "parameter": {
         "name": "levelAndRampRate",
@@ -751,6 +791,8 @@
     {
       "name": "offAtRampRate",
       "description": "Turns the load off at a ramp rate given in cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x35",
       "parameter": {
         "name": "rampRate",
@@ -765,6 +807,8 @@
     {
       "name": "changeLevel",
       "description": "Brightens or dims the load by an amount, stopping at off or full.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x38",
       "parameter": {
         "name": "amount",
@@ -778,6 +822,8 @@
     {
       "name": "onPercent",
       "description": "Turns the load on to a percentage of the way from the minimum on-level to the maximum.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x39",
       "parameter": {
         "name": "level",
@@ -792,11 +838,15 @@
     {
       "name": "nightModeOn",
       "description": "Sets night mode. It can also be sent as a group command, to set many devices at once.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x3B"
     },
     {
       "name": "nightModeOff",
       "description": "Clears night mode. It can also be sent as a group command.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x3C",
       "verification": {
         "status": "conflicting",
@@ -808,6 +858,8 @@
     {
       "name": "readLoadSettings",
       "description": "Reads the load calibration and night settings, which the extended Set writes with selectors 0x0D and 0x12.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -861,6 +913,8 @@
     {
       "name": "readProperties",
       "description": "Reads most bit and byte properties at once.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x01",
       "reply": {
@@ -1000,6 +1054,8 @@
     {
       "name": "writeProperties",
       "description": "Sets the properties that readProperties reads, at once.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x01",
       "fixed": [
@@ -1138,6 +1194,8 @@
     {
       "name": "triggerGroup",
       "description": "Acts as if group D1's button had been pressed: the device sets the local load and broadcasts and cleans up the group, with the command in D4 and D5. The device must be linked to the sender.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x30",
       "command2": "0x00",
       "perButton": false,
@@ -1187,6 +1245,8 @@
     {
       "name": "factoryReset",
       "description": "Resets every property to its factory value, as holding the SET button while power returns does. The device checks that D1 and D2 are its category and subcategory.",
+      "effect": "destructive",
+      "idempotent": true,
       "command1": "0x36",
       "command2": "0x00",
       "fixed": [
@@ -1264,7 +1324,9 @@
     "Its database layout gives records from 0x0FFF down to 0x0300, 416 of them; the database read reply gives addresses from 0x0FFF to 0x0407. Bit 0 of a record's flags is fast fail, bit 2 marks a Lighting Director record, bits 3 and 4 hold its hop count and bit 5 is always 1; the device may change some of these bits on its own.",
     "The load settings reply (readLoadSettings) starts with the same bytes as the extended Get reply, so wait for one before asking for the other.",
     "The extended Get request carries no checksum.",
-    "Inferred: seen on two i2CS devices (Outdoor On/Off Plug 2634-222 firmware 0x42, On/Off Plug 2635-222 firmware 0x48) linked to a Hub 2245, the device itself writes its responder record when it's linked remotely or with the SET button, and takes Data 1 from the load's state at that moment: the two plugs wrote 0x00 when the load was off and 0xFF when it was on. So Data 1 (on-level) of the light group's responder records is the state the load was in when the device was linked. The On/Off Plug 2635-222 Owner's Manual says to make sure the module is on before linking it as a responder. The values its link data give are what to write when writing the record by hand."
+    "Inferred: seen on two i2CS devices (Outdoor On/Off Plug 2634-222 firmware 0x42, On/Off Plug 2635-222 firmware 0x48) linked to a Hub 2245, the device itself writes its responder record when it's linked remotely or with the SET button, and takes Data 1 from the load's state at that moment: the two plugs wrote 0x00 when the load was off and 0xFF when it was on. So Data 1 (on-level) of the light group's responder records is the state the load was in when the device was linked. The On/Off Plug 2635-222 Owner's Manual says to make sure the module is on before linking it as a responder. The values its link data give are what to write when writing the record by hand.",
+    "groupOn, groupOff and triggerGroup, as the i3 Paddle/Dial (Insteon Developer Documentation, October 2025) gives them, broadcast a group command and clean it up with every responder, and a responder's reply to a second one, such as a toggle or a momentary relay acting again, isn't something the sender can see, so each is actuation and not idempotent.",
+    "nightModeOn and nightModeOff are configuration as direct commands. Sent as group commands, they set night mode on every responder at once, which the direct commands' effect doesn't describe."
   ],
   "sources": [
     "i3 Paddle/Dial (Insteon Developer Documentation, October 2025)"

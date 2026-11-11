@@ -6,12 +6,16 @@
     {
       "name": "readDeviceText",
       "description": "Device Text String Request: the device answers with an extended Device Text String Response (cmd1 0x03, cmd2 0x02), D1 through D14 an ASCII string, null-terminated or 14 bytes long.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x03",
       "command2": "0x02"
     },
     {
       "name": "setAddressMsb",
       "description": "Set Address MSB: sets the high byte of the address Peek and Poke use. It must be 0x00 for the addresses the notes list.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x28",
       "parameter": {
         "name": "addressMsb",
@@ -21,6 +25,8 @@
     {
       "name": "poke",
       "description": "Poke One Byte: writes cmd2 to the parameter RAM at the address Peek One Byte last set, then moves to the next address.",
+      "effect": "destructive",
+      "idempotent": false,
       "command1": "0x29",
       "parameter": {
         "name": "value",
@@ -30,6 +36,8 @@
     {
       "name": "peek",
       "description": "Peek One Byte: sets the address to cmd2, and reads the byte there.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x2B",
       "parameter": {
         "name": "address",
@@ -43,30 +51,40 @@
     {
       "name": "loadInitializationValues",
       "description": "EZX10RF Control, Load Initialization Values: resets the device to its factory settings.",
+      "effect": "destructive",
+      "idempotent": true,
       "command1": "0xF0",
       "command2": "0x00"
     },
     {
       "name": "writeCodeRecord",
       "description": "EZX10RF Control, Write a code record: saves the code record buffer as the record of the last code received.",
+      "effect": "destructive",
+      "idempotent": true,
       "command1": "0xF0",
       "command2": "0x01"
     },
     {
       "name": "readCodeRecord",
       "description": "EZX10RF Control, Read a code record: loads the record of the last code received into the code record buffer.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0xF0",
       "command2": "0x02"
     },
     {
       "name": "getCodeRecord",
       "description": "EZX10RF Control, Get a code record: has the device send the code record buffer, for the last code received, in an extended message.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0xF0",
       "command2": "0x03"
     },
     {
       "name": "requestCodeRecord",
       "description": "Specific Code Record Read: asks for a record. The device answers with an extended Code record request Response (cmd1 0xF1, cmd2 the record), D1 through D8 the record.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0xF1",
       "parameter": {
         "name": "record",
@@ -91,7 +109,9 @@
     "The EZX10RF Insteon Messages/Commands give the record's timer in 0.5-second steps; the Quick-Start Guide EZX10RF Wireless Sensor Receiver Insteon EZX10RF—Model #5010G adds half a minute for each tap of the SET button, for 0.5 to 15.5 minutes.",
     "Peek and Poke addresses, with Set Address MSB 0x00: 0x00 the last X10 house and unit code received (r), 0x01 the last X10 command received (r), 0x02 firmware revision (r), 0x03 EEPROM loaded (r), 0x04 to 0x23 the X10 address filter, 16 by 16 bits, 0x24 to 0x2B the code record buffer (rw). The EZX10RF Insteon Messages/Commands give these addresses without a prefix, as 04-35 and 36-43; read as decimal, they match the filter's 32 bytes and the buffer's 8.",
     "The device answers an ID Request with an acknowledgment and a SET Button Pressed broadcast, without entering linking mode.",
-    "Its Poke description says to follow a Poke with Load EEPROM from RAM, which its command table doesn't list."
+    "Its Poke description says to follow a Poke with Load EEPROM from RAM, which its command table doesn't list.",
+    "setAddressMsb and peek, as the EZX10RF Insteon Messages/Commands give them, only choose and read the address that Peek One Byte and Poke One Byte use, which matters only to those requests, so each is readOnly and idempotent; Poke One Byte writes, and is destructive.",
+    "writeCodeRecord, as the EZX10RF Insteon Messages/Commands give it, saves the code record buffer over a stored code record, and no message restores the record it replaces, so it's destructive and idempotent."
   ],
   "sources": [
     "EZX10RF Insteon Messages/Commands",

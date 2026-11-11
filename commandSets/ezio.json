@@ -30,6 +30,8 @@
     {
       "name": "outputOn",
       "description": "Output ON: turns on the output in cmd2.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x45",
       "parameter": {
         "name": "output",
@@ -47,6 +49,8 @@
     {
       "name": "outputOff",
       "description": "Output OFF: turns off the output in cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x46",
       "parameter": {
         "name": "output",
@@ -64,6 +68,8 @@
     {
       "name": "writeOutputPort",
       "description": "Write Output Port: sets every output at once. Only the bits of outputs the model has take effect.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x48",
       "parameter": {
         "name": "outputs",
@@ -171,6 +177,8 @@
     {
       "name": "readInputPort",
       "description": "Read Input Port: reads the inputs. An analog or 1-Wire input reads as on while its value is past its alarm point.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x49",
       "command2": "0x00",
       "reply": {
@@ -228,6 +236,8 @@
     {
       "name": "readSensor",
       "description": "Get Sensor Value: reads a sensor's value.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x4A",
       "parameter": {
         "name": "sensor",
@@ -245,6 +255,8 @@
     {
       "name": "setSensor1OnAlarm",
       "description": "Set Sensor 1 OFF -> ON Alarm: sets the value at which sensor 1 goes from off to on and alarms.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x4B",
       "parameter": {
         "name": "alarm",
@@ -258,6 +270,8 @@
     {
       "name": "setSensor1OffAlarm",
       "description": "Set Sensor 1 ON -> OFF Alarm: sets the value at which sensor 1 goes from on to off and alarms.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x4C",
       "parameter": {
         "name": "alarm",
@@ -271,6 +285,8 @@
     {
       "name": "writeConfigurationPort",
       "description": "Write Configuration Port: sets how the device responds to commands.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x4D",
       "parameter": {
         "name": "configuration",
@@ -378,6 +394,8 @@
     {
       "name": "readConfigurationPort",
       "description": "Read Configuration Port: reads the Configuration Port byte.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x4E",
       "command2": "0x00",
       "reply": {
@@ -435,18 +453,24 @@
     {
       "name": "loadInitializationValues",
       "description": "EZIO Control, Load Initialization Values: resets the device to its factory settings.",
+      "effect": "destructive",
+      "idempotent": true,
       "command1": "0x4F",
       "command2": "0x00"
     },
     {
       "name": "updateEeprom",
       "description": "EZIO Control, Update EEPROM: saves the parameters in RAM to EEPROM, as after a Poke One Byte.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x4F",
       "command2": "0x01"
     },
     {
       "name": "statusRequest",
       "description": "EZIO Control, Status Request: reads the outputs.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x4F",
       "command2": "0x02",
       "reply": {
@@ -504,12 +528,16 @@
     {
       "name": "readFirmwareVersion",
       "description": "EZIO Control, Get Firmware Version: reads the firmware version, which Peek One Byte also reads at address 0x48.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x4F",
       "command2": "0x05"
     },
     {
       "name": "readOutputTimers",
       "description": "EZIO Control, Get Output Timers: reads the output timers. They arrive in an extended message with cmd1 0x4F and cmd2 0x04, D1 through D8 the timers of outputs 1 through 8.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x4F",
       "command2": "0x06",
       "verification": {
@@ -520,30 +548,40 @@
     {
       "name": "enableStatusChangeMessage",
       "description": "EZIO Control, Enable status change message: the device broadcasts when its output port changes.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x4F",
       "command2": "0x09"
     },
     {
       "name": "disableStatusChangeMessage",
       "description": "EZIO Control, Disable status change message: the device stops broadcasting output port changes.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x4F",
       "command2": "0x0A"
     },
     {
       "name": "diagnosticsOn",
       "description": "EZIO Control, Diagnostics ON: cycles the outputs on for 1 second each.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x4F",
       "command2": "0x0E"
     },
     {
       "name": "diagnosticsOff",
       "description": "EZIO Control, Diagnostics OFF: takes the device out of diagnostics.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x4F",
       "command2": "0x0F"
     },
     {
       "name": "setAddressMsb",
       "description": "Set Address MSB: sets the high byte of the address Peek and Poke use. It must be 0x00 for the addresses the notes list.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x28",
       "parameter": {
         "name": "addressMsb",
@@ -553,6 +591,8 @@
     {
       "name": "poke",
       "description": "Poke One Byte: writes cmd2 to the parameter RAM at the address Peek One Byte last set. A location marked rw keeps the value once Update EEPROM saves it.",
+      "effect": "destructive",
+      "idempotent": false,
       "command1": "0x29",
       "parameter": {
         "name": "value",
@@ -562,6 +602,8 @@
     {
       "name": "peek",
       "description": "Peek One Byte: sets the address to cmd2, and reads the byte there. The notes list the addresses.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x2B",
       "parameter": {
         "name": "address",
@@ -581,6 +623,8 @@
     {
       "name": "setOutputTimers",
       "description": "Set Output Timers: sets the timers of outputs 1 through 8. A timer greater than 0 turns its output off when it runs out, while the Configuration Port's outputTimersEnabled bit is set; the outputTimersInSeconds bit picks seconds or minutes.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x4D",
       "command2": "0x00",
       "parameters": [
@@ -629,6 +673,8 @@
     {
       "name": "setAlarms0",
       "description": "Set Sensor/Analog Alarms for sensor or analog input 0x00: D1 through D4 hold the alarm values, 2 bytes for sensors S1 to S4 or 4 bytes for analog inputs AN1 to AN3.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x4B",
       "command2": "0x00",
       "parameters": [
@@ -661,6 +707,8 @@
     {
       "name": "setAlarms1",
       "description": "Set Sensor/Analog Alarms for sensor or analog input 0x01: D1 through D4 hold the alarm values, 2 bytes for sensors S1 to S4 or 4 bytes for analog inputs AN1 to AN3.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x4B",
       "command2": "0x01",
       "parameters": [
@@ -693,6 +741,8 @@
     {
       "name": "setAlarms2",
       "description": "Set Sensor/Analog Alarms for sensor or analog input 0x02: D1 through D4 hold the alarm values, 2 bytes for sensors S1 to S4 or 4 bytes for analog inputs AN1 to AN3.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x4B",
       "command2": "0x02",
       "parameters": [
@@ -725,6 +775,8 @@
     {
       "name": "setAlarms3",
       "description": "Set Sensor/Analog Alarms for sensor or analog input 0x03: D1 through D4 hold the alarm values, 2 bytes for sensors S1 to S4 or 4 bytes for analog inputs AN1 to AN3.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x4B",
       "command2": "0x03",
       "parameters": [
@@ -1419,6 +1471,10 @@
     "Status Changed broadcast (cmd1 0x27): when broadcasts are enabled, the device sends the output or input port's byte in cmd2 when it changes, with 00 in the To Address's low byte for the output port and 01 for the input port.",
     "The device answers an ID Request with an acknowledgment and a SET Button Pressed broadcast, without entering linking mode. ALL-Link Recall (cmd1 0x11, an ALL-Link command) recalls groups 0 to 15.",
     "Peek and Poke addresses, with Set Address MSB 0x00: 0x00 to 0x07 output timers (rw); 0x08 X10 house code (rw); 0x09 Configuration Port (rw); 0x0A to 0x11 sensor 1 to 4 alarms, 2 bytes each (rw); 0x12 to 0x19 analog inputs 1 and 2 alarms, 4 bytes each (rw); 0x1A inputs-to-outputs crosslink bitmap (rw); 0x1B to 0x1F reserved; 0x20 to 0x3F the group command on/off sequence for inputs 1 to 8 (rw); 0x40 to 0x47 group numbers for inputs 1 to 8 (rw); 0x48 firmware version (r); 0x49 EEPROM loaded flag (r); 0x4A output port status (r); 0x4B input port status (r); 0x4C analog data, 2 bytes for each of 2 inputs (r); 0x50 1-Wire raw data (r); 0x58 to 0x5F input timers (rw). A Poke to an rw location lasts once Update EEPROM saves it.",
+    "setAddressMsb and peek, as the EZIOxx Advanced Details give them, only choose and read the address that Peek One Byte and Poke One Byte use, which matters only to those requests, so each is readOnly and idempotent; Poke One Byte writes, and is destructive.",
+    "outputOn and writeOutputPort, as the EZIOxx Advanced Details give them, turn outputs on, and an output's timer (setOutputTimers) turns it off when it runs out; they don't say whether a second command restarts that timer, so each is actuation and not idempotent.",
+    "diagnosticsOn, as the EZIOxx Advanced Details give it, cycles the outputs, and they don't say whether a second one restarts the cycle, so it's actuation and not idempotent; diagnosticsOff ends it, so it's actuation and idempotent.",
+    "updateEeprom, as the EZIOxx Advanced Details give it, saves the parameters in RAM to EEPROM, which the device keeps and acts on later, so it's configuration and idempotent.",
     "X10: units 1 to 8 turn outputs 1 to 8 on and off, and unit 16 On and Off enable and disable the output timers. To enable X10, pick a house code (A to P) on an X10 controller, hold the SET button at least 4 seconds and release it so the LED blinks, then send 3 On commands (any unit) until the LED stops blinking; 3 Off commands disable it. The Quick-Start Guide EZIO2X4—Model #5010D—2-Relay/4-Input Controller and the Quick-Start Guide EZIO4O—Model #5010J—4-Relay Load Controller give one On or Off command instead of 3."
   ],
   "sources": [

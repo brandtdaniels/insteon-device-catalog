@@ -90,11 +90,15 @@
     {
       "name": "stayAwakeOn",
       "description": "Keeps the display awake for 4 minutes, so it can be programmed.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x06"
     },
     {
       "name": "stayAwakeOff",
       "description": "Lets the display sleep.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x07"
     }
   ],
@@ -102,6 +106,8 @@
     {
       "name": "readSettings",
       "description": "Reads the display's settings, temperature and battery.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "reply": {
@@ -196,6 +202,8 @@
     {
       "name": "writeMainDisplay",
       "description": "Sets which meter group the main display shows.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -219,6 +227,8 @@
     {
       "name": "writeDisplayMode",
       "description": "Sets what the main display shows.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -240,6 +250,8 @@
     {
       "name": "writeTemperatureFormat",
       "description": "Sets the temperature scale.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -261,6 +273,8 @@
     {
       "name": "writeCost",
       "description": "Sets the cost of a kilowatt-hour.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -287,6 +301,8 @@
     {
       "name": "writeTemperatureCalibration",
       "description": "Sets the temperature calibration.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -314,6 +330,8 @@
     {
       "name": "restartAverageCost",
       "description": "Restarts the averages, of cost and of energy, of the chosen meter groups.",
+      "effect": "destructive",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x00",
       "fixed": [
@@ -348,6 +366,8 @@
     {
       "name": "readMeter",
       "description": "Reads what the display holds for the meter group in D1.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x2E",
       "command2": "0x01",
       "perButton": true,
@@ -402,6 +422,8 @@
     {
       "name": "readMeterIds",
       "description": "Reads the IDs of the meters in groups 1 to 3.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x2F",
       "command2": "0x01",
       "reply": {
@@ -446,6 +468,8 @@
     {
       "name": "writeMeterId",
       "description": "Sets the ID of the meter, or modem, in the group in D1. A modem linked this way receives the display's meter reads.",
+      "effect": "configuration",
+      "idempotent": true,
       "command1": "0x2F",
       "command2": "0x01",
       "perButton": true,
@@ -477,7 +501,9 @@
     "Every 3 minutes the display checks the temperature; when it has changed by more than 1 degree Celsius, it broadcasts cmd1 0x6E to group 4 (flags 0x8F, To 00 00 04) with the temperature in half degrees Celsius in cmd2. The Energy Display Developer Notes' example frame ends with one more byte, 0x1A, which they don't explain.",
     "Here cmd1 0x2F with cmd2 0x01 reads and writes the meter in each group, not the ALL-Link database.",
     "The Energy Display Developer Notes don't say whether the extended Sets carry a checksum.",
-    "The Energy Display 2448A2 Owner's Manual gives 10 cents a kilowatt-hour as the default cost."
+    "The Energy Display 2448A2 Owner's Manual gives 10 cents a kilowatt-hour as the default cost.",
+    "restartAverageCost, as the Energy Display Developer Notes give it, restarts the averages of cost and energy, discarding the ones the display has accumulated, which nothing can restore, so it's destructive and idempotent.",
+    "writeMeterId, as the Energy Display Developer Notes give it, writes the meter or modem in a group, which the display keeps and reads its reports from, and adds no ALL-Link record, so it's configuration and idempotent."
   ],
   "sources": [
     "Energy Display Developer Notes",

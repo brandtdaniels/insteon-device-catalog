@@ -228,11 +228,15 @@
     {
       "name": "buttonFourOff",
       "description": "Sets button 4 to off. Insteon's documents describe 0x35 and 0x37 alike and don't say which bit each clears.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x35"
     },
     {
       "name": "buttonFourOffAlternate",
       "description": "Sets button 4 to off. Insteon's documents describe 0x35 and 0x37 alike and don't say which bit each clears.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x37"
     }
   ],
@@ -481,6 +485,8 @@
     {
       "name": "lightOn",
       "description": "Turns the load on: a dimmer to the level in cmd2 at the saved ramp rate, an on/off model to full on.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x11",
       "parameter": {
         "name": "onLevel",
@@ -494,11 +500,15 @@
     {
       "name": "lightOff",
       "description": "Turns the load off at the saved ramp rate.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x13"
     },
     {
       "name": "readStatus",
       "description": "Reads the load's level. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x00",
       "reply": {
@@ -617,7 +627,10 @@
   "notes": [
     "Bits 2 and 3 of the 0x04 reply together SET button 4's mode: always off, always on, a 4-hour countdown or on/off toggle.",
     "The keypad is built on the KeypadLinc code base, but Insteon's documents don't say which of the KeypadLinc's other operating flags it accepts.",
-    "Setting the hours and minutes starts the countdown, and the matching LED lights a second later."
+    "Setting the hours and minutes starts the countdown, and the matching LED lights a second later.",
+    "lightOn, as the Insteon Developer's Guide (2009) gives it, turns the load on, and on this device the load can be held by a countdown timer; it doesn't say whether a second one restarts the countdown, so it's actuation and not idempotent.",
+    "The ledMask write is an extended Set, so it's configuration, though it turns LEDs on and off at once: the catalog has no field that gives an extended settings write another effect.",
+    "buttonFourOff and buttonFourOffAlternate are Set Operating Flags, so they're configuration; whether either also turns button 4's load or LED off at once is unverified."
   ],
   "sources": [
     "Insteon Developer's Guide (2009)"

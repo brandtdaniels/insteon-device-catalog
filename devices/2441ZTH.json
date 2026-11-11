@@ -261,13 +261,17 @@
           "command1": "0x20",
           "command2": "0x06",
           "extended": true,
-          "integrity": "checksum"
+          "integrity": "checksum",
+          "effect": "configuration",
+          "idempotent": true
         },
         "release": {
           "command1": "0x20",
           "command2": "0x07",
           "extended": true,
-          "integrity": "checksum"
+          "integrity": "checksum",
+          "effect": "configuration",
+          "idempotent": true
         },
         "seconds": 240,
         "verification": {

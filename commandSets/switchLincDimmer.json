@@ -420,31 +420,43 @@
     {
       "name": "yakityYakOff",
       "description": "Turns the Yakity Yak signaling option off.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x26"
     },
     {
       "name": "yakityYakOn",
       "description": "Turns the Yakity Yak signaling option on.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x27"
     },
     {
       "name": "modSyncFailureNoHop",
       "description": "When modulation sync fails, the device doesn't hop the message.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x28"
     },
     {
       "name": "modSyncFailureOwnZeroCrossing",
       "description": "When modulation sync fails, the device uses its own zero crossing.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x29"
     },
     {
       "name": "pushHopsToRadioOn",
       "description": "The device repeats every powerline hop over RF.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x2A"
     },
     {
       "name": "pushHopsToRadioOff",
       "description": "The device doesn't repeat every powerline hop over RF.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x2B"
     }
   ],
@@ -630,7 +642,9 @@
   ],
   "notes": [
     "Earlier sources give ramp rates 0x00 through 0x1F as 9 minutes down to 0.1 second; the later ones make 0x01 8 minutes and 0x00 2 seconds.",
-    "Inferred: seen on two i2CS devices (Outdoor On/Off Plug 2634-222 firmware 0x42, On/Off Plug 2635-222 firmware 0x48) linked to a Hub 2245, the device itself writes its responder record when it's linked remotely or with the SET button, and takes Data 1 from the load's state at that moment: the two plugs wrote 0x00 when the load was off and 0xFF when it was on. So Data 1 (on-level) of the light group's responder records is the state the load was in when the device was linked. The On/Off Plug 2635-222 Owner's Manual says to make sure the module is on before linking it as a responder; the 2-Wire Dimmer Switch 2474DWH Owner's Manual, the Dimmer Switch 2476D Owner's Manual and the Dimmer Switch 2477D Owner's Manual say to set the load to the state the link should recall before linking it as a responder; the Dimmer Switch 240V 2478D Owner's Manual says to turn the load on before linking it as a responder. The values its link data give are what to write when writing the record by hand."
+    "Inferred: seen on two i2CS devices (Outdoor On/Off Plug 2634-222 firmware 0x42, On/Off Plug 2635-222 firmware 0x48) linked to a Hub 2245, the device itself writes its responder record when it's linked remotely or with the SET button, and takes Data 1 from the load's state at that moment: the two plugs wrote 0x00 when the load was off and 0xFF when it was on. So Data 1 (on-level) of the light group's responder records is the state the load was in when the device was linked. The On/Off Plug 2635-222 Owner's Manual says to make sure the module is on before linking it as a responder; the 2-Wire Dimmer Switch 2474DWH Owner's Manual, the Dimmer Switch 2476D Owner's Manual and the Dimmer Switch 2477D Owner's Manual say to set the load to the state the link should recall before linking it as a responder; the Dimmer Switch 240V 2478D Owner's Manual says to turn the load on before linking it as a responder. The values its link data give are what to write when writing the record by hand.",
+    "remoteSetButtonTap: the SwitchLinc 2-Wire Dimmer Developer Notes give cmd2 0x00 to set the on-level and 0x02 the ramp rate from the load's present level, and the Insteon Developer's Guide (2009) gives cmd2 as a count of taps of the SET button. The sources conflict and neither describes linking; the Developer Notes' reading sets a kept level, so it's configuration, and not idempotent, since under the tap-count reading a second tap may undo the first.",
+    "triggerGroup, as the SwitchLinc 2-Wire Dimmer Developer Notes give it, sends a group command to the group's responders, and a responder's reply to a second one, such as a toggle or a momentary relay acting again, isn't something the sender can see, so it's actuation and not idempotent."
   ],
   "sources": [
     "Insteon Developer's Guide (2009)",
@@ -640,6 +654,8 @@
     {
       "name": "lightOn",
       "description": "Turns the load on to the level in cmd2 at the saved ramp rate.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x11",
       "parameter": {
         "name": "onLevel",
@@ -653,6 +669,8 @@
     {
       "name": "lightOnFast",
       "description": "Turns the load on to the level in cmd2 instantly.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x12",
       "parameter": {
         "name": "onLevel",
@@ -666,16 +684,22 @@
     {
       "name": "lightOff",
       "description": "Turns the load off at the saved ramp rate. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x13"
     },
     {
       "name": "lightOffFast",
       "description": "Turns the load off instantly. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x14"
     },
     {
       "name": "readStatus",
       "description": "Reads the load's level. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x00",
       "reply": {
@@ -688,6 +712,8 @@
     {
       "name": "instantChange",
       "description": "Sets the load to the level in cmd2 instantly.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x21",
       "parameter": {
         "name": "onLevel",
@@ -701,6 +727,8 @@
     {
       "name": "remoteSetButtonTap",
       "description": "Acts as a tap of the SET button: sets the on-level or the ramp rate from the load's present level, so turn the load to that level first.",
+      "effect": "configuration",
+      "idempotent": false,
       "command1": "0x25",
       "parameter": {
         "name": "setting",
@@ -716,6 +744,8 @@
     {
       "name": "onAtRampRate",
       "description": "Turns the load on to a level at a ramp rate, both given in cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x2E",
       "parameter": {
         "name": "levelAndRampRate",
@@ -729,6 +759,8 @@
     {
       "name": "offAtRampRate",
       "description": "Turns the load off at a ramp rate given in cmd2. Bits 4 through 7 are 0.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x2F",
       "parameter": {
         "name": "rampRate",
@@ -743,6 +775,8 @@
     {
       "name": "beep",
       "description": "Beeps once, as pressing the SET button does. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x30",
       "verification": {
         "status": "inferred",
@@ -754,6 +788,8 @@
     {
       "name": "triggerGroup",
       "description": "Acts as if group D1's button had been pressed: sends the cmd1 and cmd2 in D4 and D5 to group D1, and sets the local load as D2, D3 and D6 say. The device doesn't parse the command it sends, so to turn the local load off, put 0x01 in D2 and 0x00 in D3.",
+      "effect": "actuation",
+      "idempotent": false,
       "command1": "0x30",
       "command2": "0x00",
       "perButton": true,

@@ -6,6 +6,8 @@
     {
       "name": "resetEnergy",
       "description": "Clears the energy count and the meter's log time and index, and sets the meter to its 0 to 150 W range.",
+      "effect": "destructive",
+      "idempotent": true,
       "command1": "0x80"
     }
   ],
@@ -13,6 +15,8 @@
     {
       "name": "readMeter",
       "description": "Reads the power and energy. The meter acknowledges, then sends an extended reply.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x82",
       "command2": "0x00",
       "reply": {

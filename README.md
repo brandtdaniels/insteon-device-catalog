@@ -64,7 +64,9 @@ the catalog and treat downloading a newer one as optional.
    version twice. It also checks each command set in `commandSets/` against its schema, and that
    no two of its flags share a bit or a command, no two values share a byte, no two writes
    share a selector, no two commands or direct messages share a command, no message fills a
-   byte's bits twice, and every flag and enumeration it names exists. A change to
+   byte's bits twice, every flag and enumeration it names exists, and each command's `effect`
+   and `idempotent` fit what the protocol and the command set say about it, as
+   [API.md](API.md#what-a-command-does) describes. A change to
    `scripts/build.py` comes with a test in `tests/`; run them with
    `python3 -I -m unittest discover -s tests`.
 3. Follow [CONVENTIONS.md](CONVENTIONS.md) for names, terms and citations; the build fails on

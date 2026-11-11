@@ -240,72 +240,100 @@
     {
       "name": "programmingLockOn",
       "description": "Turns the programming lock on: linking and programming from the keypad are locked out.",
+      "effect": "destructive",
+      "idempotent": true,
       "command2": "0x00",
       "guard": "never"
     },
     {
       "name": "programmingLockOff",
       "description": "Turns the programming lock off.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x01"
     },
     {
       "name": "ledOnTransmitOn",
       "description": "The status LED blinks when the keypad sends an Insteon message.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x02"
     },
     {
       "name": "ledOnTransmitOff",
       "description": "The status LED doesn't blink when the keypad sends an Insteon message.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x03"
     },
     {
       "name": "resumeDimOn",
       "description": "Turning the load on at the keypad restores its last level instead of the on-level.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x04"
     },
     {
       "name": "resumeDimOff",
       "description": "Turning the load on at the keypad goes to the on-level.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x05"
     },
     {
       "name": "eightButtonLayout",
       "description": "Sets the 8-button layout.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x06"
     },
     {
       "name": "sixButtonLayout",
       "description": "Sets the 6-button layout.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x07"
     },
     {
       "name": "backlightOff",
       "description": "Turns the status LEDs and button backlights off.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x08"
     },
     {
       "name": "backlightOn",
       "description": "Turns the status LEDs and button backlights on.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x09"
     },
     {
       "name": "keyBeepOn",
       "description": "The keypad beeps when a button is pressed.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x0A"
     },
     {
       "name": "keyBeepOff",
       "description": "The keypad doesn't beep when a button is pressed.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x0B"
     },
     {
       "name": "errorBlinkOff",
       "description": "The status LED doesn't blink when a communication error occurs.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x14"
     },
     {
       "name": "errorBlinkOn",
       "description": "The status LED blinks when a communication error occurs.",
+      "effect": "configuration",
+      "idempotent": true,
       "command2": "0x15"
     }
   ],
@@ -649,6 +677,8 @@
     {
       "name": "lightOn",
       "description": "Turns the load on: a dimmer to the level in cmd2 at the saved ramp rate, an on/off model to full on.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x11",
       "parameter": {
         "name": "onLevel",
@@ -662,11 +692,15 @@
     {
       "name": "lightOff",
       "description": "Turns the load off at the saved ramp rate.",
+      "effect": "actuation",
+      "idempotent": true,
       "command1": "0x13"
     },
     {
       "name": "readStatus",
       "description": "Reads the load's level. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
       "command1": "0x19",
       "command2": "0x00",
       "reply": {
@@ -795,7 +829,8 @@
     "A Get with 0x01 in D3 returns the on and off times of group D1 in D3 through D10, and a Get with 0x02 in D3 returns the time of day in D3 through D6, in the layout the Sets use.",
     "Earlier sources give ramp rates 0x00 through 0x1F as 9 minutes down to 0.1 second; the later ones make 0x01 8 minutes and 0x00 2 seconds.",
     "Earlier sources and the Insteon Developer's Guide give D14 of the reply as the trigger mask; later sources moved the trigger mask to query 0x08 and use D14 for the radio group mask.",
-    "The Insteon Developer's Guide sets selectors 0x08 through 0x0C one button at a time; other sources write the whole mask."
+    "The Insteon Developer's Guide sets selectors 0x08 through 0x0C one button at a time; other sources write the whole mask.",
+    "The ledMask write is an extended Set, so it's configuration, though it turns LEDs on and off at once: the catalog has no field that gives an extended settings write another effect."
   ],
   "sources": [
     "Insteon Developer's Guide (2009)"
