@@ -31,7 +31,7 @@
       "name": "outputOn",
       "description": "Output ON: turns on the output in cmd2.",
       "effect": "actuation",
-      "idempotent": true,
+      "idempotent": false,
       "command1": "0x45",
       "parameter": {
         "name": "output",
@@ -69,7 +69,7 @@
       "name": "writeOutputPort",
       "description": "Write Output Port: sets every output at once. Only the bits of outputs the model has take effect.",
       "effect": "actuation",
-      "idempotent": true,
+      "idempotent": false,
       "command1": "0x48",
       "parameter": {
         "name": "outputs",
@@ -1472,7 +1472,7 @@
     "The device answers an ID Request with an acknowledgment and a SET Button Pressed broadcast, without entering linking mode. ALL-Link Recall (cmd1 0x11, an ALL-Link command) recalls groups 0 to 15.",
     "Peek and Poke addresses, with Set Address MSB 0x00: 0x00 to 0x07 output timers (rw); 0x08 X10 house code (rw); 0x09 Configuration Port (rw); 0x0A to 0x11 sensor 1 to 4 alarms, 2 bytes each (rw); 0x12 to 0x19 analog inputs 1 and 2 alarms, 4 bytes each (rw); 0x1A inputs-to-outputs crosslink bitmap (rw); 0x1B to 0x1F reserved; 0x20 to 0x3F the group command on/off sequence for inputs 1 to 8 (rw); 0x40 to 0x47 group numbers for inputs 1 to 8 (rw); 0x48 firmware version (r); 0x49 EEPROM loaded flag (r); 0x4A output port status (r); 0x4B input port status (r); 0x4C analog data, 2 bytes for each of 2 inputs (r); 0x50 1-Wire raw data (r); 0x58 to 0x5F input timers (rw). A Poke to an rw location lasts once Update EEPROM saves it.",
     "setAddressMsb and peek, as the EZIOxx Advanced Details give them, only choose and read the address that Peek One Byte and Poke One Byte use, which matters only to those requests, so each is readOnly and idempotent; Poke One Byte writes, and is destructive.",
-    "writeOutputPort, as the EZIOxx Advanced Details give it, sets every output at once to the bits in cmd2, so it's actuation and idempotent.",
+    "outputOn and writeOutputPort, as the EZIOxx Advanced Details give them, turn outputs on, and an output's timer (setOutputTimers) turns it off when it runs out; they don't say whether a second command restarts that timer, so each is actuation and not idempotent.",
     "diagnosticsOn, as the EZIOxx Advanced Details give it, cycles the outputs, and they don't say whether a second one restarts the cycle, so it's actuation and not idempotent; diagnosticsOff ends it, so it's actuation and idempotent.",
     "updateEeprom, as the EZIOxx Advanced Details give it, saves the parameters in RAM to EEPROM, which the device keeps and acts on later, so it's configuration and idempotent.",
     "X10: units 1 to 8 turn outputs 1 to 8 on and off, and unit 16 On and Off enable and disable the output timers. To enable X10, pick a house code (A to P) on an X10 controller, hold the SET button at least 4 seconds and release it so the LED blinks, then send 3 On commands (any unit) until the LED stops blinking; 3 Off commands disable it. The Quick-Start Guide EZIO2X4—Model #5010D—2-Relay/4-Input Controller and the Quick-Start Guide EZIO4O—Model #5010J—4-Relay Load Controller give one On or Off command instead of 3."

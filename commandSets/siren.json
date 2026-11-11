@@ -146,7 +146,7 @@
       "name": "soundAlert",
       "description": "Sounds the alert, armed or not, at once or after the delay its cmd2 sets.",
       "effect": "actuation",
-      "idempotent": true,
+      "idempotent": false,
       "command1": "0x11",
       "parameter": {
         "name": "delayAndDuration",
@@ -311,7 +311,8 @@
     "While the alert sounds, the siren broadcasts Fast On and Fast Off (cmd1 0x12 and 0x14) to group 1 in turn, every 2 seconds.",
     "An alert record's data holds the delay and duration, the alert type and a record type; an arm record's data holds a record type. The Siren Module Developer Notes also say linking to an arm group stores the countdown behavior.",
     "The siren adds or modifies a record with ALL-Link database command D2 0x03, matching on group and ID, and answers 0x2F with NAK 0xF9 when its database is full.",
-    "The Siren Module Developer Notes give arm as Set Operating Flags with cmd2 0x05, which arms the siren at once, so it's actuation rather than configuration; it starts no countdown that a second one could restart, so it's idempotent."
+    "The Siren Module Developer Notes give arm as Set Operating Flags with cmd2 0x05, which arms the siren at once, so it's actuation rather than configuration; it starts no countdown that a second one could restart, so it's idempotent.",
+    "soundAlert, as the Siren Module Developer Notes give it, sounds the alert at once or after the delay its cmd2 sets, and they don't say whether a second one restarts the delay or the sound, so it's actuation and not idempotent."
   ],
   "sources": [
     "Siren Module Developer Notes"

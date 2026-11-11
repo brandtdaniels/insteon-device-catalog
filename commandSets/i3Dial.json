@@ -762,7 +762,7 @@
       "name": "groupOn",
       "description": "Acts as if a button had been pressed on: the device broadcasts and cleans up the group's On command.",
       "effect": "actuation",
-      "idempotent": true,
+      "idempotent": false,
       "command1": "0x32",
       "parameter": {
         "name": "group",
@@ -777,7 +777,7 @@
       "name": "groupOff",
       "description": "Acts as if a button had been pressed off: the device broadcasts and cleans up the group's Off command.",
       "effect": "actuation",
-      "idempotent": true,
+      "idempotent": false,
       "command1": "0x33",
       "parameter": {
         "name": "group",
@@ -1206,7 +1206,7 @@
       "name": "triggerGroup",
       "description": "Acts as if group D1's button had been pressed: the device sets the local load and broadcasts and cleans up the group, with the command in D4 and D5. The device must be linked to the sender.",
       "effect": "actuation",
-      "idempotent": true,
+      "idempotent": false,
       "command1": "0x30",
       "command2": "0x00",
       "perButton": false,
@@ -1335,7 +1335,8 @@
     "Its database layout gives records from 0x0FFF down to 0x0300, 416 of them; the database read reply gives addresses from 0x0FFF to 0x0407. Bit 0 of a record's flags is fast fail, bit 2 marks a Lighting Director record, bits 3 and 4 hold its hop count and bit 5 is always 1; the device may change some of these bits on its own.",
     "The load settings reply (readLoadSettings) starts with the same bytes as the extended Get reply, so wait for one before asking for the other.",
     "The extended Get request carries no checksum.",
-    "Inferred: seen on two i2CS devices (Outdoor On/Off Plug 2634-222 firmware 0x42, On/Off Plug 2635-222 firmware 0x48) linked to a Hub 2245, the device itself writes its responder record when it's linked remotely or with the SET button, and takes Data 1 from the load's state at that moment: the two plugs wrote 0x00 when the load was off and 0xFF when it was on. So Data 1 (on-level) of the light group's responder records is the state the load was in when the device was linked. The On/Off Plug 2635-222 Owner's Manual says to make sure the module is on before linking it as a responder. The values its link data give are what to write when writing the record by hand."
+    "Inferred: seen on two i2CS devices (Outdoor On/Off Plug 2634-222 firmware 0x42, On/Off Plug 2635-222 firmware 0x48) linked to a Hub 2245, the device itself writes its responder record when it's linked remotely or with the SET button, and takes Data 1 from the load's state at that moment: the two plugs wrote 0x00 when the load was off and 0xFF when it was on. So Data 1 (on-level) of the light group's responder records is the state the load was in when the device was linked. The On/Off Plug 2635-222 Owner's Manual says to make sure the module is on before linking it as a responder. The values its link data give are what to write when writing the record by hand.",
+    "groupOn, groupOff and triggerGroup, as the i3 Paddle/Dial (Insteon Developer Documentation, October 2025) gives them, broadcast a group command and clean it up with every responder, and a responder's reply to a second one, such as a toggle or a momentary relay acting again, isn't something the sender can see, so each is actuation and not idempotent."
   ],
   "sources": [
     "i3 Paddle/Dial (Insteon Developer Documentation, October 2025)"

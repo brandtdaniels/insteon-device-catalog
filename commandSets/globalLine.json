@@ -728,7 +728,7 @@
       "name": "triggerGroup",
       "description": "Sends group D1's command to the group as if its button were pressed, and sets the local load as D2 through D6 say. The device doesn't parse the command it sends, so to turn the local load off, put 0x01 in D2 and 0x00 in D3.",
       "effect": "actuation",
-      "idempotent": true,
+      "idempotent": false,
       "command1": "0x30",
       "command2": "0x00",
       "perButton": true,
@@ -878,7 +878,8 @@
     "The Global Line Developer Notes' Set Operating Flags table stops at 0x23; other sources add 0x26 through 0x2B for the KeypadLinc code base, which the micro modules run.",
     "Insteon's list of code bases puts subcategory 0x0B on the older LampLinc code base; the Global Line Developer Notes list it as the French 2632-422.",
     "The Global Line Developer Notes send Set Operating Flags as an extended message with a checksum in D14.",
-    "Inferred: seen on two i2CS devices (Outdoor On/Off Plug 2634-222 firmware 0x42, On/Off Plug 2635-222 firmware 0x48) linked to a Hub 2245, the device itself writes its responder record when it's linked remotely or with the SET button, and takes Data 1 from the load's state at that moment: the two plugs wrote 0x00 when the load was off and 0xFF when it was on. So Data 1 (on-level) of the light and load groups' responder records is the state the load was in when the device was linked. The On/Off Plug 2635-222 Owner's Manual says to make sure the module is on before linking it as a responder; the Micro Dimmer 2442 Owner's Manual, the Dimmer DIN Rail Module 2452 Owner's Manual, the Micro On/Off 2443 Owner's Manual, the On/Off DIN Rail Module 2453 Owner's Manual and the On/Off Module 2633 Owner's Manual say to set the load to the state the link should recall before linking it as a responder. The values its link data give are what to write when writing the record by hand."
+    "Inferred: seen on two i2CS devices (Outdoor On/Off Plug 2634-222 firmware 0x42, On/Off Plug 2635-222 firmware 0x48) linked to a Hub 2245, the device itself writes its responder record when it's linked remotely or with the SET button, and takes Data 1 from the load's state at that moment: the two plugs wrote 0x00 when the load was off and 0xFF when it was on. So Data 1 (on-level) of the light and load groups' responder records is the state the load was in when the device was linked. The On/Off Plug 2635-222 Owner's Manual says to make sure the module is on before linking it as a responder; the Micro Dimmer 2442 Owner's Manual, the Dimmer DIN Rail Module 2452 Owner's Manual, the Micro On/Off 2443 Owner's Manual, the On/Off DIN Rail Module 2453 Owner's Manual and the On/Off Module 2633 Owner's Manual say to set the load to the state the link should recall before linking it as a responder. The values its link data give are what to write when writing the record by hand.",
+    "triggerGroup, as the Global Line Developer Notes give it, sends a group command to the group's responders, and a responder's reply to a second one, such as a toggle or a momentary relay acting again, isn't something the sender can see, so it's actuation and not idempotent."
   ],
   "sources": [
     "Insteon Developer's Guide (2009)",

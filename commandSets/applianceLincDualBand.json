@@ -408,7 +408,7 @@
       "name": "triggerGroup",
       "description": "Sends group D1's command to the group as if its button were pressed, and sets the local load as D2 through D6 say. The device doesn't parse the command it sends, so to turn the local load off, put 0x01 in D2 and 0x00 in D3.",
       "effect": "actuation",
-      "idempotent": true,
+      "idempotent": false,
       "command1": "0x30",
       "command2": "0x00",
       "perButton": true,
@@ -539,7 +539,8 @@
     "The On/Off Module, Dual-Band Developer Notes mark bits 2 and 3 of the 0x00 reply and bits 4, 5 and 7 of the 0x05 reply N/A.",
     "Seen on a device running firmware 0x48: Get Operating Flags answered cleanly only with cmd2 0x00 (the 0x00 reply), 0x01 (the ALL-Link database delta) and 0x05 (the 0x05 reply). Other cmd2 values, 0x02 to 0x04 and 0x06 to 0x08, answered with bytes that followed neither this set nor the Outdoor On/Off Plug 2634-222's pattern on firmware 0x42, where an even cmd2 is ORed into the flags; so the CRC error and signal-to-noise failure readings weren't confirmed.",
     "Seen on a device running firmware 0x48: the 0x05 reply read 0x0D before any change: error blink and cleanup report on, and bit 0x01 set. Bit 0x01 wasn't changed, so what it does on this device wasn't seen.",
-    "Seen on a device running firmware 0x48: the extended Get reply's data read 0x01 0x01 0x00 0x00 0x20 0x20 0x1C 0xFE 0x3F 0x00 0x01 0x00 0x00 0x00, the same in idle reads over time and after the load was switched on and off; unlike D12 and D13 on the Outdoor On/Off Plug 2634-222 on firmware 0x42, no byte counted the device's activity. This set gives no meaning for D7 (0x1C), D8 (0xFE) or D11 (0x01). The operating flags and these settings read the same after the device was unlinked and linked again."
+    "Seen on a device running firmware 0x48: the extended Get reply's data read 0x01 0x01 0x00 0x00 0x20 0x20 0x1C 0xFE 0x3F 0x00 0x01 0x00 0x00 0x00, the same in idle reads over time and after the load was switched on and off; unlike D12 and D13 on the Outdoor On/Off Plug 2634-222 on firmware 0x42, no byte counted the device's activity. This set gives no meaning for D7 (0x1C), D8 (0xFE) or D11 (0x01). The operating flags and these settings read the same after the device was unlinked and linked again.",
+    "triggerGroup, as the On/Off Module, Dual-Band Developer Notes give it, sends a group command to the group's responders, and a responder's reply to a second one, such as a toggle or a momentary relay acting again, isn't something the sender can see, so it's actuation and not idempotent."
   ],
   "sources": [
     "On/Off Module, Dual-Band Developer Notes"

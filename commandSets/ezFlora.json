@@ -40,7 +40,7 @@
       "name": "valveOn",
       "description": "Sprinkler Valve ON: turns on the valve in cmd2. The acknowledgment carries 0x00 instead of the status byte for an invalid valve or while commands are inhibited.",
       "effect": "actuation",
-      "idempotent": true,
+      "idempotent": false,
       "command1": "0x40",
       "parameter": {
         "name": "valve",
@@ -1626,7 +1626,8 @@
     "programOn starts a program, and the EZFlora Insteon and X10 Messages/Commands don't say whether it restarts a running program, so it's actuation and not idempotent. programOff and stopDiagnostics stop what's running, so each is actuation and idempotent; startDiagnostics restarts the valve sequence, so it's actuation and not idempotent.",
     "inhibit and resume, as the EZFlora Insteon and X10 Messages/Commands give them, change whether the EZFlora accepts valve and program ON commands, a state it keeps and acts on later, so each is configuration and idempotent; inhibit stops only valve and program ON commands, so resume undoes it and neither needs a guard.",
     "writeMeterCountLsb and writeMeterCountMsb, as the EZFlora Insteon and X10 Messages/Commands give them, overwrite the water meter count, which nothing can restore, as resetMeterCount does, so each is destructive and idempotent.",
-    "setAddressMsb and peek, as the EZFlora Insteon and X10 Messages/Commands give them, only choose and read the address that Peek One Byte and Poke One Byte use, which matters only to those requests, so each is readOnly and idempotent; Poke One Byte writes, and is destructive."
+    "setAddressMsb and peek, as the EZFlora Insteon and X10 Messages/Commands give them, only choose and read the address that Peek One Byte and Poke One Byte use, which matters only to those requests, so each is readOnly and idempotent; Poke One Byte writes, and is destructive.",
+    "valveOn, as the EZFlora Insteon and X10 Messages/Commands give it, turns a valve on for its timer, and they don't say whether a second one restarts the timer, so it's actuation and not idempotent."
   ],
   "sources": [
     "EZFlora Insteon and X10 Messages/Commands",

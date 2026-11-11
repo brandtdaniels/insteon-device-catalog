@@ -785,7 +785,7 @@
       "name": "triggerGroup",
       "description": "Sends group D1's command to the group as if its button were pressed, and sets the local load as D2 through D6 say. The device doesn't parse the command it sends, so to turn the local load off, put 0x01 in D2 and 0x00 in D3.",
       "effect": "actuation",
-      "idempotent": true,
+      "idempotent": false,
       "command1": "0x30",
       "command2": "0x00",
       "perButton": true,
@@ -875,7 +875,8 @@
     "Earlier sources give ramp rates 0x00 through 0x1F as 9 minutes down to 0.1 second; the later ones make 0x01 8 minutes and 0x00 2 seconds.",
     "The 2472D Developer Notes' examples show category 0x01 and subcategory 0x0E, which the catalog gives to the 2457D2.",
     "Inferred: seen on two i2CS devices (Outdoor On/Off Plug 2634-222 firmware 0x42, On/Off Plug 2635-222 firmware 0x48) linked to a Hub 2245, the device itself writes its responder record when it's linked remotely or with the SET button, and takes Data 1 from the load's state at that moment: the two plugs wrote 0x00 when the load was off and 0xFF when it was on. So Data 1 (on-level) of the light group's responder records is the state the load was in when the device was linked. The On/Off Plug 2635-222 Owner's Manual says to make sure the module is on before linking it as a responder; the OutletLinc Dimmer 2472D Owner's Manual says to turn the load on before linking it as a responder. The values its link data give are what to write when writing the record by hand.",
-    "remoteSetButtonTap, as the 2472D Developer Notes give it, sets the on-level with cmd2 0x00 or the ramp rate with 0x02, and the Insteon Command Tables (2007) give cmd2 as a count of taps of the SET button; neither describes linking, so it's configuration, and not idempotent, since a second tap may undo what the first set."
+    "remoteSetButtonTap, as the 2472D Developer Notes give it, sets the on-level with cmd2 0x00 or the ramp rate with 0x02, and the Insteon Command Tables (2007) give cmd2 as a count of taps of the SET button; neither describes linking, so it's configuration, and not idempotent, since a second tap may undo what the first set.",
+    "triggerGroup, as the 2472D Developer Notes give it, sends a group command to the group's responders, and a responder's reply to a second one, such as a toggle or a momentary relay acting again, isn't something the sender can see, so it's actuation and not idempotent."
   ],
   "sources": [
     "Insteon Developer's Guide (2009)",
