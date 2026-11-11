@@ -229,6 +229,10 @@ follows without reading its steps:
   "keepAwake": { "when": "afterLinked", "send": { "command": "stayAwake" } }
   ```
 
+  A message given as bytes also carries the `effect` and `idempotent` a command set entry would,
+  as [What a command does](#what-a-command-does) describes. A keepAwake message, named or given
+  as bytes, is `configuration` and idempotent; the build fails on one that isn't.
+
 - `fromHub`, each leg, `remoteEnterLinkingMode` and `keepAwake` can carry a `verification`. A
   leg without one is as sure as `fromHub`'s `verification` says. No document describes adding a
   product to a Hub, so most are `inferred`.
@@ -511,6 +515,77 @@ changes what a link records; until then a command set has no `linkingChanges`.
 ```json
 "linkingChanges": [{ "flag": "exampleFlag" }]
 ```
+
+## What a command does
+
+Every flag command, standard command and extended command carries an `effect` and
+`idempotent`, so software decides from the catalog whether a message needs a person's consent
+and whether it may be sent again:
+
+```json
+{ "name": "lightOn", "description": "Turns the load on to the level in cmd2 at the saved ramp rate.",
+  "effect": "actuation", "idempotent": true, "command1": "0x11", "parameter": { "…": "…" } }
+```
+
+`effect` says what the message does to its addressee, the device or modem it's sent to:
+
+| `effect` | The message |
+| --- | --- |
+| `readOnly` | Asks for state. The addressee answers, with an acknowledgment's cmd2, an extended reply, or a direct or broadcast report such as a database checksum, and changes nothing it keeps or does, apart from state that matters only to the request, such as the address Peek One Byte reads. |
+| `configuration` | Changes a setting the addressee keeps and acts on later, such as operating flags, extended Set values, setpoints, timers or registers, and nothing it does at once. |
+| `link` | Puts the addressee in or out of ALL-Linking mode, or adds an ALL-Link record. |
+| `actuation` | Changes what the addressee does at once: a load, an output, a valve, a sound, a program, or a group broadcast from the addressee. |
+| `destructive` | Removes or overwrites ALL-Link records, memory or counters, restores factory settings, or leaves the addressee unable to communicate with the modem until a person acts. |
+
+`idempotent` is true when sending the identical message twice leaves the addressee in the same
+state as sending it once, as for a command that sets a level or a value. It's false for a
+relative step, such as Brighten One Step or a setpoint raise, for a start that restarts, such as
+Start Manual Change or a program start, and for a toggle.
+
+The rest of a command set takes its effect from where it sits, so it carries no field of its own:
+
+| Item | Effect |
+| --- | --- |
+| An operating flag's `on` and `off` | `configuration`, idempotent: Set Operating Flags with a fixed cmd2. Its `guard` decides whether an app writes it. |
+| An extended settings write | `configuration`, idempotent: an extended Set writes absolute bytes. `flagsQuery` and guards decide what it may change. |
+| A group type's `actions` | The effect of the command each names, which the build requires to be `actuation`. |
+| A group type's `state` | The effect of the command it names, which the build requires to be `readOnly`. |
+| A flag's `onCommand` and `offCommand`, and a value's `write` | The effect of the command each names, which the build requires to be `configuration`. |
+| `linkingChanges` | `configuration`, under the link operation that changes them. |
+| A keepAwake message | The named command's or flag's effect, or its own `effect` when given as bytes; the build requires `configuration` and idempotent. |
+| A lifecycle `send` step | None: it names a command for a person, by its Insteon Developer's Guide name. |
+
+The build also requires that a command with `guard` `never` is `destructive`, that no Set
+Operating Flags command (a flag command, or cmd1 `0x20`) and no extended Set (cmd1 `0x2E`, cmd2
+`0x00`, a D2 other than `0x00`) is `readOnly`, that a `readOnly` command is idempotent, and that
+Set Operating Flags entries sending the same cmd2, such as a flag and a standard command with
+cmd1 `0x20`, have the same effect. An effect never stands in for a guard: a destructive command
+that turns a guarded flag on needs `guard` `never` as well.
+
+### Reading effects
+
+Software finds a message's effect by its bytes, not by the name it was sent under: a standard
+command by cmd1 and its fixed or parameter cmd2, an extended command by cmd1, cmd2 and its
+`fixed` bytes, a flag command or flag by cmd1 `0x20` and cmd2, and an extended settings write by
+cmd1 `0x2E`, cmd2 `0x00` and its selector in D2. It reads them so that anything it can't place
+fails closed:
+
+1. An entry without an `effect`, or with a value the software doesn't know, is `destructive`.
+2. An entry without `idempotent` isn't idempotent.
+3. A message no entry describes is undescribed: neither readOnly nor any other effect, and sent
+   only by an operation that sends bytes a person typed.
+4. A device without a command set has every message undescribed, apart from those whose effect
+   the protocol itself fixes, such as Ping and ID Request.
+5. A message several entries describe takes the strictest of their effects, and is idempotent
+   only if all of them are.
+6. A downloaded catalog that gives a command known from the copy the software ships a weaker
+   effect, or turns its `idempotent` from false to true, is refused, and the shipped copy kept.
+   `readOnly` is weakest and `destructive` strictest; a change among `configuration`, `link` and
+   `actuation` counts as weaker too.
+
+A message without an acknowledgment may have reached the device, so software sends it again only
+when it's idempotent. A modem's NAK means the message never left the modem, so it can always be
+sent again.
 
 ## Keeping a copy up to date
 
