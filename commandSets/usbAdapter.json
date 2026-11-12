@@ -1,0 +1,846 @@
+{
+  "id": "usbAdapter",
+  "name": "Insteon USB Wireless Adapter",
+  "description": "The serial commands of the Insteon USB Wireless Adapters 2448A7 and 2448A7H, an RF-only modem with no SET button: the modem commands that apply, without Send X10.",
+  "serialCommands": [
+    {
+      "name": "getImInfo",
+      "description": "Asks the modem for its Insteon ID, device category, device subcategory and firmware version. The modem returns the values hard-coded at the factory, whatever Set Host Device Category set.",
+      "effect": "readOnly",
+      "idempotent": true,
+      "number": "0x60",
+      "reply": [
+        {
+          "name": "id",
+          "description": "The modem's Insteon ID, high byte first.",
+          "bytes": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "name": "category",
+          "description": "The modem's device category.",
+          "byte": 4
+        },
+        {
+          "name": "subcategory",
+          "description": "The modem's device subcategory.",
+          "byte": 5
+        },
+        {
+          "name": "firmware",
+          "description": "The modem's firmware version.",
+          "byte": 6
+        }
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes say the adapter has the same communication protocol as the PowerLinc USB 2414U but list no commands, so this entry is carried from the modem command set, which the Insteon Modem Developer's Guide gives, and no document confirms the adapter answers it."
+      }
+    },
+    {
+      "name": "startAllLinkingAsResponder",
+      "description": "Puts the modem into ALL-Linking mode without the SET button, to link as a responder. The modem's LED blinks until the ALL-Link completes or is canceled, and an ALL-Linking Completed message reports the link.",
+      "effect": "link",
+      "idempotent": false,
+      "number": "0x64",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x00"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "group",
+          "description": "The ALL-Link group to link.",
+          "byte": 2
+        }
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes name Start ALL-Linking (0x64) as the way to start linking mode, but not its control bytes; this control byte is carried from the modem command set, which the Insteon Modem Developer's Guide gives."
+      }
+    },
+    {
+      "name": "startAllLinkingAsController",
+      "description": "Puts the modem into ALL-Linking mode without the SET button, to link as a controller. The modem's LED blinks until the ALL-Link completes or is canceled, and an ALL-Linking Completed message reports the link.",
+      "effect": "link",
+      "idempotent": false,
+      "number": "0x64",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x01"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "group",
+          "description": "The ALL-Link group to link.",
+          "byte": 2
+        }
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes name Start ALL-Linking (0x64) as the way to start linking mode, but not its control bytes; this control byte is carried from the modem command set, which the Insteon Modem Developer's Guide gives."
+      }
+    },
+    {
+      "name": "startAllLinkingAsEither",
+      "description": "Puts the modem into ALL-Linking mode without the SET button, to link as a controller when the modem starts ALL-Linking and as a responder when another device does. The modem's LED blinks until the ALL-Link completes or is canceled, and an ALL-Linking Completed message reports the link.",
+      "effect": "link",
+      "idempotent": false,
+      "number": "0x64",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x03"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "group",
+          "description": "The ALL-Link group to link.",
+          "byte": 2
+        }
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes name Start ALL-Linking (0x64) as the way to start linking mode, but not its control bytes; this control byte is carried from the modem command set, which the Insteon Modem Developer's Guide gives."
+      }
+    },
+    {
+      "name": "deleteAllLink",
+      "description": "Deletes the ALL-Link to a device for a group, through ALL-Linking mode.",
+      "effect": "destructive",
+      "idempotent": true,
+      "number": "0x64",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0xFF"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "group",
+          "description": "The ALL-Link group to delete.",
+          "byte": 2
+        }
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes name Start ALL-Linking (0x64) as the way to enter linking mode, but not its control bytes; this control byte is carried from the modem command set, which the Insteon Modem Developer's Guide gives."
+      }
+    },
+    {
+      "name": "cancelAllLinking",
+      "description": "Cancels ALL-Linking mode started with Start ALL-Linking. The adapter has no SET button to start it.",
+      "effect": "link",
+      "idempotent": true,
+      "number": "0x65",
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes say the adapter has the same communication protocol as the PowerLinc USB 2414U but list no commands, so this entry is carried from the modem command set, which the Insteon Modem Developer's Guide gives, and no document confirms the adapter answers it."
+      }
+    },
+    {
+      "name": "setHostDeviceCategory",
+      "description": "Sets the device category and subcategory of the host, which the modem sends other devices while ALL-Linking. The modem keeps them across a power loss; Get IM Info still returns the factory values.",
+      "effect": "configuration",
+      "idempotent": true,
+      "number": "0x66",
+      "parameters": [
+        {
+          "name": "category",
+          "description": "The host's device category.",
+          "byte": 1
+        },
+        {
+          "name": "subcategory",
+          "description": "The host's device subcategory.",
+          "byte": 2
+        },
+        {
+          "name": "firmware",
+          "description": "The host's firmware version, or a filler byte.",
+          "byte": 3
+        }
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes say the adapter has the same communication protocol as the PowerLinc USB 2414U but list no commands, so this entry is carried from the modem command set, which the Insteon Modem Developer's Guide gives, and no document confirms the adapter answers it."
+      }
+    },
+    {
+      "name": "resetModem",
+      "description": "Puts the modem in its factory reset state, which clears its entire ALL-Link database. The ACK follows the erase, about 20 seconds for a modem with external EEPROM and about 2 seconds for one without.",
+      "effect": "destructive",
+      "idempotent": true,
+      "number": "0x67",
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes say the adapter has the same communication protocol as the PowerLinc USB 2414U but list no commands, so this entry is carried from the modem command set, which the Insteon Modem Developer's Guide gives, and no document confirms the adapter answers it."
+      }
+    },
+    {
+      "name": "setAckMessageByte",
+      "description": "Sets the byte the modem puts in cmd2 of the ACK it sends automatically after an Insteon direct message. The host has about 15 milliseconds after the message to send it.",
+      "effect": "configuration",
+      "idempotent": true,
+      "number": "0x68",
+      "parameters": [
+        {
+          "name": "command2",
+          "description": "The byte for cmd2 of the ACK.",
+          "byte": 1
+        }
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes say the adapter has the same communication protocol as the PowerLinc USB 2414U but list no commands, so this entry is carried from the modem command set, which the Insteon Modem Developer's Guide gives, and no document confirms the adapter answers it."
+      }
+    },
+    {
+      "name": "getFirstAllLinkRecord",
+      "description": "Starts a scan of the modem's ALL-Link database. An ACK means an ALL-Link Record Response follows; a NAK means the database is empty.",
+      "effect": "readOnly",
+      "idempotent": true,
+      "number": "0x69",
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes say the adapter has the same communication protocol as the PowerLinc USB 2414U but list no commands, so this entry is carried from the modem command set, which the Insteon Modem Developer's Guide gives, and no document confirms the adapter answers it."
+      }
+    },
+    {
+      "name": "getNextAllLinkRecord",
+      "description": "Returns the next record in the modem's ALL-Link database. An ACK means an ALL-Link Record Response follows; a NAK means there are no more records.",
+      "effect": "readOnly",
+      "idempotent": true,
+      "number": "0x6A",
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes say the adapter has the same communication protocol as the PowerLinc USB 2414U but list no commands, so this entry is carried from the modem command set, which the Insteon Modem Developer's Guide gives, and no document confirms the adapter answers it."
+      }
+    },
+    {
+      "name": "setImConfiguration",
+      "description": "Sets all of the modem's configuration flags at once. Reading them with Get IM Configuration first lets a caller change one bit.",
+      "effect": "configuration",
+      "idempotent": true,
+      "number": "0x6B",
+      "parameters": [
+        {
+          "name": "flags",
+          "description": "The configuration flags; bits 3 to 0 are reserved and stay 0.",
+          "byte": 1,
+          "kind": "flags",
+          "bits": [
+            {
+              "mask": "0x80",
+              "name": "autoLinkingDisabled",
+              "description": "Disables automatic ALL-Linking when the SET button is pressed and held."
+            },
+            {
+              "mask": "0x40",
+              "name": "monitorMode",
+              "description": "Reports every received message whose From Address is in the modem's ALL-Link database, not only those directed to the modem."
+            },
+            {
+              "mask": "0x20",
+              "name": "ledControlledByHost",
+              "description": "Disables the modem's automatic LED operation, so the host controls the LED with LED On and LED Off."
+            },
+            {
+              "mask": "0x10",
+              "name": "deadmanDisabled",
+              "description": "Allows the host to wait more than 240 milliseconds between bytes it sends the modem."
+            }
+          ]
+        }
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes say the adapter has the same communication protocol as the PowerLinc USB 2414U but list no commands, so this entry is carried from the modem command set, which the Insteon Modem Developer's Guide gives, and no document confirms the adapter answers it."
+      }
+    },
+    {
+      "name": "getAllLinkRecordForSender",
+      "description": "Returns the ALL-Link database record for the sender of the last Insteon message the modem received. A NAK means the sender is not in the database.",
+      "effect": "readOnly",
+      "idempotent": true,
+      "number": "0x6C",
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes say the adapter has the same communication protocol as the PowerLinc USB 2414U but list no commands, so this entry is carried from the modem command set, which the Insteon Modem Developer's Guide gives, and no document confirms the adapter answers it."
+      }
+    },
+    {
+      "name": "ledOn",
+      "description": "Turns the modem's LED on, when the configuration flags let the host control it; otherwise the modem NAKs.",
+      "effect": "actuation",
+      "idempotent": true,
+      "number": "0x6D",
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes say the adapter has the same communication protocol as the PowerLinc USB 2414U but list no commands, so this entry is carried from the modem command set, which the Insteon Modem Developer's Guide gives, and no document confirms the adapter answers it."
+      }
+    },
+    {
+      "name": "ledOff",
+      "description": "Turns the modem's LED off, when the configuration flags let the host control it; otherwise the modem NAKs.",
+      "effect": "actuation",
+      "idempotent": true,
+      "number": "0x6E",
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes say the adapter has the same communication protocol as the PowerLinc USB 2414U but list no commands, so this entry is carried from the modem command set, which the Insteon Modem Developer's Guide gives, and no document confirms the adapter answers it."
+      }
+    },
+    {
+      "name": "findFirstAllLinkRecord",
+      "description": "Searches the modem's ALL-Link database from the top for the first record that matches the group and ID, ignoring the record flags, and returns it in an ALL-Link Record Response. A NAK means no record matches.",
+      "effect": "readOnly",
+      "idempotent": true,
+      "number": "0x6F",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x00"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "recordFlags",
+          "description": "The ALL-Link record flags.",
+          "byte": 2,
+          "kind": "flags",
+          "bits": [
+            {
+              "mask": "0x80",
+              "name": "inUse",
+              "description": "The record is in use."
+            },
+            {
+              "mask": "0x40",
+              "name": "controller",
+              "description": "The modem is the controller of the device in the record; clear, it is a responder."
+            },
+            {
+              "mask": "0x02",
+              "name": "usedBefore",
+              "description": "The record has been used before; clear, it is the high-water mark."
+            }
+          ]
+        },
+        {
+          "name": "group",
+          "description": "The ALL-Link group of the record.",
+          "byte": 3
+        },
+        {
+          "name": "id",
+          "description": "The Insteon ID of the device the record links to, high byte first.",
+          "bytes": [
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "name": "data1",
+          "description": "Link Data 1.",
+          "byte": 7
+        },
+        {
+          "name": "data2",
+          "description": "Link Data 2.",
+          "byte": 8
+        },
+        {
+          "name": "data3",
+          "description": "Link Data 3.",
+          "byte": 9
+        }
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes say the adapter has the same communication protocol as the PowerLinc USB 2414U but list no commands, so this entry is carried from the modem command set, which the Insteon Modem Developer's Guide gives, and no document confirms the adapter answers it."
+      }
+    },
+    {
+      "name": "findNextAllLinkRecord",
+      "description": "Searches for the next record after the one Find First ALL-Link Record found, with the same group and ID, and returns it in an ALL-Link Record Response. A NAK means no other record matches.",
+      "effect": "readOnly",
+      "idempotent": true,
+      "number": "0x6F",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x01"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "recordFlags",
+          "description": "The ALL-Link record flags.",
+          "byte": 2,
+          "kind": "flags",
+          "bits": [
+            {
+              "mask": "0x80",
+              "name": "inUse",
+              "description": "The record is in use."
+            },
+            {
+              "mask": "0x40",
+              "name": "controller",
+              "description": "The modem is the controller of the device in the record; clear, it is a responder."
+            },
+            {
+              "mask": "0x02",
+              "name": "usedBefore",
+              "description": "The record has been used before; clear, it is the high-water mark."
+            }
+          ]
+        },
+        {
+          "name": "group",
+          "description": "The ALL-Link group of the record.",
+          "byte": 3
+        },
+        {
+          "name": "id",
+          "description": "The Insteon ID of the device the record links to, high byte first.",
+          "bytes": [
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "name": "data1",
+          "description": "Link Data 1.",
+          "byte": 7
+        },
+        {
+          "name": "data2",
+          "description": "Link Data 2.",
+          "byte": 8
+        },
+        {
+          "name": "data3",
+          "description": "Link Data 3.",
+          "byte": 9
+        }
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes say the adapter has the same communication protocol as the PowerLinc USB 2414U but list no commands, so this entry is carried from the modem command set, which the Insteon Modem Developer's Guide gives, and no document confirms the adapter answers it."
+      }
+    },
+    {
+      "name": "modifyOrAddAllLinkRecord",
+      "description": "Overwrites the first record that matches the group and ID with the record given, or adds a new record if none matches, as either a controller or a responder record. The modem does not check the data, and a wrong flags byte can make its database look empty.",
+      "effect": "destructive",
+      "idempotent": true,
+      "number": "0x6F",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x20"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "recordFlags",
+          "description": "The ALL-Link record flags.",
+          "byte": 2,
+          "kind": "flags",
+          "bits": [
+            {
+              "mask": "0x80",
+              "name": "inUse",
+              "description": "The record is in use."
+            },
+            {
+              "mask": "0x40",
+              "name": "controller",
+              "description": "The modem is the controller of the device in the record; clear, it is a responder."
+            },
+            {
+              "mask": "0x02",
+              "name": "usedBefore",
+              "description": "The record has been used before; clear, it is the high-water mark."
+            }
+          ]
+        },
+        {
+          "name": "group",
+          "description": "The ALL-Link group of the record.",
+          "byte": 3
+        },
+        {
+          "name": "id",
+          "description": "The Insteon ID of the device the record links to, high byte first.",
+          "bytes": [
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "name": "data1",
+          "description": "Link Data 1.",
+          "byte": 7
+        },
+        {
+          "name": "data2",
+          "description": "Link Data 2.",
+          "byte": 8
+        },
+        {
+          "name": "data3",
+          "description": "Link Data 3.",
+          "byte": 9
+        }
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes say the adapter has the same communication protocol as the PowerLinc USB 2414U but list no commands, so this entry is carried from the modem command set, which the Insteon Modem Developer's Guide gives, and no document confirms the adapter answers it."
+      }
+    },
+    {
+      "name": "modifyOrAddControllerRecord",
+      "description": "Overwrites the first controller record that matches the group and ID with the record given, or adds a new controller record if none matches.",
+      "effect": "destructive",
+      "idempotent": true,
+      "number": "0x6F",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x40"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "recordFlags",
+          "description": "The ALL-Link record flags.",
+          "byte": 2,
+          "kind": "flags",
+          "bits": [
+            {
+              "mask": "0x80",
+              "name": "inUse",
+              "description": "The record is in use."
+            },
+            {
+              "mask": "0x40",
+              "name": "controller",
+              "description": "The modem is the controller of the device in the record; clear, it is a responder."
+            },
+            {
+              "mask": "0x02",
+              "name": "usedBefore",
+              "description": "The record has been used before; clear, it is the high-water mark."
+            }
+          ]
+        },
+        {
+          "name": "group",
+          "description": "The ALL-Link group of the record.",
+          "byte": 3
+        },
+        {
+          "name": "id",
+          "description": "The Insteon ID of the device the record links to, high byte first.",
+          "bytes": [
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "name": "data1",
+          "description": "Link Data 1.",
+          "byte": 7
+        },
+        {
+          "name": "data2",
+          "description": "Link Data 2.",
+          "byte": 8
+        },
+        {
+          "name": "data3",
+          "description": "Link Data 3.",
+          "byte": 9
+        }
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes say the adapter has the same communication protocol as the PowerLinc USB 2414U but list no commands, so this entry is carried from the modem command set, which the Insteon Modem Developer's Guide gives, and no document confirms the adapter answers it."
+      }
+    },
+    {
+      "name": "modifyOrAddResponderRecord",
+      "description": "Overwrites the first responder record that matches the group and ID with the record given, or adds a new responder record if none matches.",
+      "effect": "destructive",
+      "idempotent": true,
+      "number": "0x6F",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x41"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "recordFlags",
+          "description": "The ALL-Link record flags.",
+          "byte": 2,
+          "kind": "flags",
+          "bits": [
+            {
+              "mask": "0x80",
+              "name": "inUse",
+              "description": "The record is in use."
+            },
+            {
+              "mask": "0x40",
+              "name": "controller",
+              "description": "The modem is the controller of the device in the record; clear, it is a responder."
+            },
+            {
+              "mask": "0x02",
+              "name": "usedBefore",
+              "description": "The record has been used before; clear, it is the high-water mark."
+            }
+          ]
+        },
+        {
+          "name": "group",
+          "description": "The ALL-Link group of the record.",
+          "byte": 3
+        },
+        {
+          "name": "id",
+          "description": "The Insteon ID of the device the record links to, high byte first.",
+          "bytes": [
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "name": "data1",
+          "description": "Link Data 1.",
+          "byte": 7
+        },
+        {
+          "name": "data2",
+          "description": "Link Data 2.",
+          "byte": 8
+        },
+        {
+          "name": "data3",
+          "description": "Link Data 3.",
+          "byte": 9
+        }
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes say the adapter has the same communication protocol as the PowerLinc USB 2414U but list no commands, so this entry is carried from the modem command set, which the Insteon Modem Developer's Guide gives, and no document confirms the adapter answers it."
+      }
+    },
+    {
+      "name": "deleteAllLinkRecord",
+      "description": "Deletes the first record that matches the group and ID. A NAK means no record matches.",
+      "effect": "destructive",
+      "idempotent": true,
+      "number": "0x6F",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x80"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "recordFlags",
+          "description": "The ALL-Link record flags.",
+          "byte": 2,
+          "kind": "flags",
+          "bits": [
+            {
+              "mask": "0x80",
+              "name": "inUse",
+              "description": "The record is in use."
+            },
+            {
+              "mask": "0x40",
+              "name": "controller",
+              "description": "The modem is the controller of the device in the record; clear, it is a responder."
+            },
+            {
+              "mask": "0x02",
+              "name": "usedBefore",
+              "description": "The record has been used before; clear, it is the high-water mark."
+            }
+          ]
+        },
+        {
+          "name": "group",
+          "description": "The ALL-Link group of the record.",
+          "byte": 3
+        },
+        {
+          "name": "id",
+          "description": "The Insteon ID of the device the record links to, high byte first.",
+          "bytes": [
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "name": "data1",
+          "description": "Link Data 1.",
+          "byte": 7
+        },
+        {
+          "name": "data2",
+          "description": "Link Data 2.",
+          "byte": 8
+        },
+        {
+          "name": "data3",
+          "description": "Link Data 3.",
+          "byte": 9
+        }
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes say the adapter has the same communication protocol as the PowerLinc USB 2414U but list no commands, so this entry is carried from the modem command set, which the Insteon Modem Developer's Guide gives, and no document confirms the adapter answers it."
+      }
+    },
+    {
+      "name": "setNakMessageByte",
+      "description": "Makes the ACK the modem sends automatically after an Insteon direct message a NAK, with a byte in cmd2.",
+      "effect": "configuration",
+      "idempotent": true,
+      "number": "0x70",
+      "parameters": [
+        {
+          "name": "command2",
+          "description": "The byte for cmd2 of the NAK.",
+          "byte": 1
+        }
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes say the adapter has the same communication protocol as the PowerLinc USB 2414U but list no commands, so this entry is carried from the modem command set, which the Insteon Modem Developer's Guide gives, and no document confirms the adapter answers it."
+      }
+    },
+    {
+      "name": "setAckMessageTwoBytes",
+      "description": "Sets the bytes the modem puts in cmd1 and cmd2 of the ACK it sends automatically after an Insteon direct message. The host has about 15 milliseconds after the message to send it.",
+      "effect": "configuration",
+      "idempotent": true,
+      "number": "0x71",
+      "parameters": [
+        {
+          "name": "command1",
+          "description": "The byte for cmd1 of the ACK.",
+          "byte": 1
+        },
+        {
+          "name": "command2",
+          "description": "The byte for cmd2 of the ACK.",
+          "byte": 2
+        }
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes say the adapter has the same communication protocol as the PowerLinc USB 2414U but list no commands, so this entry is carried from the modem command set, which the Insteon Modem Developer's Guide gives, and no document confirms the adapter answers it."
+      }
+    },
+    {
+      "name": "rfSleep",
+      "description": "Directs an RF modem into its power-saving sleep mode, in which it does not answer until the host sends it one byte of serial data. The modem then reinitializes without altering its memory.",
+      "effect": "destructive",
+      "idempotent": true,
+      "number": "0x72",
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes say the adapter has the same communication protocol as the PowerLinc USB 2414U but list no commands, so this entry is carried from the modem command set, which the Insteon Modem Developer's Guide gives, and no document confirms the adapter answers it."
+      }
+    },
+    {
+      "name": "getImConfiguration",
+      "description": "Returns the modem's configuration flags.",
+      "effect": "readOnly",
+      "idempotent": true,
+      "number": "0x73",
+      "reply": [
+        {
+          "name": "flags",
+          "description": "The configuration flags.",
+          "byte": 1,
+          "kind": "flags",
+          "bits": [
+            {
+              "mask": "0x80",
+              "name": "autoLinkingDisabled",
+              "description": "Disables automatic ALL-Linking when the SET button is pressed and held."
+            },
+            {
+              "mask": "0x40",
+              "name": "monitorMode",
+              "description": "Reports every received message whose From Address is in the modem's ALL-Link database, not only those directed to the modem."
+            },
+            {
+              "mask": "0x20",
+              "name": "ledControlledByHost",
+              "description": "Disables the modem's automatic LED operation, so the host controls the LED with LED On and LED Off."
+            },
+            {
+              "mask": "0x10",
+              "name": "deadmanDisabled",
+              "description": "Allows the host to wait more than 240 milliseconds between bytes it sends the modem."
+            }
+          ]
+        },
+        {
+          "name": "spare1",
+          "description": "Reserved; 0x00.",
+          "byte": 2
+        },
+        {
+          "name": "spare2",
+          "description": "Reserved; 0x00.",
+          "byte": 3
+        }
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes say the adapter has the same communication protocol as the PowerLinc USB 2414U but list no commands, so this entry is carried from the modem command set, which the Insteon Modem Developer's Guide gives, and no document confirms the adapter answers it."
+      }
+    }
+  ],
+  "notes": [
+    "The USB Wireless Adapter Developer Notes (2010-07-02) say the adapter has the same communication protocol as the PowerLinc USB 2414U, with these changes: device category 0x03 and subcategory 0x1F; no SET button, so linking mode starts from software with Start ALL-Linking (0x64); RF only, so it needs a dual-band device to reach powerline devices; and no X10, so Send X10 (0x63) is NAKed in every case and X10 Received (0x52) is never sent. The document lists no other commands.",
+    "The entries are the modem command set's, minus sendX10. Nothing in the document confirms them, so each carries inferred, except that the document does name Start ALL-Linking (0x64); its control bytes are still carried.",
+    "sendX10 is left out: the adapter NAKs every frame with command number 0x63, and the schema has no marker for a command that always fails.",
+    "The document describes the 2448A7 and no document names the 2448A7H, so the 2448A7H's use of this set is inferred.",
+    "Entries that mention the SET button, such as the autoLinkingDisabled bit of setImConfiguration, are the modem's; the adapter has no SET button, so that bit has nothing to disable.",
+    "A serial command is 0x02, its number and its payload; the modem echoes it and ends the echo with an ACK (0x06) or a NAK (0x15). Send Insteon Standard or Extended Message (0x62) and Send ALL-Link Command (0x61) carry a device message, so the device's own command set describes them and they are not entries.",
+    "Start ALL-Linking and Manage ALL-Link Record are one entry per control byte, so each control byte has its own effect; effects follow the modem command set's."
+  ],
+  "sources": [
+    "USB Wireless Adapter Developer Notes",
+    "Insteon Modem Developer's Guide"
+  ]
+}

@@ -20,6 +20,26 @@
       "kind": "modem"
     }
   ],
+  "commandSets": [
+    {
+      "commandSet": "usbAdapter",
+      "category": "0x03",
+      "subcategory": "0x1F",
+      "verification": {
+        "status": "inferred",
+        "note": "The USB Wireless Adapter Developer Notes give subcategory 0x1F and say the adapter has the PowerLinc USB 2414U's protocol but list no commands, so the use of usbAdapter, which carries the modem commands, is inferred."
+      }
+    },
+    {
+      "commandSet": "usbAdapter",
+      "category": "0x03",
+      "subcategory": "0x20",
+      "verification": {
+        "status": "inferred",
+        "note": "No document names subcategory 0x20 for this product; it is read as the same adapter as 0x1F, and the use of usbAdapter is inferred."
+      }
+    }
+  ],
   "lifecycle": {
     "installation": {
       "steps": [
@@ -68,12 +88,13 @@
     "HouseLinc Device Definitions (version 2.9.87)",
     "Portable USB Adapter 2448A7 Quick Start Guide",
     "USB Stick 2448A7 Quick Start Guide",
-    "USB Adapter Developer Notes"
+    "USB Wireless Adapter Developer Notes"
   ],
   "notes": [
     "Has no SET button: start linking from software with Start ALL-Linking (0x64).",
     "Reaches powerline devices only through a dual-band device, such as the Access Point 2443 or a dual-band LampLinc.",
     "Has no X10: it answers Send X10 (0x63) with a NAK, and never sends X10 Received (0x52).",
-    "The USB Adapter Developer Notes say it uses the PowerLinc USB 2414U's protocol, but the commands they name are the PowerLinc Modem 2413's."
+    "The USB Wireless Adapter Developer Notes say it uses the PowerLinc USB 2414U's protocol, but the commands they name are the PowerLinc Modem 2413's.",
+    "Its serial commands are the modem's without Send X10, as the usbAdapter command set describes."
   ]
 }
