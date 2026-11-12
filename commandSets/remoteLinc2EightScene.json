@@ -63,21 +63,6 @@
       "bit": "0x20",
       "on": "0x0A",
       "off": "0x0B"
-    },
-    {
-      "name": "grouped",
-      "label": "Pair buttons by row",
-      "section": "Buttons",
-      "description": "Each row's two buttons share a group, 1 to 4 from the top. Otherwise each button has its own group, 1 to 8.",
-      "query": "0x00",
-      "bit": "0x40",
-      "on": "0x0F",
-      "off": "0x0E",
-      "advanced": true,
-      "verification": {
-        "status": "inferred",
-        "note": "The RemoteLinc 2 Developer Notes describe this flag for a keypad of four rows of an on button and an off button. No document describes it for the 8-scene remote, whose buttons are scenes, so the catalog reads it as pairing each row's two buttons and hides it as advanced."
-      }
     }
   ],
   "readings": [
@@ -316,11 +301,11 @@
     }
   ],
   "notes": [
-    "Every entry other than the grouped flag is carried over from the RemoteLinc 2 command set, because the RemoteLinc 2 Developer Notes are the only document for the Mini Remote family's commands.",
+    "Every entry is carried over unchanged from the RemoteLinc 2 command set, because the RemoteLinc 2 Developer Notes are the only document for the Mini Remote family's commands.",
     "The RemoteLinc 2 Developer Notes give the sleep interval's first byte in steps of 755.2 seconds, or 12.5 minutes, and its low byte in steps of 2.3 seconds.",
     "The RemoteLinc 2 Developer Notes' descriptions of Set Operating Flags 0x08 and 0x09 are unclear for the RemoteLinc 2, so listenOnly has no commands here.",
-    "The RemoteLinc 2 Developer Notes' keypad has eight buttons in four rows of two, which is the 8-scene remote's layout, so every other entry is the RemoteLinc 2's.",
-    "Insteon's file for the RemoteLinc 2 Developer Notes are named for the 2342, but its title and ID request reply are the RemoteLinc 2's, subcategory 0x10."
+    "Insteon's file for the RemoteLinc 2 Developer Notes are named for the 2342, but its title and ID request reply are the RemoteLinc 2's, subcategory 0x10.",
+    "The grouped flag is left out. Eight groups, one per scene button, come from the profile notes and Insteon Device Categories (January 2014), not from a document that describes the flag for this remote, so a bench check or a document can add it."
   ],
   "sources": [
     "RemoteLinc 2 Developer Notes"
