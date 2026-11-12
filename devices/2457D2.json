@@ -14,6 +14,13 @@
       "productKeyVerification": {
         "status": "inferred",
         "note": "Insteon Device Categories and Product Keys (October 2008) gives this category and subcategory's key to the LampLinc Dimmer, Dual-Band [2457D3], not to this model; that this product reports the same key is read from its sharing the identity."
+      },
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running firmware 0x3B: a Hub 2245's ALL-Link record for the device and the device's ID Request broadcast gave category 0x01, subcategory 0x0E and firmware 0x3B, and Get Insteon Engine Version (cmd1 0x0D) was acknowledged with cmd2 0x01, i2.",
+        "firmware": [
+          "0x3B"
+        ]
       }
     }
   ],
