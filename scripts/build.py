@@ -1247,6 +1247,131 @@ def capability_descriptions():
     return {option["properties"]["kind"]["const"]: option["description"] for option in schema["$defs"]["capability"]["oneOf"]}
 
 
+# The verification statuses, in the order the page lists them.
+STATUSES = ("observed", "documented", "inferred", "conflicting")
+
+# One sentence each, for the page. They say what the README says a status means.
+STATUS_EXPLANATIONS = {
+    "observed": "Seen on a real device, with the firmware it was running recorded.",
+    "documented": "An Insteon document gives it and none of the catalog's sources disagree.",
+    "inferred": "No document states it, so it is read from an example, a similar product or how the product behaves.",
+    "conflicting": "Insteon's documents disagree, and the note says which value the catalog uses.",
+}
+
+# The keys of a command set that describe it rather than the product's behavior.
+COMMAND_SET_DESCRIPTIVE_KEYS = {"id", "name", "description", "notes", "sources"}
+
+
+def marked_statuses(value):
+    """The status of every `verification` in value, nested at any depth."""
+    found = []
+
+    def visit(node, key=None):
+        if isinstance(node, dict):
+            if key == "verification" and "status" in node:
+                found.append(node["status"])
+
+            for child_key, child in node.items():
+                visit(child, child_key)
+        elif isinstance(node, list):
+            for child in node:
+                visit(child, key)
+
+    visit(value)
+
+    return found
+
+
+def status_counts(statuses):
+    """How many of each status are in statuses, in the page's order."""
+    return {status: statuses.count(status) for status in STATUSES}
+
+
+def coverage(profiles, command_sets):
+    """What the catalog covers, counted from its data.
+
+    A value with no `verification` is documented, so an identity without one counts as
+    documented. A command set's values are counted only where they carry a mark. A profile has a
+    command set when one of its entries names a command set that describes behavior, and
+    deliberately has none when every entry names a command set that says there is nothing to read
+    or write.
+    """
+    describes_behavior = {command_set["id"]: bool(set(command_set) - COMMAND_SET_DESCRIPTIVE_KEYS) for command_set in command_sets}
+    described = deliberately_empty = 0
+
+    for profile in profiles:
+        entries = [describes_behavior[entry["commandSet"]] for entry in profile.get("commandSets", [])]
+        described += any(entries)
+        deliberately_empty += bool(entries) and not any(entries)
+
+    identities = [identity for profile in profiles for identity in profile["identities"]]
+
+    return {
+        "profiles": len(profiles),
+        "identities": len(identities),
+        "described": described,
+        "deliberatelyEmpty": deliberately_empty,
+        "undescribed": len(profiles) - described - deliberately_empty,
+        "commandSetStatuses": status_counts([status for command_set in command_sets for status in marked_statuses(command_set)]),
+        "identityStatuses": status_counts([identity.get("verification", {}).get("status", "documented") for identity in identities]),
+    }
+
+
+def coverage_section(summary):
+    """The page's coverage summary: counts, and a table of statuses."""
+
+    def number(metric, value):
+        return f'<span data-metric="{metric}">{value}</span>'
+
+    rows = "".join(
+        f'<tr><th scope="row"><span class="status status-{status}">{status.capitalize()}</span></th>'
+        f"<td>{html.escape(STATUS_EXPLANATIONS[status])}</td>"
+        f'<td class="num">{number(f"commandSet-{status}", summary["commandSetStatuses"][status])}</td>'
+        f'<td class="num">{number(f"identity-{status}", summary["identityStatuses"][status])}</td></tr>'
+        for status in STATUSES
+    )
+
+    return (
+        '<section class="coverage" aria-labelledby="coverage-heading">'
+        '<h2 id="coverage-heading">What the catalog covers</h2>'
+        '<ul class="totals">'
+        f'<li><strong>{number("profiles", summary["profiles"])}</strong> profiles</li>'
+        f'<li><strong>{number("identities", summary["identities"])}</strong> identities (category, subcategory and firmware a device can report)</li>'
+        f'<li><strong>{number("described", summary["described"])}</strong> profiles with a command set</li>'
+        f'<li><strong>{number("deliberatelyEmpty", summary["deliberatelyEmpty"])}</strong> profiles that deliberately have none, because there is nothing to read or write</li>'
+        f'<li><strong>{number("undescribed", summary["undescribed"])}</strong> profiles with no command set in the catalog, which are gaps</li>'
+        "</ul>"
+        '<table class="statuses-table"><caption>How sure the catalog is of what it states</caption>'
+        '<thead><tr><th scope="col">Status</th><th scope="col">Meaning</th><th scope="col" class="num">Command set values</th><th scope="col" class="num">Identities</th></tr></thead>'
+        f"<tbody>{rows}</tbody></table>"
+        '<p class="note">A command set value or profile entry with no mark is documented. The command set column counts only values that carry a mark; '
+        "the identities column counts every identity, and one with no mark counts as documented.</p>"
+        "</section>"
+    )
+
+
+def how_section(version):
+    """The page's closing section: where the catalog's facts come from and how to help."""
+    base = "https://github.com/brandtdaniels/insteon-device-catalog"
+
+    return (
+        '<section class="how" aria-labelledby="how-heading">'
+        '<h2 id="how-heading">How this catalog is built and how to help</h2>'
+        "<p>Every fact comes from a public Insteon document, cited by its exact title and version in the profile's <code>sources</code>, "
+        "or from an observation on a real device, which names the firmware it was seen on. "
+        "A value that no document states, that documents disagree on, or that a device has shown carries a status and a note that say so. "
+        "A value nobody has checked is marked unverified rather than stated as fact.</p>"
+        "<p>Help is welcome wherever a value is marked inferred or conflicting, and for devices the catalog has no command set for:</p>"
+        "<ul>"
+        f'<li>Found a wrong or missing value? <a href="{base}/issues">Open an issue</a> that names the product, the value and the document or device that shows it.</li>'
+        f'<li>Own a device? A <a href="{base}/pulls">pull request</a> can record what it did: the model, the firmware it was running and what you saw. '
+        f'<a href="{base}/blob/main/README.md#adding-or-changing-a-profile">Adding or changing a profile</a> describes the steps and the checks every change passes.</li>'
+        f'<li>Writing software? <a href="{base}/blob/main/API.md">API.md</a> describes the files and how to read them.</li>'
+        "</ul>"
+        "</section>"
+    )
+
+
 def index_page(profiles, command_sets, version):
     """The landing page: what the catalog is, how to download it, and a card for each profile to
     search and filter."""
@@ -1312,6 +1437,8 @@ def index_page(profiles, command_sets, version):
         if table or shared:
             details = "<details><summary>Details</summary>" + "".join(f"<p>{line}</p>" for line in shared) + table + "</details>"
 
+        statuses = [status for status in STATUSES if status in marked_statuses(profile)]
+        marks = "".join(f'<span class="status status-{status}" title="{escape(STATUS_EXPLANATIONS[status])}">{status.capitalize()}</span>' for status in statuses)
         facts = [radios[profile["radio"]] for _ in [0] if "radio" in profile]
         facts += [roles[profile["role"]]] if "role" in profile else []
         facts += ["Battery powered"] if profile.get("batteryPowered") else []
@@ -1329,6 +1456,7 @@ def index_page(profiles, command_sets, version):
             "engines": " ".join(sorted({entry["engine"] for entry in profile.get("engines", [])})),
             "radio": profile.get("radio", ""),
             "battery": "true" if profile.get("batteryPowered") else "false",
+            "verification": " ".join(statuses),
         }
         data = " ".join(f'data-{key}="{escape(value)}"' for key, value in attributes.items())
         card = (
@@ -1338,6 +1466,7 @@ def index_page(profiles, command_sets, version):
             + (f'<p class="aliases">Also known as {escape(", ".join(aliases))}</p>' if aliases else "")
             + (f'<p class="description">{escape(profile["description"])}</p>' if "description" in profile else "")
             + (f'<p class="facts">{" · ".join(facts)}</p>' if facts else '<p class="facts"></p>')
+            + (f'<p class="marks"><span class="marks-label">Marked values</span> {marks}</p>' if marks else "")
             + details
             + "</article>"
         )
@@ -1364,6 +1493,11 @@ def index_page(profiles, command_sets, version):
         version=MAJOR,
         catalog_version=version,
         count=len(profiles),
+        coverage=coverage_section(coverage(profiles, command_sets)),
+        how=how_section(version),
+        verification_options="".join(
+            f'<option value="{status}">{status.capitalize()}</option>' for status in STATUSES if any(status in marked_statuses(profile) for profile in profiles)
+        ),
         sections="\n".join(sections),
         category_options="".join(f'<option value="{c}">{escape(CATEGORY_NAMES.get(c, c))}</option>' for c in categories),
         engine_options="".join(
