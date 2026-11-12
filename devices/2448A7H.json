@@ -16,6 +16,26 @@
       "kind": "modem"
     }
   ],
+  "commandSets": [
+    {
+      "commandSet": "usbAdapter",
+      "category": "0x03",
+      "subcategory": "0x21",
+      "verification": {
+        "status": "inferred",
+        "note": "No document names the 2448A7H; it is read as the same adapter as the 2448A7, and the use of usbAdapter is inferred."
+      }
+    },
+    {
+      "commandSet": "usbAdapter",
+      "category": "0x03",
+      "subcategory": "0x23",
+      "verification": {
+        "status": "inferred",
+        "note": "No document names the 2448A7H; it is read as the same adapter as the 2448A7, and the use of usbAdapter is inferred."
+      }
+    }
+  ],
   "lifecycle": {
     "installation": {
       "steps": [
@@ -59,7 +79,7 @@
       ],
       "verification": {
         "status": "inferred",
-        "note": "Read from the USB Adapter Developer Notes; no document names the 2448A7H."
+        "note": "Read from the USB Wireless Adapter Developer Notes; no document names the 2448A7H."
       }
     }
   },
@@ -67,6 +87,6 @@
     "HouseLinc Device Definitions (version 2.9.87)",
     "Portable USB Adapter 2448A7 Quick Start Guide",
     "USB Stick 2448A7 Quick Start Guide",
-    "USB Adapter Developer Notes"
+    "USB Wireless Adapter Developer Notes"
   ]
 }
