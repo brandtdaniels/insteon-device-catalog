@@ -916,8 +916,8 @@
       "idempotent": true,
       "number": "0x77",
       "verification": {
-        "status": "observed",
-        "note": "Seen on a device running modem firmware 0xA5: a Hub 2245's modem, driven over the Hub's network interface, answered Beep (0x77) with a NAK, where the Insteon Hub Developer's Guide lists the command in its serial command summary table, among the commands it marks as added after initial release, without a chart of its own. So the catalog's documented entry did not hold on this modem.",
+        "status": "conflicting",
+        "note": "The Insteon Hub Developer's Guide lists Beep (0x77) in its serial command summary table, among the commands it marks as added after initial release, without a chart of its own. Seen on a device running modem firmware 0xA5: a Hub 2245's modem, driven over the Hub's network interface, answered Beep with a NAK. The catalog keeps the entry from the document.",
         "firmware": [
           "0xA5"
         ]
