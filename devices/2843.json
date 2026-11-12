@@ -11,7 +11,14 @@
         "status": "inferred",
         "note": "Insteon Device Categories and Product Keys (October 2008) gives this category and subcategory's key to the TriggerLinc - Insteon Open / Close Sensor [2421], not to this model; that this product reports the same key is read from its sharing the identity."
       },
-      "region": "US"
+      "region": "US",
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running firmware 0x34: ID Request answered with category 0x10, subcategory 0x02 and firmware 0x34, and the engine read i2CS, as the catalog's engine entry gives, while the sensor was awake in its double-blink mode (SET held until the LED blinks, then a tap of SET). While it was asleep it answered nothing: not ID Request, Ping or Get Insteon Engine Version (cmd1 0x0D). It did not report a product key.",
+        "firmware": [
+          "0x34"
+        ]
+      }
     },
     {
       "category": "0x10",
@@ -45,6 +52,13 @@
           "0x87",
           "0x88",
           "0x89"
+        ]
+      },
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running firmware 0x34: the engine read i2CS while the sensor was awake in its double-blink mode.",
+        "firmware": [
+          "0x34"
         ]
       }
     },
@@ -83,7 +97,14 @@
     {
       "number": "0x01",
       "name": "Open/close",
-      "role": "controller"
+      "role": "controller",
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running firmware 0x34: tapping its SET button sent a group 1 broadcast to the Hub: Light On (cmd1 0x11) on one tap and Light Off (cmd1 0x13) on the next.",
+        "firmware": [
+          "0x34"
+        ]
+      }
     },
     {
       "number": "0x02",
@@ -174,7 +195,8 @@
         "Then turn the responder on (or set it to any state) and press and hold its SET button for 3 seconds; the sensor's LED turns solid green. By default the sensor turns responders on when it opens and off when it closes.",
         "When adding it to a Hub, the Open/Close Sensor 2843 Quick Start Guide says to press and hold the SET button until the LED blinks and then tap the SET button (the LED double-blinks).",
         "The Open/Close Sensor is a controller only.",
-        "Older sensors with a jumper have a multi-scene mode (jumper removed): link scene 1 with the sensor open and scene 2 with it closed. Remove and reinsert the battery after changing the jumper."
+        "Older sensors with a jumper have a multi-scene mode (jumper removed): link scene 1 with the sensor open and scene 2 with it closed. Remove and reinsert the battery after changing the jumper.",
+        "Seen on a device running firmware 0x34: holding SET for 3 seconds put the sensor in linking mode, with its LED blinking green."
       ],
       "verification": {
         "status": "conflicting",
@@ -242,8 +264,11 @@
             "set": true
           },
           "verification": {
-            "status": "inferred",
-            "note": "The Open/Close Sensor Developer Notes give the Link to FF Group option as bit 6 of the configuration byte, on in its default 0x43. That a link made with the SET button covers every group the sensor controls while it's on is read from that; with it off, the button links group 1 only. No document describes adding this product to a Hub."
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x34: with the sensor in linking mode (SET held 3 seconds, green LED blinking), linking with the modem of a Hub 2245 as responder in group 1 completed after the keep-awake, an extended Set (cmd1 0x2E, cmd2 0x00) with D1 0x01 and D2 0x04, was sent to the sensor first.",
+            "firmware": [
+              "0x34"
+            ]
           }
         }
       ],
@@ -338,7 +363,8 @@
       ],
       "notes": [
         "The Open/Close Sensor Developer Notes say the sensor sleeps quickly to save battery and must be awake to send or receive messages. Their example asks for 0xF0 seconds, about 4 minutes; the maximum is 0xFF.",
-        "The documents don't say how to wake the sensor before sending the command."
+        "The documents don't say how to wake the sensor before sending the command.",
+        "Seen on a device running firmware 0x34: the sensor answered ID Request only while awake in its double-blink mode (SET held until the LED blinks, then a tap of SET); while asleep it answered nothing, not ID Request, Ping or Get Insteon Engine Version (cmd1 0x0D)."
       ],
       "verification": {
         "status": "inferred",

@@ -34,7 +34,14 @@
           "description": "The modem's firmware version.",
           "byte": 6
         }
-      ]
+      ],
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running modem firmware 0xA5: a Hub 2245's modem, driven over the Hub's network interface, answered Get IM Info with its Insteon ID, category 0x03, subcategory 0x33 and firmware 0xA5.",
+        "firmware": [
+          "0xA5"
+        ]
+      }
     },
     {
       "name": "sendX10",
@@ -73,7 +80,14 @@
           "description": "The ALL-Link group to link.",
           "byte": 2
         }
-      ]
+      ],
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running modem firmware 0xA5: a Hub 2245's modem, driven over the Hub's network interface, accepted Start ALL-Linking with link code 0x00, as responder, and linking completed with real devices.",
+        "firmware": [
+          "0xA5"
+        ]
+      }
     },
     {
       "name": "startAllLinkingAsController",
@@ -93,7 +107,14 @@
           "description": "The ALL-Link group to link.",
           "byte": 2
         }
-      ]
+      ],
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running modem firmware 0xA5: a Hub 2245's modem, driven over the Hub's network interface, accepted Start ALL-Linking with link code 0x01, as controller, and linking completed with real devices.",
+        "firmware": [
+          "0xA5"
+        ]
+      }
     },
     {
       "name": "startAllLinkingAsEither",
@@ -192,14 +213,28 @@
       "description": "Starts a scan of the modem's ALL-Link database. An ACK means an ALL-Link Record Response follows; a NAK means the database is empty.",
       "effect": "readOnly",
       "idempotent": true,
-      "number": "0x69"
+      "number": "0x69",
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running modem firmware 0xA5: a Hub 2245's modem, driven over the Hub's network interface, answered Get First ALL-Link Record with its first ALL-Link record, as the start of a listing of its database.",
+        "firmware": [
+          "0xA5"
+        ]
+      }
     },
     {
       "name": "getNextAllLinkRecord",
       "description": "Returns the next record in the modem's ALL-Link database. An ACK means an ALL-Link Record Response follows; a NAK means there are no more records.",
       "effect": "readOnly",
       "idempotent": true,
-      "number": "0x6A"
+      "number": "0x6A",
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running modem firmware 0xA5: a Hub 2245's modem, driven over the Hub's network interface, answered Get Next ALL-Link Record with its following ALL-Link records, to list its database.",
+        "firmware": [
+          "0xA5"
+        ]
+      }
     },
     {
       "name": "setImConfiguration",
@@ -236,7 +271,14 @@
             }
           ]
         }
-      ]
+      ],
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running modem firmware 0xA5: a Hub 2245's modem, driven over the Hub's network interface, accepted Set IM Configuration: 02 6B 43 was echoed as 02 6B 43 06, ending in an ACK, and the configuration flags read the same after it.",
+        "firmware": [
+          "0xA5"
+        ]
+      }
     },
     {
       "name": "getAllLinkRecordForSender",
@@ -659,7 +701,14 @@
           "description": "Link Data 3.",
           "byte": 9
         }
-      ]
+      ],
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running modem firmware 0xA5: a Hub 2245's modem, driven over the Hub's network interface, deleted a responder record with Manage ALL-Link Record, control code 0x80: the record was gone from the modem's next read of its database.",
+        "firmware": [
+          "0xA5"
+        ]
+      }
     },
     {
       "name": "setNakMessageByte",
@@ -746,7 +795,14 @@
           "description": "Reserved; 0x00.",
           "byte": 3
         }
-      ]
+      ],
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running modem firmware 0xA5: a Hub 2245's modem, driven over the Hub's network interface, answered Get IM Configuration, and the configuration flags byte read 0x43, and read 0x43 again after Set IM Configuration wrote the same value.",
+        "firmware": [
+          "0xA5"
+        ]
+      }
     },
     {
       "name": "cancelCleanup",
@@ -860,8 +916,11 @@
       "idempotent": true,
       "number": "0x77",
       "verification": {
-        "status": "documented",
-        "note": "The Insteon Hub Developer's Guide lists the command in its serial command summary table, among the commands it marks as added after initial release, without a chart of its own."
+        "status": "conflicting",
+        "note": "The Insteon Hub Developer's Guide lists Beep (0x77) in its serial command summary table, among the commands it marks as added after initial release, without a chart of its own. Seen on a device running modem firmware 0xA5: a Hub 2245's modem, driven over the Hub's network interface, answered Beep with a NAK. The catalog keeps the entry from the document.",
+        "firmware": [
+          "0xA5"
+        ]
       }
     },
     {
@@ -938,7 +997,9 @@
     "sendX10 is not idempotent: an X10 Dim or Bright command repeats its step.",
     "startAllLinkingAsResponder, startAllLinkingAsController and startAllLinkingAsEither are not idempotent: sending one again restarts ALL-Linking mode.",
     "The Insteon Hub Developer's Guide gives the commands from 0x75 on in its summary table only, and charts Cancel Cleanup (0x74) alone. It lists 0x7B (Set RF Frequency Offset) and 0x7C (Set Acknowledge for TempLinc command), whose payloads it does not describe enough to take, so they have no entries.",
-    "writeDatabaseBytes overwrites an ALL-Link record in the modem's database at an address, so it is destructive. beep sounds at once, so it is actuation."
+    "writeDatabaseBytes overwrites an ALL-Link record in the modem's database at an address, so it is destructive. beep sounds at once, so it is actuation.",
+    "Seen on a device running modem firmware 0xA5: a Hub 2245's modem, driven over the Hub's network interface, echoed Send Insteon Standard or Extended Message (0x62) with an ACK for standard frames and for extended frames, and device replies followed.",
+    "Seen on a device running modem firmware 0xA5: a Hub 2245's modem, driven over the Hub's network interface, answered Read Radio Status (0x7E) with frequency code 0x85, radio flags 0x04, LED flags 0x00, hardware version 0x00 and the last two bytes 0x01 0x00. Set Radio (0x7D) with 02 7D 01 was echoed with an ACK and the radio flags read 0x05, with bit 0, the RF disable flag, set and the radio off until a power cycle; 02 7D 00 was echoed with an ACK and the radio flags read 0x04 again. This command set has no entry for either command."
   ],
   "sources": [
     "Insteon Hub Developer's Guide"
