@@ -1,0 +1,706 @@
+{
+  "id": "microShutter",
+  "name": "Micro Open/Close Module",
+  "description": "The module the Open/Close Micro Module - Developer Notes cover (the document calls it the Micro Module Shutter), which opens and closes a motorized load such as a shutter, shade or screen. It takes the commands of the micro modules, with Shutter Open and Shutter OFF for the light commands, and adds a motor direction. The document's device line is a placeholder, so no category or subcategory is confirmed by it.",
+  "enumerations": [
+    {
+      "name": "triggerLevel",
+      "description": "Which level a triggered group sets the local load to.",
+      "values": [
+        {
+          "value": "0x00",
+          "name": "localOnLevel",
+          "description": "The local load's own on-level."
+        },
+        {
+          "value": "0x01",
+          "name": "givenLevel",
+          "description": "The level in D3."
+        }
+      ]
+    },
+    {
+      "name": "triggerRampRate",
+      "description": "How fast a triggered group changes the local load.",
+      "values": [
+        {
+          "value": "0x00",
+          "name": "localRampRate",
+          "description": "At the local load's ramp rate."
+        },
+        {
+          "value": "0x01",
+          "name": "instant",
+          "description": "Instantly."
+        }
+      ]
+    }
+  ],
+  "operatingFlags": [
+    {
+      "name": "programmingLock",
+      "label": "Programming lock",
+      "section": "Linking",
+      "description": "Linking and programming from the device itself are locked out.",
+      "query": "0x00",
+      "bit": "0x01",
+      "on": "0x00",
+      "off": "0x01",
+      "guard": "neverSet",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, pages 7 and 10: bit 0 of the Read Operating Flags table is the programming lock; Set Operating Flags 0x00 turns it on and 0x01 off."
+      }
+    },
+    {
+      "name": "ledOnTransmit",
+      "label": "Blink LED when sending",
+      "section": "LEDs",
+      "description": "The status LED blinks when the device sends an Insteon message.",
+      "query": "0x00",
+      "bit": "0x02",
+      "on": "0x02",
+      "off": "0x03",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, pages 7 and 10: bit 1 of the Read Operating Flags table is LED on TX; Set Operating Flags 0x02 turns it on and 0x03 off."
+      }
+    },
+    {
+      "name": "ledOff",
+      "label": "LED off",
+      "section": "LEDs",
+      "description": "The status LED is off.",
+      "query": "0x00",
+      "bit": "0x10",
+      "on": "0x08",
+      "off": "0x09",
+      "verification": {
+        "status": "conflicting",
+        "note": "Open/Close Micro Module - Developer Notes, pages 7 and 10, read bit 4 as LED off, the state Set Operating Flags 0x08 sets and 0x09 clears. The Insteon Developer's Guide (2009) reads bit 4 of the 0x00 reply as LED on (backlight on). The values here are those of the Open/Close Micro Module - Developer Notes."
+      }
+    },
+    {
+      "name": "loadSense",
+      "label": "Load sense",
+      "section": "Load",
+      "advanced": true,
+      "description": "Bit 5 of the Read Operating Flags table. No command sets it, and the document doesn't say what it does for a motor.",
+      "query": "0x00",
+      "bit": "0x20",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 7: bit 5 is listed as LoadSense. The document gives no Set Operating Flags value for it and says nothing of what it does for a shutter."
+      }
+    }
+  ],
+  "readings": [
+    {
+      "name": "databaseDelta",
+      "label": "ALL-Link database changes",
+      "section": "Diagnostics",
+      "advanced": true,
+      "description": "A count that goes up whenever the ALL-Link database changes.",
+      "query": "0x01",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 7: the second row of the Read Operating Flags table, the database delta, which increments with any change in the database."
+      }
+    }
+  ],
+  "flagCommands": [
+    {
+      "name": "keyBeepOn",
+      "description": "The device beeps when a button is pressed.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x0A",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 10: Set Operating Flags 0x0A is KeyBeep On. The Read Operating Flags table gives no bit for it."
+      }
+    },
+    {
+      "name": "keyBeepOff",
+      "description": "The device doesn't beep when a button is pressed.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x0B",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 11: Set Operating Flags 0x0B is KeyBeep Off. The Read Operating Flags table gives no bit for it."
+      }
+    },
+    {
+      "name": "radioOff",
+      "description": "The device doesn't originate RF messages. It still repeats the RF messages it hears. Never sent, because it can leave the device unreachable over RF.",
+      "effect": "destructive",
+      "idempotent": true,
+      "command2": "0x0C",
+      "guard": "never",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 11: Set Operating Flags 0x0C is RF Off (as an originator, the device will still hop messages)."
+      }
+    },
+    {
+      "name": "radioOn",
+      "description": "The device originates RF messages.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x0D",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 11: Set Operating Flags 0x0D is RF On."
+      }
+    },
+    {
+      "name": "powerLineOff",
+      "description": "Insteon communication over the powerline is off. The device turns it back on whenever it powers up. Never sent, because it can leave the device unreachable over the powerline.",
+      "effect": "destructive",
+      "idempotent": true,
+      "command2": "0x0E",
+      "guard": "never",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 11: Set Operating Flags 0x0E is Insteon Off; 0x0F is Insteon On and goes back to on every power cycle."
+      }
+    },
+    {
+      "name": "powerLineOn",
+      "description": "Insteon communication over the powerline is on.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x0F",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 11: Set Operating Flags 0x0F is Insteon On (it will go back to on every power cycle)."
+      }
+    },
+    {
+      "name": "applicationRetriesOn",
+      "description": "The device retries application messages as many times as its ALL-Link database says, and reports cleanup errors.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x10",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 11: Set Operating Flags 0x10 is the TenD flag on, which turns on application retries read out of the database and the cleanup error report."
+      }
+    },
+    {
+      "name": "applicationRetriesOff",
+      "description": "The device doesn't retry application messages from its ALL-Link database.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x11",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 11: Set Operating Flags 0x11 is the TenD flag off."
+      }
+    },
+    {
+      "name": "x10Off",
+      "description": "X10 sending and receiving are off.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x12",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 11: Set Operating Flags 0x12 is X10Offflag on, which disables all X10 receiving and transmitting."
+      }
+    },
+    {
+      "name": "x10On",
+      "description": "X10 sending and receiving are on.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x13",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 11: Set Operating Flags 0x13 is X10Offflag off."
+      }
+    },
+    {
+      "name": "errorBlinkOff",
+      "description": "The status LED doesn't blink when a communication error occurs.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x14",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 11: Set Operating Flags 0x14 is Error Blink Off."
+      }
+    },
+    {
+      "name": "errorBlinkOn",
+      "description": "The status LED blinks when a communication error occurs.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x15",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 11: Set Operating Flags 0x15 is Error Blink On."
+      }
+    },
+    {
+      "name": "cleanupReportOff",
+      "description": "The device doesn't send a success report after the cleanup messages that follow a group command.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x16",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 11: Set Operating Flags 0x16 is Cleanup Report Off."
+      }
+    },
+    {
+      "name": "cleanupReportOn",
+      "description": "The device sends a success report after the cleanup messages that follow a group command.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x17",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 11: Set Operating Flags 0x17 is Cleanup Report On."
+      }
+    },
+    {
+      "name": "checksumOff",
+      "description": "Extended Set and ALL-Link database write messages needn't carry a checksum in D14.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x18",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 11: Set Operating Flags 0x18 is Checksum Off for database and properties writes."
+      }
+    },
+    {
+      "name": "checksumOn",
+      "description": "Extended Set and ALL-Link database write messages must carry a checksum in D14. Never sent, because a controller that doesn't send one isn't understood by the module.",
+      "effect": "destructive",
+      "idempotent": true,
+      "command2": "0x19",
+      "guard": "never",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 11: Set Operating Flags 0x19 is Checksum On for database and properties writes."
+      }
+    },
+    {
+      "name": "standardHoldoff",
+      "description": "The device holds off 2 to 9 zero crossings before sending.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x1A",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, pages 11 and 12: Set Operating Flags 0x1A is Standard Holdoff (2 to 9 zero crossings)."
+      }
+    },
+    {
+      "name": "longHoldoff",
+      "description": "The device holds off 8 times as long before sending, 16 to 72 zero crossings.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x1B",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 12: Set Operating Flags 0x1B is Standard Holdoff times 8 (16 to 72 zero crossings)."
+      }
+    },
+    {
+      "name": "smartHopsOn",
+      "description": "Each message starts with the hop count of the last acknowledgment received (smart hops).",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x1C",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 12: Set Operating Flags 0x1C is Start Hops of last Rx ACK (SmartHops)."
+      }
+    },
+    {
+      "name": "smartHopsOff",
+      "description": "Each message starts with one hop.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x1D",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 12: Set Operating Flags 0x1D is Start Hops of 1."
+      }
+    },
+    {
+      "name": "normalDirection",
+      "description": "The motor runs in its normal direction.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x24",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 12: Set Operating Flags 0x24 is Normal Direction. The document doesn't say which way the motor then turns."
+      }
+    },
+    {
+      "name": "reverseDirection",
+      "description": "The motor runs in the reverse direction.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x25",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 12: Set Operating Flags 0x25 is Reverse Direction. The document doesn't say what it reverses."
+      }
+    }
+  ],
+  "extendedSettings": {
+    "perButton": false,
+    "values": [
+      {
+        "name": "rampRate",
+        "label": "Ramp rate",
+        "section": "Load",
+        "advanced": true,
+        "description": "The saved ramp rate that Shutter OFF uses, from 0x00 to 0x1F. The document gives no durations and doesn't say what the ramp rate times for a motor.",
+        "byte": 7,
+        "range": {
+          "from": "0x00",
+          "through": "0x1F"
+        },
+        "verification": {
+          "status": "documented",
+          "note": "Open/Close Micro Module - Developer Notes, pages 13 and 14: the extended Get reply holds the ramp rate in D7, and the Set for Ramp Rate takes 0x00 through 0x1F. Page 6 says Shutter OFF goes to off at the saved ramp rate."
+        }
+      },
+      {
+        "name": "onLevel",
+        "label": "On-level",
+        "section": "Load",
+        "advanced": true,
+        "description": "The on-level, from 0x00 to 0xFF. The document doesn't say what it means for a motor.",
+        "byte": 8,
+        "range": {
+          "from": "0x00",
+          "through": "0xFF"
+        },
+        "unit": "percent",
+        "scale": 0.392157,
+        "verification": {
+          "status": "documented",
+          "note": "Open/Close Micro Module - Developer Notes, pages 13 and 15: the extended Get reply holds the on-level in D8, and the Set for On Level takes 0x00 through 0xFF."
+        }
+      },
+      {
+        "name": "ledBrightness",
+        "label": "LED brightness",
+        "section": "LEDs",
+        "description": "The brightness of the status LED, from 0x11 (dimmest) to 0x7F (brightest).",
+        "byte": 9,
+        "range": {
+          "from": "0x11",
+          "through": "0x7F"
+        },
+        "verification": {
+          "status": "documented",
+          "note": "Open/Close Micro Module - Developer Notes, pages 13 and 16: the extended Get reply holds the LED brightness in D9, and the Set for LED Brightness takes 0x11 (least bright) through 0x7F (most bright)."
+        }
+      }
+    ],
+    "writes": [
+      {
+        "name": "rampRate",
+        "description": "Sets the ramp rate.",
+        "selector": "0x05",
+        "perButton": false,
+        "bytes": [
+          {
+            "position": 3,
+            "value": "rampRate"
+          }
+        ],
+        "verification": {
+          "status": "conflicting",
+          "note": "Open/Close Micro Module - Developer Notes, page 14, puts 0x00 in D1 of the Set for Ramp Rate and says other values are ignored. The catalog's extended Set for a whole-device value sends 0x01 in D1, as for every device, and the selector 0x05 in D2 is as the document gives it."
+        }
+      },
+      {
+        "name": "onLevel",
+        "description": "Sets the on-level.",
+        "selector": "0x06",
+        "perButton": false,
+        "bytes": [
+          {
+            "position": 3,
+            "value": "onLevel"
+          }
+        ],
+        "verification": {
+          "status": "conflicting",
+          "note": "Open/Close Micro Module - Developer Notes, page 15, puts 0x00 in D1 of the Set for On Level and says other values are ignored. The catalog's extended Set for a whole-device value sends 0x01 in D1, as for every device, and the selector 0x06 in D2 is as the document gives it."
+        }
+      },
+      {
+        "name": "ledBrightness",
+        "description": "Sets the brightness of the status LED.",
+        "selector": "0x07",
+        "perButton": false,
+        "bytes": [
+          {
+            "position": 3,
+            "value": "ledBrightness"
+          }
+        ],
+        "verification": {
+          "status": "conflicting",
+          "note": "Open/Close Micro Module - Developer Notes, page 16, puts 0x00 in D1 of the Set for LED Brightness. The catalog's extended Set for a whole-device value sends 0x01 in D1, as for every device, and the selector 0x07 in D2 is as the document gives it."
+        }
+      }
+    ]
+  },
+  "standardCommands": [
+    {
+      "name": "shutterOpen",
+      "description": "Opens the shutter. The document gives cmd2 as 0x01 through 0xFF and doesn't say that a value other than 0xFF changes how far it opens.",
+      "effect": "actuation",
+      "idempotent": true,
+      "command1": "0x11",
+      "parameter": {
+        "name": "level",
+        "description": "0x01 through 0xFF; the document gives no meaning for the value.",
+        "range": {
+          "from": 1,
+          "through": 255
+        }
+      },
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 6: Shutter Open, cmd1 0x11, cmd2 0x01 through 0xFF. The document has no stop command and no position, so Open is treated as going to the open end, which repeating leaves unchanged."
+      }
+    },
+    {
+      "name": "shutterOpenFast",
+      "description": "Opens the shutter instantly. The document gives cmd2 as 0x01 through 0xFF.",
+      "effect": "actuation",
+      "idempotent": true,
+      "command1": "0x12",
+      "parameter": {
+        "name": "level",
+        "description": "0x01 through 0xFF; the document gives no meaning for the value.",
+        "range": {
+          "from": 1,
+          "through": 255
+        }
+      },
+      "verification": {
+        "status": "conflicting",
+        "note": "Open/Close Micro Module - Developer Notes, page 6, lists Shutter Open Fast with cmd1 0x11, the same as Shutter Open, and Shutter OFF Fast with 0x14. The catalog uses 0x12, which the Insteon Developer's Guide (2009) gives for Light ON Fast and which pairs with 0x14 as 0x11 pairs with 0x13."
+      }
+    },
+    {
+      "name": "shutterOff",
+      "description": "Shutter OFF: goes to off, the closed end, at the saved ramp rate. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
+      "command1": "0x13",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 6: Shutter OFF, cmd1 0x13, cmd2 a value it doesn't care about: go to off at the saved ramp rate. The document never says closed; the catalog reads off as the closed end, since Shutter Open is on."
+      }
+    },
+    {
+      "name": "shutterOffFast",
+      "description": "Shutter OFF Fast: goes to off, the closed end, instantly. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
+      "command1": "0x14",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 6: Shutter OFF Fast, cmd1 0x14, cmd2 a value it doesn't care about: go to off instantly."
+      }
+    },
+    {
+      "name": "readStatus",
+      "description": "Reads the module's level. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
+      "command1": "0x19",
+      "command2": "0x00",
+      "reply": {
+        "name": "onLevel",
+        "description": "The switch on-level, from 0x00 (off) to 0xFF.",
+        "unit": "percent",
+        "scale": 0.392157
+      },
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 5: Status Request, cmd1 0x19, cmd2 0x00; the acknowledgment carries the database delta and the switch on-level. The document doesn't say what level a shutter reports in or after travel."
+      }
+    },
+    {
+      "name": "instantOnOff",
+      "description": "Sets the module to the level in cmd2 instantly, at the instant ramp rate.",
+      "effect": "actuation",
+      "idempotent": true,
+      "command1": "0x21",
+      "parameter": {
+        "name": "onLevel",
+        "description": "The level to go to, from 0x00 (off) to 0xFF.",
+        "range": {
+          "from": 0,
+          "through": 255
+        }
+      },
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 8: Instant On/Off, cmd1 0x21, cmd2 0x00 through 0xFF (the on-level), which uses the instant ramp rate."
+      }
+    },
+    {
+      "name": "onAtRampRate",
+      "description": "Turns the module on to a level at a ramp rate, both given in cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
+      "command1": "0x2E",
+      "parameter": {
+        "name": "levelAndRampRate",
+        "description": "Bits 4 through 7 give the level, which is 16 times their value plus 0x0F, and bits 0 through 3 the ramp rate, which is 2 times their value plus 1."
+      },
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 8: RR On, cmd1 0x2E: on-level is 16 times the on value plus 0x0F, and the ramp rate is 2 times the ramp rate plus 1."
+      }
+    },
+    {
+      "name": "offAtRampRate",
+      "description": "Turns the module off at a ramp rate given in cmd2. Bits 4 through 7 are 0.",
+      "effect": "actuation",
+      "idempotent": true,
+      "command1": "0x2F",
+      "parameter": {
+        "name": "rampRate",
+        "description": "The ramp rate, which is 2 times this value plus 1.",
+        "mask": "0x0F"
+      },
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 8: RR Off, cmd1 0x2F: the level is 0x00 and the ramp rate is 2 times the ramp rate plus 1."
+      }
+    },
+    {
+      "name": "beep",
+      "description": "Beeps once, as pressing the SET button does. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
+      "command1": "0x30",
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, page 8: Beep, cmd1 0x30, cmd2 a value it doesn't care about: beeps for the standard duration, the same as the SET button pressed."
+      }
+    }
+  ],
+  "extendedCommands": [
+    {
+      "name": "triggerGroup",
+      "description": "Sends group D1's command to the group as if its button were pressed, and sets the local load as D2 through D6 say. The device doesn't parse the command it sends, so to turn the local load off, put 0x01 in D2 and 0x00 in D3.",
+      "effect": "actuation",
+      "idempotent": false,
+      "command1": "0x30",
+      "command2": "0x00",
+      "perButton": true,
+      "parameters": [
+        {
+          "name": "levelSource",
+          "description": "Which level the local load goes to.",
+          "byte": 2,
+          "kind": "enumeration",
+          "enumeration": "triggerLevel"
+        },
+        {
+          "name": "onLevel",
+          "description": "The level the local load goes to when D2 is 0x01.",
+          "byte": 3,
+          "range": {
+            "from": 0,
+            "through": 255
+          }
+        },
+        {
+          "name": "groupCommand1",
+          "description": "The cmd1 to send to the group.",
+          "byte": 4
+        },
+        {
+          "name": "groupCommand2",
+          "description": "The cmd2 to send to the group.",
+          "byte": 5
+        },
+        {
+          "name": "rampRate",
+          "description": "How fast the local load changes.",
+          "byte": 6,
+          "kind": "enumeration",
+          "enumeration": "triggerRampRate"
+        }
+      ],
+      "verification": {
+        "status": "documented",
+        "note": "Open/Close Micro Module - Developer Notes, pages 19 and 20: Trigger Group, cmd1 0x30, cmd2 0x00, D1 the group or button, D2 through D6 as listed on page 20."
+      }
+    }
+  ],
+  "groupTypes": [
+    {
+      "name": "shutter",
+      "label": "Shutter",
+      "kind": "windowCovering",
+      "state": {
+        "command": "readStatus",
+        "ranges": [
+          {
+            "from": "0x00",
+            "through": "0x00",
+            "label": "Closed"
+          },
+          {
+            "from": "0x01",
+            "through": "0xFF",
+            "label": "Open"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "name": "open",
+          "label": "Open",
+          "command": "shutterOpen",
+          "value": "0xFF"
+        },
+        {
+          "name": "close",
+          "label": "Close",
+          "command": "shutterOff"
+        }
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "The Open/Close Micro Module - Developer Notes, pages 5 and 6, gives Status Request's reply as the switch on-level and the commands Shutter Open and Shutter OFF, but never says what a level means for a shutter, so the ranges and the labels Closed and Open are read from the on and off the commands are named for. Group 1 is the module's only group (page 3)."
+      }
+    }
+  ],
+  "notes": [
+    "The Open/Close Micro Module - Developer Notes are titled Micro Module Shutter Developer Notes on the document itself (Version 001, June 28, 2012) and give their device line as a placeholder, Dev 0x01 and Sub 0xXX, so they don't confirm the category 0x0E identities this command set is used for.",
+    "The Open/Close Micro Module - Developer Notes are for an i2CS device: a direct command from a sender not in the module's ALL-Link database is ignored and answered with a NAK carrying 0xFF in cmd2, and Set Operating Flags and the extended Sets carry a checksum in D14 (page 21).",
+    "The document defines no stop command and no position. Shutter Open and Shutter OFF go to the ends of travel, so the catalog marks all four shutter commands idempotent; repeating one while the shutter is moving or already at the end isn't described.",
+    "The document's Set Operating Flags table lists Resume Dim (0x04 and 0x05) as dimmers only, so the catalog gives the shutter no resume dim flag, and lists Normal Direction and Reverse Direction (0x24 and 0x25), which no read bit reports.",
+    "The document gives no Read Operating Flags bits for RF off, powerline off or checksum required, so those are flag commands without a flag to read; radioOff, powerLineOff and checksumOn are guard never, as the flags they set cut the module off or change the messages it accepts.",
+    "The document's ALL-Link record lists Data 1 through Data 3 as not used and says a record with the controller bit clear is a responder whose group 1 controls the local load (page 22), so the group type has no link data. The database holds 416 records of 8 bytes, from 0x0FF8 down to 0x0300.",
+    "The document also describes Enter Linking Mode (cmd1 0x09, always group 1), Get Database and Set Database (cmd1 0x2F, D2 0x00 and 0x02), Ping, ID Request and the Assign to and Delete from ALL-Link Group broadcasts; the catalog describes those for every device elsewhere and gives this command set no entries for them.",
+    "triggerGroup, as the document gives it, sends a group command to the group's responders, and a responder's reply to a second one isn't something the sender can see, so it's actuation and not idempotent."
+  ],
+  "sources": [
+    "Open/Close Micro Module - Developer Notes",
+    "Insteon Developer's Guide (2009)"
+  ]
+}
