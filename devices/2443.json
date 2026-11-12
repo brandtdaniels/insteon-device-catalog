@@ -11,6 +11,17 @@
       "productKey": "0x000022"
     }
   ],
+  "commandSets": [
+    {
+      "commandSet": "noSettings",
+      "category": "0x00",
+      "subcategory": "0x0B",
+      "verification": {
+        "status": "inferred",
+        "note": "The Access Point 2443 Owner's Manual describes only installation, the beeper and LED that show setup activity, and troubleshooting. It shows no operating flag, setting or command, but it doesn't say there are none."
+      }
+    }
+  ],
   "radio": "dual",
   "capabilities": [],
   "lifecycle": {
