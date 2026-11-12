@@ -275,7 +275,7 @@
       "off": "0x07",
       "verification": {
         "status": "conflicting",
-        "note": "One source swaps 0x06 and 0x07 (the 6- and 8-button layouts) and 0x08 and 0x09 (backlight on and off); the values here are those other sources give."
+        "note": "One source swaps 0x06 and 0x07 (the 6- and 8-button layouts) and 0x08 and 0x09 (backlight on and off); the values here are those the KeypadLinc Line Developer Notes and the Insteon Command Tables (2007) give."
       },
       "advanced": true
     },
@@ -290,7 +290,7 @@
       "off": "0x09",
       "verification": {
         "status": "conflicting",
-        "note": "The Insteon Developer's Guide (2009) reads bit 4 of the 0x00 reply as LED on, but later sources read it as LED off, the state 0x08 sets."
+        "note": "The Insteon Developer's Guide (2009) reads bit 4 of the 0x00 reply as LED on, but the KeypadLinc Line Developer Notes and the Insteon Command Tables (2007) read it as LED off, the state 0x08 sets."
       }
     },
     {
@@ -424,7 +424,7 @@
       "query": "0x02",
       "verification": {
         "status": "conflicting",
-        "note": "The Insteon Developer's Guide (2009) gives query 0x02 as a signal-to-noise value; later sources count messages with CRC errors there."
+        "note": "The Insteon Developer's Guide (2009) gives query 0x02 as a signal-to-noise value; the KeypadLinc Line Developer Notes count messages with CRC errors there."
       }
     },
     {
@@ -536,7 +536,7 @@
         "table": "rampRate",
         "verification": {
           "status": "conflicting",
-          "note": "Earlier sources give ramp rate 0x00 as 9 minutes; the table uses the later reading, 2 seconds."
+          "note": "The Insteon Developer's Guide (2009) and the Insteon Command Tables (2007) give the ramp rate range 0x00 through 0x1F as 0.1 second to 9 minutes; the KeypadLinc Line Developer Notes give 0x00 as 2 seconds, the reading the table uses."
         }
       },
       {
@@ -1182,7 +1182,7 @@
     }
   ],
   "notes": [
-    "Earlier sources give ramp rates 0x00 through 0x1F as 9 minutes down to 0.1 second; the later ones make 0x01 8 minutes and 0x00 2 seconds.",
+    "The Insteon Developer's Guide (2009) and the Insteon Command Tables (2007) give ramp rates 0x00 through 0x1F as 0.1 second to 9 minutes; the KeypadLinc Line Developer Notes make 0x01 8 minutes and 0x00 2 seconds.",
     "Earlier sources, the Insteon Developer's Guide (2009) and the KeypadLinc Line Developer Notes give D14 of the reply as the trigger mask; later sources moved the trigger mask to query 0x08 and use D14 for the radio group mask.",
     "The Insteon Developer's Guide (2009) sets selectors 0x08 through 0x0C one button at a time; other sources write the whole mask.",
     "The KeypadLinc Line Developer Notes cover firmware 0x41 and later of subcategories 0x1B, 0x1C, 0x0F, 0x1E and 0x2C, and every firmware of 0x41 and 0x42.",

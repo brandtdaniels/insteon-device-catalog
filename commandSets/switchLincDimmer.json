@@ -261,7 +261,7 @@
       "off": "0x09",
       "verification": {
         "status": "conflicting",
-        "note": "One source swaps 0x08 and 0x09 (backlight on and off); the values here are those other sources give. The Insteon Developer's Guide (2009) reads bit 4 of the 0x00 reply as LED on, but later sources read it as LED off, the state 0x08 sets."
+        "note": "One source swaps 0x08 and 0x09 (backlight on and off); the values here are those the SwitchLinc 2-Wire Dimmer Developer Notes give. The Insteon Developer's Guide (2009) reads bit 4 of the 0x00 reply as LED on, but the SwitchLinc 2-Wire Dimmer Developer Notes read it as LED off, the state 0x08 sets."
       }
     },
     {
@@ -492,7 +492,7 @@
         "table": "rampRate",
         "verification": {
           "status": "conflicting",
-          "note": "Earlier sources give ramp rate 0x00 as 9 minutes; the table uses the later reading, 2 seconds."
+          "note": "The Insteon Developer's Guide (2009) gives the ramp rate range 0x00 through 0x1F as 0.1 second to 9 minutes; the table gives 0x00 as 2 seconds."
         }
       },
       {
@@ -641,7 +641,7 @@
     }
   ],
   "notes": [
-    "Earlier sources give ramp rates 0x00 through 0x1F as 9 minutes down to 0.1 second; the later ones make 0x01 8 minutes and 0x00 2 seconds.",
+    "The Insteon Developer's Guide (2009) gives ramp rates 0x00 through 0x1F as 0.1 second to 9 minutes; the table makes 0x01 8 minutes and 0x00 2 seconds.",
     "Inferred: seen on two i2CS devices (Outdoor On/Off Plug 2634-222 firmware 0x42, On/Off Plug 2635-222 firmware 0x48) linked to a Hub 2245, the device itself writes its responder record when it's linked remotely or with the SET button, and takes Data 1 from the load's state at that moment: the two plugs wrote 0x00 when the load was off and 0xFF when it was on. So Data 1 (on-level) of the light group's responder records is the state the load was in when the device was linked. The On/Off Plug 2635-222 Owner's Manual says to make sure the module is on before linking it as a responder; the 2-Wire Dimmer Switch 2474DWH Owner's Manual, the Dimmer Switch 2476D Owner's Manual and the Dimmer Switch 2477D Owner's Manual say to set the load to the state the link should recall before linking it as a responder; the Dimmer Switch 240V 2478D Owner's Manual says to turn the load on before linking it as a responder. The values its link data give are what to write when writing the record by hand.",
     "remoteSetButtonTap: the SwitchLinc 2-Wire Dimmer Developer Notes give cmd2 0x00 to set the on-level and 0x02 the ramp rate from the load's present level, and the Insteon Developer's Guide (2009) gives cmd2 as a count of taps of the SET button. The sources conflict and neither describes linking; the Developer Notes' reading sets a kept level, so it's configuration, and not idempotent, since under the tap-count reading a second tap may undo the first.",
     "triggerGroup, as the SwitchLinc 2-Wire Dimmer Developer Notes give it, sends a group command to the group's responders, and a responder's reply to a second one, such as a toggle or a momentary relay acting again, isn't something the sender can see, so it's actuation and not idempotent."

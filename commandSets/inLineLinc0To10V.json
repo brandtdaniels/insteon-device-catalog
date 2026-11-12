@@ -219,7 +219,7 @@
       "off": "0x09",
       "verification": {
         "status": "conflicting",
-        "note": "One source swaps 0x08 and 0x09 (backlight on and off); the values here are those other sources give. The Insteon Developer's Guide (2009) reads bit 4 of the 0x00 reply as LED on, but later sources read it as LED off, the state 0x08 sets."
+        "note": "One source swaps 0x08 and 0x09 (backlight on and off); the values here are those the Insteon Command Tables (2007) give. The Insteon Developer's Guide (2009) reads bit 4 of the 0x00 reply as LED on, but the Insteon Command Tables (2007) read it as LED off, the state 0x08 sets."
       }
     },
     {
@@ -331,7 +331,7 @@
       "query": "0x02",
       "verification": {
         "status": "conflicting",
-        "note": "The Insteon Developer's Guide (2009) gives query 0x02 as a signal-to-noise value; later sources count messages with CRC errors there."
+        "note": "The Insteon Developer's Guide (2009) gives query 0x02 as a signal-to-noise value; the In-Line 0-10VDC Dimmer Developer Notes count messages with CRC errors there."
       }
     },
     {
@@ -382,7 +382,7 @@
         "table": "rampRate",
         "verification": {
           "status": "conflicting",
-          "note": "Earlier sources give ramp rate 0x00 as 9 minutes; the table uses the later reading, 2 seconds."
+          "note": "The Insteon Developer's Guide (2009) and the Insteon Command Tables (2007) give the ramp rate range 0x00 through 0x1F as 0.1 second to 9 minutes; the table gives 0x00 as 2 seconds."
         }
       },
       {
@@ -696,7 +696,7 @@
     }
   ],
   "notes": [
-    "Earlier sources give ramp rates 0x00 through 0x1F as 9 minutes down to 0.1 second; the later ones make 0x01 8 minutes and 0x00 2 seconds.",
+    "The Insteon Developer's Guide (2009) and the Insteon Command Tables (2007) give ramp rates 0x00 through 0x1F as 0.1 second to 9 minutes; the table makes 0x01 8 minutes and 0x00 2 seconds.",
     "An earlier source describes selector 0x02 as a mask whose bits 0 and 1 disable relays 1 and 2.",
     "The In-Line 0-10VDC Dimmer Developer Notes mark bit 2 of the 0x00 reply and bits 2 and 4 of the 0x05 reply N/A and lists no Set Operating Flags for resume dim, error blink or the checksum flag, so they're left out here; another source gives them for the KeypadLinc code base.",
     "The In-Line 0-10VDC Dimmer Developer Notes send Set Operating Flags as an extended message with a checksum in D14.",

@@ -440,7 +440,7 @@
   "notes": [
     "Subcategory 0x09 is the Door Sensor 2843-232, which has its own profile.",
     "Its heartbeat's cmd1 is 0x11 while it's open and 0x13 while it's closed.",
-    "Its Developer Notes give the heartbeat as about once every 24 hours; other sources give 23.8 hours.",
+    "The Open/Close Sensor Developer Notes give the heartbeat as about once every 24 hours; other sources give 23.8 hours.",
     "With its jumper removed, in multi-scene mode, the sensor sends group 1 when it opens and group 2 when it closes. Later units without a jumper, as the 2016 Open/Close Sensor 2843 Owner's Manual describes them, have no multi-scene mode."
   ],
   "sources": [

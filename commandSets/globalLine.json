@@ -283,7 +283,7 @@
       "off": "0x09",
       "verification": {
         "status": "conflicting",
-        "note": "One source swaps 0x08 and 0x09 (backlight on and off); the values here are those the Global Line Developer Notes and other sources give. The Insteon Developer's Guide (2009) reads bit 4 of the 0x00 reply as LED on, but later sources and the Global Line Developer Notes read it as LED off, the state 0x08 sets."
+        "note": "One source swaps 0x08 and 0x09 (backlight on and off); the values here are those the Global Line Developer Notes give. The Insteon Developer's Guide (2009) reads bit 4 of the 0x00 reply as LED on, but the Global Line Developer Notes read it as LED off, the state 0x08 sets."
       }
     },
     {
@@ -297,7 +297,7 @@
       "off": "0x0B",
       "verification": {
         "status": "conflicting",
-        "note": "One source lists bit 5 of the 0x00 reply as load sense; the Global Line Developer Notes give bit 5 as the key beep and bit 3 as load sense on the dimmers."
+        "note": "The Insteon Developer's Guide (2009) lists bit 5 of the 0x00 reply as load sense; the Global Line Developer Notes give bit 5 as the key beep and bit 3 as load sense on the dimmers."
       }
     },
     {
@@ -453,7 +453,7 @@
       "query": "0x02",
       "verification": {
         "status": "conflicting",
-        "note": "The Insteon Developer's Guide (2009) gives query 0x02 as a signal-to-noise value; the Global Line Developer Notes and later sources count messages with CRC errors there."
+        "note": "The Insteon Developer's Guide (2009) gives query 0x02 as a signal-to-noise value; the Global Line Developer Notes count messages with CRC errors there."
       }
     },
     {
@@ -525,7 +525,7 @@
         "table": "rampRate",
         "verification": {
           "status": "conflicting",
-          "note": "Earlier sources give ramp rate 0x00 as 9 minutes; the table uses the later reading, 2 seconds."
+          "note": "The Insteon Developer's Guide (2009) gives the ramp rate range 0x00 through 0x1F as 0.1 second to 9 minutes; the table gives 0x00 as 2 seconds."
         }
       },
       {

@@ -336,7 +336,7 @@
     "Its heartbeat sends on when dry and off when wet.",
     "Once wet, it ignores further changes until its SET button is pressed.",
     "It sends dry to group 1 only when its SET button is pressed while it's dry. It sends wet to group 2 when it detects water, or when its SET button is pressed while it's wet.",
-    "Its Developer Notes give the heartbeat as about once every 24 hours; other sources give 23.8 hours."
+    "The Leak Sensor Developer Notes give the heartbeat as about once every 24 hours; other sources give 23.8 hours."
   ],
   "sources": [
     "HouseLinc Device Definitions (version 2.9.87)",

@@ -35,7 +35,7 @@
       "off": "0x09",
       "verification": {
         "status": "conflicting",
-        "note": "The Insteon Developer's Guide (2009) reads bit 4 of the 0x00 reply as LED on, but later sources read it as LED off, the state 0x08 sets."
+        "note": "The Insteon Developer's Guide (2009) reads bit 4 of the 0x00 reply as LED on, but the 2475SDB Developer Notes read it as LED off, the state 0x08 sets."
       }
     },
     {

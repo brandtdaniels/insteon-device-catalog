@@ -227,7 +227,7 @@
       "off": "0x09",
       "verification": {
         "status": "conflicting",
-        "note": "One source swaps 0x08 and 0x09 (backlight on and off); the values here are those other sources give. The Insteon Developer's Guide (2009) reads bit 4 of the 0x00 reply as LED on, but later sources read it as LED off, the state 0x08 sets."
+        "note": "One source swaps 0x08 and 0x09 (backlight on and off); the values here are those the 2475SDB Developer Notes give. The Insteon Developer's Guide (2009) reads bit 4 of the 0x00 reply as LED on, but the 2475SDB Developer Notes read it as LED off, the state 0x08 sets."
       }
     },
     {
@@ -241,7 +241,7 @@
       "off": "0x0B",
       "verification": {
         "status": "conflicting",
-        "note": "One source lists bit 5 of the 0x00 reply as load sense, set with 0x06 and 0x07; other sources make bit 5 the key beep on this code base."
+        "note": "The Insteon Developer's Guide (2009) lists bit 5 of the 0x00 reply as load sense, set with 0x06 and 0x07; other sources make bit 5 the key beep on this code base."
       }
     },
     {
@@ -428,7 +428,7 @@
         "table": "rampRate",
         "verification": {
           "status": "conflicting",
-          "note": "Earlier sources give ramp rate 0x00 as 9 minutes; the table uses the later reading, 2 seconds."
+          "note": "The Insteon Developer's Guide (2009) gives the ramp rate range 0x00 through 0x1F as 0.1 second to 9 minutes; the 2475SDB Developer Notes give 0x00 as 2 seconds, the reading the table uses."
         }
       },
       {
@@ -647,7 +647,7 @@
     }
   ],
   "notes": [
-    "Earlier sources give ramp rates 0x00 through 0x1F as 9 minutes down to 0.1 second; the later ones make 0x01 8 minutes and 0x00 2 seconds."
+    "The Insteon Developer's Guide (2009) gives ramp rates 0x00 through 0x1F as 0.1 second to 9 minutes; the 2475SDB Developer Notes make 0x01 8 minutes and 0x00 2 seconds."
   ],
   "sources": [
     "Insteon Developer's Guide (2009)"

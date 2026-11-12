@@ -318,7 +318,7 @@
         "table": "rampRate",
         "verification": {
           "status": "conflicting",
-          "note": "Earlier sources give ramp rate 0x00 as 9 minutes; the table uses the later reading, 2 seconds."
+          "note": "The Insteon Developer's Guide (2009) gives the ramp rate range 0x00 through 0x1F as 0.1 second to 9 minutes; the table gives 0x00 as 2 seconds."
         }
       },
       {
@@ -495,7 +495,7 @@
   ],
   "notes": [
     "The Insteon Developer's Guide (2009) lists 0x0A and above as unused on this code base; later sources add the cleanup report commands 0x0A and 0x0B.",
-    "Earlier sources give ramp rates 0x00 through 0x1F as 9 minutes down to 0.1 second; the later ones make 0x01 8 minutes and 0x00 2 seconds.",
+    "The Insteon Developer's Guide (2009) gives ramp rates 0x00 through 0x1F as 0.1 second to 9 minutes; the table makes 0x01 8 minutes and 0x00 2 seconds.",
     "Earlier sources give D12 as the signal-to-noise ratio and D13 as a count of messages with CRC errors."
   ],
   "sources": [

@@ -286,7 +286,7 @@
         "table": "rampRate",
         "verification": {
           "status": "conflicting",
-          "note": "The Insteon Developer's Guide (2009) gives ramp rates 0x00 through 0x1F as 9 minutes down to 0.1 second; the table uses the later reading, where 0x00 is 2 seconds."
+          "note": "The Insteon Developer's Guide (2009) gives ramp rates 0x00 through 0x1F as 0.1 second to 9 minutes; the table gives 0x00 as 2 seconds."
         }
       },
       {

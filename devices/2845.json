@@ -424,7 +424,7 @@
     "Sends low battery to group 3 each time it wakes while its battery is below a level software sets.",
     "Sends low battery and heartbeat only when it has links in those groups.",
     "Its heartbeat and low battery messages carry cmd1 0x11 while the door is open and 0x13 while it's closed.",
-    "Its Developer Notes give the heartbeat as every 24 hours by default; other sources give 256 times 5 minutes, about 21 hours.",
+    "The Hidden Door Sensor Developer Notes give the heartbeat as every 24 hours by default; other sources give 256 times 5 minutes, about 21 hours.",
     "Its owner's manual says the sensor sends its heartbeat once every 24 hours by default."
   ],
   "sources": [
