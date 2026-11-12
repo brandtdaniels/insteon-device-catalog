@@ -735,7 +735,7 @@
     {
       "name": "remoteSetButtonTap",
       "description": "Acts as a tap of the device's SET button.",
-      "effect": "actuation",
+      "effect": "configuration",
       "idempotent": false,
       "command1": "0x25",
       "parameter": {
