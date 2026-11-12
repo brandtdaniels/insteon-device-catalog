@@ -246,12 +246,16 @@
       "query": "0x01"
     },
     {
-      "name": "signalToNoise",
-      "label": "Signal-to-noise",
+      "name": "crcErrorCount",
+      "label": "CRC errors",
       "section": "Diagnostics",
       "advanced": true,
-      "description": "The powerline's signal-to-noise value.",
-      "query": "0x02"
+      "description": "The number of messages received with a CRC error.",
+      "query": "0x02",
+      "verification": {
+        "status": "conflicting",
+        "note": "The Insteon Developer's Guide gives query 0x02 as a signal-to-noise value; later sources count messages with CRC errors there."
+      }
     }
   ],
   "flagCommands": [
