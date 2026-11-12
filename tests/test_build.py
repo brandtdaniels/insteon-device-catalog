@@ -765,5 +765,5 @@ class LandingPageTests(unittest.TestCase):
         text = re.sub(r"<(script|style|article)\b.*?</\1>", "", page, flags=re.S)
         text = re.sub(r"<[^>]+>", " ", text)
 
-        self.assertNotRegex(page, "[–—]")
+        self.assertNotRegex(page, "[\u2013\u2014]")
         self.assertNotRegex(text.lower(), r"\b(now|currently|latest|recent|recently|soon|today|yet|still|new|newly|later|upcoming)\b")
