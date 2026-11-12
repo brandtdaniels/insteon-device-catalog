@@ -11,6 +11,17 @@
       "productKey": "none"
     }
   ],
+  "commandSets": [
+    {
+      "commandSet": "noSettings",
+      "category": "0x00",
+      "subcategory": "0x09",
+      "verification": {
+        "status": "inferred",
+        "note": "No manual is cited for the RF Signal Enhancer 2442. A signal repeater with no load to control is read as having no operating flags, settings or commands, which no document confirms."
+      }
+    }
+  ],
   "capabilities": [],
   "sources": [
     "HouseLinc Device Definitions (version 2.9.87)",

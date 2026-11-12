@@ -7,6 +7,17 @@
       "subcategory": "0x13"
     }
   ],
+  "commandSets": [
+    {
+      "commandSet": "noSettings",
+      "category": "0x00",
+      "subcategory": "0x13",
+      "verification": {
+        "status": "inferred",
+        "note": "The Diagnostics Keypad 2993-222 Owner's Manual describes test buttons and modes the keypad runs itself, and lists On, Off and Beep as the commands it sends. It shows no operating flag, setting or command on the keypad, but it doesn't say there are none."
+      }
+    }
+  ],
   "capabilities": [],
   "lifecycle": {
     "installation": {

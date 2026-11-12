@@ -1,0 +1,10 @@
+{
+  "id": "noSettings",
+  "name": "No settings",
+  "description": "Products with no operating flags, extended settings or commands that the catalog models: they send Insteon messages, repeat them or take part in setup, and software has nothing to read or write on them.",
+  "sources": [
+    "Access Point 2443 Owner's Manual",
+    "Range Extender 2992-222 Owner's Manual",
+    "Diagnostics Keypad 2993-222 Owner's Manual"
+  ]
+}

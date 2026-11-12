@@ -7,6 +7,17 @@
       "subcategory": "0x1D"
     }
   ],
+  "commandSets": [
+    {
+      "commandSet": "noSettings",
+      "category": "0x00",
+      "subcategory": "0x1D",
+      "verification": {
+        "status": "inferred",
+        "note": "The Range Extender 2992-222 Owner's Manual describes only installation, bridging electrical legs with four taps of the SET button, and LED and beeper behavior. It shows no operating flag, setting or command, but it doesn't say there are none."
+      }
+    }
+  ],
   "radio": "dual",
   "role": "responder",
   "capabilities": [],
