@@ -336,7 +336,7 @@
       "query": "0x02",
       "verification": {
         "status": "conflicting",
-        "note": "The Insteon Developer's Guide gives query 0x02 as a signal-to-noise value; later sources count messages with CRC errors there."
+        "note": "The Insteon Developer's Guide (2009) gives query 0x02 as a signal-to-noise value; later sources count messages with CRC errors there."
       }
     },
     {

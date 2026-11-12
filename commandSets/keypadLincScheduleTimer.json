@@ -746,7 +746,7 @@
             "scale": 0.392157,
             "verification": {
               "status": "inferred",
-              "note": "Read from the Insteon Developer's Guide, which gives Data 1 as the on-level and Data 2 as the ramp rate as examples, and from the KeypadLinc Line and LED Bulb Developer Notes. Inferred: seen on two i2CS devices (Outdoor On/Off Plug 2634-222 firmware 0x42, On/Off Plug 2635-222 firmware 0x48) linked to a Hub 2245, the device itself writes its responder record when it's linked remotely or with the SET button, and takes Data 1 from the load's state at that moment: the two plugs wrote 0x00 when the load was off and 0xFF when it was on. The On/Off Plug 2635-222 Owner's Manual says to make sure the module is on before linking it as a responder. The values given here are what to write when writing the record by hand."
+              "note": "Read from the Insteon Developer's Guide (2009), which gives Data 1 as the on-level and Data 2 as the ramp rate as examples, and from the KeypadLinc Line and LED Bulb Developer Notes. Inferred: seen on two i2CS devices (Outdoor On/Off Plug 2634-222 firmware 0x42, On/Off Plug 2635-222 firmware 0x48) linked to a Hub 2245, the device itself writes its responder record when it's linked remotely or with the SET button, and takes Data 1 from the load's state at that moment: the two plugs wrote 0x00 when the load was off and 0xFF when it was on. The On/Off Plug 2635-222 Owner's Manual says to make sure the module is on before linking it as a responder. The values given here are what to write when writing the record by hand."
             }
           },
           {
@@ -757,7 +757,7 @@
             "table": "rampRate",
             "verification": {
               "status": "inferred",
-              "note": "Read from the Insteon Developer's Guide, which gives Data 1 as the on-level and Data 2 as the ramp rate as examples, and from the KeypadLinc Line and LED Bulb Developer Notes."
+              "note": "Read from the Insteon Developer's Guide (2009), which gives Data 1 as the on-level and Data 2 as the ramp rate as examples, and from the KeypadLinc Line and LED Bulb Developer Notes."
             }
           }
         ]
@@ -812,7 +812,7 @@
       },
       "verification": {
         "status": "inferred",
-        "note": "No document says that every nonzero level means on; the ranges are read from Light Status Request's level byte (cmd2), as the Insteon Developer's Guide describes it for on/off devices."
+        "note": "No document says that every nonzero level means on; the ranges are read from Light Status Request's level byte (cmd2), as the Insteon Developer's Guide (2009) describes it for on/off devices."
       },
       "stateHolding": {
         "releasedBy": [],
@@ -828,8 +828,8 @@
     "Insteon's documents don't say which Get Operating Flags bit each Set Operating Flags command changes on this keypad.",
     "A Get with 0x01 in D3 returns the on and off times of group D1 in D3 through D10, and a Get with 0x02 in D3 returns the time of day in D3 through D6, in the layout the Sets use.",
     "Earlier sources give ramp rates 0x00 through 0x1F as 9 minutes down to 0.1 second; the later ones make 0x01 8 minutes and 0x00 2 seconds.",
-    "Earlier sources and the Insteon Developer's Guide give D14 of the reply as the trigger mask; later sources moved the trigger mask to query 0x08 and use D14 for the radio group mask.",
-    "The Insteon Developer's Guide sets selectors 0x08 through 0x0C one button at a time; other sources write the whole mask.",
+    "Earlier sources and the Insteon Developer's Guide (2009) give D14 of the reply as the trigger mask; later sources moved the trigger mask to query 0x08 and use D14 for the radio group mask.",
+    "The Insteon Developer's Guide (2009) sets selectors 0x08 through 0x0C one button at a time; other sources write the whole mask.",
     "The ledMask write is an extended Set, so it's configuration, though it turns LEDs on and off at once: the catalog has no field that gives an extended settings write another effect."
   ],
   "sources": [

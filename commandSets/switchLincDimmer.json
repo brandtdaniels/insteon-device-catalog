@@ -261,7 +261,7 @@
       "off": "0x09",
       "verification": {
         "status": "conflicting",
-        "note": "One source swaps 0x08 and 0x09 (backlight on and off); the values here are those other sources give. The Insteon Developer's Guide reads bit 4 of the 0x00 reply as LED on, but later sources read it as LED off, the state 0x08 sets."
+        "note": "One source swaps 0x08 and 0x09 (backlight on and off); the values here are those other sources give. The Insteon Developer's Guide (2009) reads bit 4 of the 0x00 reply as LED on, but later sources read it as LED off, the state 0x08 sets."
       }
     },
     {
@@ -275,7 +275,7 @@
       "off": "0x0B",
       "verification": {
         "status": "conflicting",
-        "note": "The Insteon Developer's Guide gives bit 5 of the 0x00 reply as load sense, set with 0x06 and 0x07, and the SwitchLinc 2-Wire Dimmer Developer Notes also call it load sense but set key beep with 0x0A and 0x0B; the KeypadLinc Line Developer Notes make bit 5 key beep on the code base these dimmers run, as used here."
+        "note": "The Insteon Developer's Guide (2009) gives bit 5 of the 0x00 reply as load sense, set with 0x06 and 0x07, and the SwitchLinc 2-Wire Dimmer Developer Notes also call it load sense but set key beep with 0x0A and 0x0B; the KeypadLinc Line Developer Notes make bit 5 key beep on the code base these dimmers run, as used here."
       }
     },
     {
@@ -404,7 +404,7 @@
       "query": "0x02",
       "verification": {
         "status": "conflicting",
-        "note": "The Insteon Developer's Guide gives query 0x02 as a signal-to-noise value; later sources count messages with CRC errors there."
+        "note": "The Insteon Developer's Guide (2009) gives query 0x02 as a signal-to-noise value; later sources count messages with CRC errors there."
       }
     },
     {
@@ -622,7 +622,7 @@
             "scale": 0.392157,
             "verification": {
               "status": "conflicting",
-              "note": "The SwitchLinc 2-Wire Dimmer Developer Notes list Data 1 to 3 as not used; the Insteon Developer's Guide gives Data 1 as the on-level and Data 2 as the ramp rate, as examples, and the KeypadLinc Line and LED Bulb Developer Notes agree, as used here."
+              "note": "The SwitchLinc 2-Wire Dimmer Developer Notes list Data 1 to 3 as not used; the Insteon Developer's Guide (2009) gives Data 1 as the on-level and Data 2 as the ramp rate, as examples, and the KeypadLinc Line and LED Bulb Developer Notes agree, as used here."
             }
           },
           {
@@ -738,7 +738,7 @@
       },
       "verification": {
         "status": "conflicting",
-        "note": "The SwitchLinc 2-Wire Dimmer Developer Notes send 0x00 to set the on-level and 0x02 the ramp rate, as used here; the Insteon Developer's Guide calls 0x00 unused and counts taps in cmd2, one tap 0x01 and two 0x02."
+        "note": "The SwitchLinc 2-Wire Dimmer Developer Notes send 0x00 to set the on-level and 0x02 the ramp rate, as used here; the Insteon Developer's Guide (2009) calls 0x00 unused and counts taps in cmd2, one tap 0x01 and two 0x02."
       }
     },
     {
@@ -753,7 +753,7 @@
       },
       "verification": {
         "status": "conflicting",
-        "note": "The SwitchLinc 2-Wire Dimmer Developer Notes give the level as 16 times bits 4 through 7 plus 0x0F and the ramp rate as 2 times bits 0 through 3 plus 1, as used here; the Insteon Developer's Guide prints bits 4 through 7 as the on-level plus 0x0F and bits 0 through 3 as 2 times the ramp rate plus 1."
+        "note": "The SwitchLinc 2-Wire Dimmer Developer Notes give the level as 16 times bits 4 through 7 plus 0x0F and the ramp rate as 2 times bits 0 through 3 plus 1, as used here; the Insteon Developer's Guide (2009) prints bits 4 through 7 as the on-level plus 0x0F and bits 0 through 3 as 2 times the ramp rate plus 1."
       }
     },
     {
@@ -769,7 +769,7 @@
       },
       "verification": {
         "status": "inferred",
-        "note": "Read from the SwitchLinc 2-Wire Dimmer Developer Notes and the KeypadLinc code base; the Insteon Developer's Guide reserves standard commands 0x2F through 0x3F."
+        "note": "Read from the SwitchLinc 2-Wire Dimmer Developer Notes and the KeypadLinc code base; the Insteon Developer's Guide (2009) reserves standard commands 0x2F through 0x3F."
       }
     },
     {
@@ -780,7 +780,7 @@
       "command1": "0x30",
       "verification": {
         "status": "inferred",
-        "note": "Read from the SwitchLinc 2-Wire Dimmer Developer Notes and the KeypadLinc code base; the Insteon Developer's Guide reserves standard commands 0x2F through 0x3F."
+        "note": "Read from the SwitchLinc 2-Wire Dimmer Developer Notes and the KeypadLinc code base; the Insteon Developer's Guide (2009) reserves standard commands 0x2F through 0x3F."
       }
     }
   ],
@@ -830,7 +830,7 @@
       ],
       "verification": {
         "status": "conflicting",
-        "note": "The SwitchLinc 2-Wire Dimmer Developer Notes make D2 and D6 0x00 the local on-level and ramp rate, as used here; the Insteon Developer's Guide makes them the on-level and ramp rate stored in the ALL-Link database."
+        "note": "The SwitchLinc 2-Wire Dimmer Developer Notes make D2 and D6 0x00 the local on-level and ramp rate, as used here; the Insteon Developer's Guide (2009) makes them the on-level and ramp rate stored in the ALL-Link database."
       }
     }
   ]

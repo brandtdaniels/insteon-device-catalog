@@ -376,7 +376,7 @@
   },
   "notes": [
     "0x07/0x0D is the version that detects 50 or 60 Hz power; Insteon Device Categories (January 2014) lists it as model 2450, and HouseLinc as 2450-50-60.",
-    "Inferred: group 1 is both the sensor, which controls it, and the output relay, which responds to it. The I/O Module 2450 Owner's Manual says the output relay responds to Insteon ON and OFF commands, and the ioLinc command set's relay commands, Light ON (cmd1 0x11) and Light OFF (cmd1 0x13) sent to the device directly, are read from that and the Insteon Developer's Guide; no document gives the I/O Linc's direct commands."
+    "Inferred: group 1 is both the sensor, which controls it, and the output relay, which responds to it. The I/O Module 2450 Owner's Manual says the output relay responds to Insteon ON and OFF commands, and the ioLinc command set's relay commands, Light ON (cmd1 0x11) and Light OFF (cmd1 0x13) sent to the device directly, are read from that and the Insteon Developer's Guide (2009); no document gives the I/O Linc's direct commands."
   ],
   "sources": [
     "HouseLinc Device Definitions (version 2.9.87)",
