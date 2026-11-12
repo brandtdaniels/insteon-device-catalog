@@ -24,6 +24,13 @@
       }
     }
   ],
+  "commandSets": [
+    {
+      "commandSet": "morningLinc",
+      "category": "0x0F",
+      "subcategory": "0x06"
+    }
+  ],
   "capabilities": [],
   "lifecycle": {
     "installation": {

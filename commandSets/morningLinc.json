@@ -1,0 +1,32 @@
+{
+  "id": "morningLinc",
+  "name": "MorningLinc",
+  "description": "The Morning Industry RF Doorknob/Deadbolt Controller: once linked by hand, a door lock receiver that locks or unlocks on a direct or group On command.",
+  "standardCommands": [
+    {
+      "name": "lock",
+      "description": "Locks the door, whatever state the lock was in when the device was linked. Direct On (cmd1 0x11) with cmd2 0xFF.",
+      "effect": "actuation",
+      "idempotent": true,
+      "command1": "0x11",
+      "command2": "0xFF"
+    },
+    {
+      "name": "unlock",
+      "description": "Unlocks the door, whatever state the lock was in when the device was linked. Direct On (cmd1 0x11) with cmd2 0x00.",
+      "effect": "actuation",
+      "idempotent": true,
+      "command1": "0x11",
+      "command2": "0x00"
+    }
+  ],
+  "notes": [
+    "The device ignores every message, direct commands included, until it has been linked by hand with its SET button. After that a program can lock and unlock it with direct commands.",
+    "Linked by hand to a controller's On command, Off command, or both, the device uses the state the lock was in at linking (the statelock) to choose between locking and unlocking when a group command arrives. A direct On with cmd2 0xFF or 0x00 doesn't depend on that state.",
+    "ALL-Link record data in a responder record, which a program edits only when it manages the ALL-Link database: Data 1 is 0xFF to lock and 0x00 to unlock when the group command arrives. Data 2 is ignored. Data 3 is 0x00 for a record that answers On and 0x01 for one that answers Off. A controller that locks with On and unlocks with Off has two records, one with Data 1 0xFF and Data 3 0x00 and one with Data 1 0x00 and Data 3 0x01.",
+    "The Developer Notes give no operating flags, extended settings, or command that reads the lock's state."
+  ],
+  "sources": [
+    "MorningLinc Developer Notes"
+  ]
+}
