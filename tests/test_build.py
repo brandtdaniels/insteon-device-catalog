@@ -698,6 +698,310 @@ class CoverageTests(unittest.TestCase):
         self.assertEqual(sum(coverage["identityStatuses"].values()), coverage["identities"])
 
 
+class CardParser(html.parser.HTMLParser):
+    """Reads each card's model, its filter attributes and the facts in its detail section."""
+
+    def __init__(self):
+        super().__init__()
+        self.cards = {}
+        self._card = None
+        self._command_set = None
+        self._fact = None
+        self._depth = 0
+        self._in_details = False
+        self._summary = False
+
+    def handle_starttag(self, tag, attributes):
+        attributes = dict(attributes)
+
+        if tag == "article":
+            self._card = {"attributes": attributes, "facts": [], "details": False, "summary": "", "outside": ""}
+            self.cards[attributes["data-model"]] = self._card
+        elif self._card is not None:
+            if tag == "details":
+                self._in_details = True
+                self._card["details"] = True
+            if tag == "summary":
+                self._summary = True
+            if "data-command-set" in attributes:
+                self._command_set = attributes["data-command-set"]
+            if "data-fact" in attributes:
+                self._fact = [self._command_set, attributes["data-fact"], ""]
+                self._card["facts"].append(self._fact)
+
+    def handle_endtag(self, tag):
+        if tag == "article":
+            self._card = None
+            self._command_set = None
+            self._in_details = False
+        elif tag in ("p", "li") and self._fact is not None:
+            self._fact = None
+        elif tag == "details":
+            self._in_details = False
+        elif tag == "summary":
+            self._summary = False
+
+    def handle_data(self, data):
+        if self._card is None:
+            return
+        if self._fact is not None:
+            self._fact[2] += data
+        if self._summary:
+            self._card["summary"] += data
+        if not self._in_details:
+            self._card["outside"] += data
+
+
+def facts(card, name, command_set=None):
+    return [text.strip() for owner, fact, text in card["facts"] if fact == name and (command_set is None or owner == command_set)]
+
+
+def read_cards(page):
+    parser = CardParser()
+    parser.feed(page)
+
+    return parser.cards
+
+
+def disk_json(folder, name):
+    return json.loads((build.ROOT / folder / f"{name}.json").read_text())
+
+
+def page_text(page):
+    text = re.sub(r"<(script|style)\b.*?</\1>", "", page, flags=re.S)
+
+    return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", text))
+
+
+class CapabilityLegendTests(unittest.TestCase):
+    def setUp(self):
+        self.profiles, self.command_sets, self.page, self.parser = catalog_page()
+        self.metrics = {key: int(value.strip()) for key, value in self.parser.metrics.items()}
+        self.schema = json.loads((build.ROOT / "schema" / "device-profile.schema.json").read_text())
+
+    def test_each_capability_count_is_the_number_of_profiles_that_have_it(self):
+        kinds = [option["properties"]["kind"]["const"] for option in self.schema["$defs"]["capability"]["oneOf"]]
+
+        self.assertEqual(sorted(kinds), sorted(build.CAPABILITY_EXPLANATIONS))
+
+        for kind in kinds:
+            expected = sum(any(c["kind"] == kind for c in profile["capabilities"]) for profile in self.profiles)
+            self.assertEqual(self.metrics[f"capability-{kind}"], expected, kind)
+
+    def test_each_radio_count_is_the_number_of_profiles_that_state_it(self):
+        for radio in ("powerline", "rf", "dual"):
+            expected = sum(profile.get("radio") == radio for profile in self.profiles)
+            self.assertEqual(self.metrics[f"radio-{radio}"], expected, radio)
+
+        self.assertEqual(self.metrics["radio-unstated"], sum("radio" not in profile for profile in self.profiles))
+
+    def test_the_battery_count_is_the_number_of_battery_powered_profiles(self):
+        self.assertEqual(self.metrics["battery"], sum(profile.get("batteryPowered", False) for profile in self.profiles))
+
+    def test_each_engine_count_is_the_number_of_profiles_with_an_entry_for_it(self):
+        for engine in ("i1", "i2", "i2cs"):
+            expected = sum(any(entry["engine"] == engine for entry in profile.get("engines", [])) for profile in self.profiles)
+            self.assertEqual(self.metrics[f"engine-{engine}"], expected, engine)
+
+    def test_every_term_has_one_plain_sentence(self):
+        explanations = [*build.CAPABILITY_EXPLANATIONS.values(), *build.RADIO_EXPLANATIONS.values(), *build.ENGINE_EXPLANATIONS.values(), build.BATTERY_EXPLANATION]
+
+        for sentence in explanations:
+            self.assertTrue(sentence.endswith("."), sentence)
+            self.assertEqual(sentence.count("."), 1, sentence)
+            self.assertIn(html.escape(sentence), self.page)
+
+    def test_the_legend_is_a_labeled_section_listed_in_the_page_links(self):
+        self.assertIn("#capabilities-heading", self.parser.hrefs)
+        self.assertIn("What the filters mean", [text for _, text in self.parser.headings])
+        self.assertIn('aria-labelledby="capabilities-heading"', self.page)
+
+
+class CapabilityDetailTests(unittest.TestCase):
+    def setUp(self):
+        self.profiles, self.command_sets, self.page, _ = catalog_page()
+        self.cards = read_cards(self.page)
+
+    def test_every_profile_has_a_card_with_an_expandable_detail(self):
+        self.assertEqual(sorted(self.cards), sorted(profile["model"] for profile in self.profiles))
+
+        for card in self.cards.values():
+            self.assertTrue(card["details"])
+            self.assertIn("What the catalog describes", card["summary"])
+
+    def test_the_first_lines_of_a_card_carry_no_counts(self):
+        for card in self.cards.values():
+            self.assertNotRegex(card["outside"], r"\boperating flags?\b|\bextended settings?\b|\bstandard commands?\b|\bserial commands?\b")
+
+    def test_a_command_set_s_counts_and_labels_are_the_data_s(self):
+        for profile in self.profiles:
+            card = self.cards[profile["model"]]
+
+            for set_id in dict.fromkeys(entry["commandSet"] for entry in profile.get("commandSets", [])):
+                command_set = disk_json("commandSets", set_id)
+                flags = command_set.get("operatingFlags", [])
+                settings = (command_set.get("extendedSettings") or {}).get("values", [])
+
+                for name, items in (("operatingFlags", flags), ("extendedSettings", settings)):
+                    found = facts(card, name, set_id)
+
+                    if not items:
+                        self.assertEqual(found, [], (profile["model"], name))
+                        continue
+
+                    self.assertEqual(len(found), 1, (profile["model"], name))
+                    self.assertRegex(found[0], rf"^{len(items)} ")
+
+                    for item in items:
+                        self.assertIn(item["label"], found[0])
+
+                for name, key in (("standardCommands", "standardCommands"), ("extendedCommands", "extendedCommands"), ("serialCommands", "serialCommands"), ("readings", "readings")):
+                    found = facts(card, name, set_id)
+                    items = command_set.get(key, [])
+
+                    if items:
+                        self.assertEqual(len(found), 1, (profile["model"], name))
+                        self.assertRegex(found[0], rf"^{len(items)} ")
+                    else:
+                        self.assertEqual(found, [], (profile["model"], name))
+
+    def test_a_modem_reports_its_serial_commands(self):
+        card = self.cards["2413U"]
+        entries = catalog_profile("2413U")["commandSets"]
+
+        for entry in entries:
+            expected = len(disk_json("commandSets", entry["commandSet"]).get("serialCommands", []))
+            self.assertRegex(facts(card, "serialCommands", entry["commandSet"])[0], rf"^{expected} serial commands")
+
+    def test_a_profile_with_no_command_set_says_so_and_implies_no_capability(self):
+        missing = [profile for profile in self.profiles if not profile.get("commandSets")]
+        self.assertTrue(missing)
+
+        for profile in missing:
+            card = self.cards[profile["model"]]
+
+            self.assertEqual(facts(card, "noCommandSet"), ["The catalog has no command set for this device."], profile["model"])
+            self.assertEqual([fact for _, fact, _ in card["facts"] if fact in build.COMMAND_SET_FACTS], [], profile["model"])
+
+    def test_a_profile_deliberately_without_settings_says_so(self):
+        empty = [p for p in self.profiles if p.get("commandSets") and all(not (set(disk_json("commandSets", e["commandSet"])) - build.COMMAND_SET_DESCRIPTIVE_KEYS) for e in p["commandSets"])]
+        self.assertTrue(empty)
+
+        for profile in empty:
+            card = self.cards[profile["model"]]
+
+            self.assertEqual(facts(card, "noSettings"), ["The catalog deliberately holds no settings for this device: there is nothing for software to read or write."], profile["model"])
+            self.assertEqual(facts(card, "noCommandSet"), [])
+            self.assertEqual([fact for _, fact, _ in card["facts"] if fact in build.COMMAND_SET_FACTS], [], profile["model"])
+
+    def test_radio_role_battery_and_engine_follow_the_profile(self):
+        radios = {"powerline": "Powerline", "rf": "RF", "dual": "Dual-band"}
+
+        for profile in self.profiles:
+            card = self.cards[profile["model"]]
+            radio = facts(card, "radio")
+            engine = facts(card, "engine")
+
+            self.assertEqual(len(radio), 1)
+            self.assertIn(radios[profile["radio"]] if "radio" in profile else "does not state", radio[0], profile["model"])
+            self.assertEqual(bool(facts(card, "battery")), bool(profile.get("batteryPowered")), profile["model"])
+            self.assertEqual(len(engine), 1)
+
+            if profile.get("engines"):
+                for entry in profile["engines"]:
+                    self.assertIn(build.ENGINE_LABELS[entry["engine"]], engine[0])
+            else:
+                self.assertIn("does not state", engine[0])
+
+    def test_groups_events_and_heartbeat_follow_the_profile(self):
+        for profile in self.profiles:
+            card = self.cards[profile["model"]]
+            groups = facts(card, "groups")
+
+            self.assertEqual(len(groups), 1, profile["model"])
+
+            for group in profile.get("groups", []):
+                self.assertIn(group["name"], groups[0], profile["model"])
+
+            if not profile.get("groups"):
+                self.assertIn("lists no ALL-Link groups", groups[0])
+
+            for capability in profile["capabilities"]:
+                if capability["kind"] == "groupEvents":
+                    text = " ".join(facts(card, "events"))
+                    self.assertTrue(text, profile["model"])
+
+                    for event in capability["events"]:
+                        self.assertIn(event["event"], text)
+                        self.assertIn(event["command1"], text)
+
+                if capability["kind"] == "heartbeat":
+                    text = " ".join(facts(card, "heartbeat"))
+                    self.assertIn(f"group {int(capability['group'], 16)}", text)
+
+                    if "intervalMinutes" in capability:
+                        self.assertIn(str(capability["intervalMinutes"]), text)
+
+            if not any(c["kind"] == "groupEvents" for c in profile["capabilities"]):
+                self.assertEqual(facts(card, "events"), [])
+
+            if not any(c["kind"] == "heartbeat" for c in profile["capabilities"]):
+                self.assertEqual(facts(card, "heartbeat"), [])
+
+    def test_search_finds_a_card_by_capability_radio_role_and_battery_words(self):
+        for profile in self.profiles:
+            search = self.cards[profile["model"]]["attributes"]["data-search"]
+
+            for capability in profile["capabilities"]:
+                for word in build.CAPABILITY_LABELS[capability["kind"]].lower().split():
+                    self.assertIn(word, search, profile["model"])
+
+            if profile.get("batteryPowered"):
+                self.assertIn("battery powered", search)
+
+            if "radio" in profile:
+                self.assertIn({"powerline": "powerline", "rf": "rf", "dual": "dual-band"}[profile["radio"]], search)
+
+    def test_the_search_script_also_reads_the_text_of_the_card(self):
+        self.assertIn("textContent", self.page)
+
+    def test_the_page_stays_a_sane_size(self):
+        self.assertLess(len(self.page.encode()), 400_000)
+
+
+class CapabilityWordingTests(unittest.TestCase):
+    def setUp(self):
+        _, _, self.page, _ = catalog_page()
+        self.text = page_text(self.page)
+
+    def test_the_page_names_the_status_words_not_unverified(self):
+        self.assertNotIn("unverified", self.text.lower())
+        self.assertRegex(self.text, r"status \(inferred, conflicting or observed\)")
+        self.assertIn("a value with no mark is documented", self.text.lower())
+
+    def test_the_identities_column_says_what_documented_means(self):
+        self.assertIn("An identity with no mark is counted as documented: it is read from the documents the profile cites, not confirmed on a device.", self.text)
+
+    def test_generated_text_has_no_dash_and_no_temporal_words_even_in_cards(self):
+        profile = {"model": "9", "name": "Plain", "capabilities": [{"kind": "dimmable"}, {"kind": "heartbeat", "group": "0x04", "intervalMinutes": 5}], "sources": ["S"], "radio": "rf", "batteryPowered": True,
+                   "groups": [{"number": "0x04", "name": "Beat", "role": "controller"}], "engines": [{"category": "0x01", "subcategory": "0x01", "engine": "i2"}],
+                   "commandSets": [{"commandSet": "a", "category": "0x01", "subcategory": "0x01"}],
+                   "identities": [{"category": "0x01", "subcategory": "0x01"}]}
+        bare = {"model": "8", "name": "Bare", "capabilities": [], "sources": ["S"], "identities": [{"category": "0x01", "subcategory": "0x02"}]}
+        none = {"model": "7", "name": "None", "capabilities": [], "sources": ["S"], "identities": [{"category": "0x01", "subcategory": "0x03"}],
+                "commandSets": [{"commandSet": "empty", "category": "0x01", "subcategory": "0x03"}]}
+        sets = [{"id": "a", "name": "A", "operatingFlags": [{"name": "f", "label": "Flag one"}], "extendedSettings": {"values": [{"label": "Setting one"}]}, "standardCommands": [{}], "serialCommands": [{}]},
+                {"id": "empty", "name": "E", "description": "Nothing.", "sources": ["S"]}]
+        page = build.index_page([profile, bare, none], sets, "0.0.0")
+        text = page_text(page)
+
+        self.assertNotRegex(page, "[\u2013\u2014]")
+        self.assertNotRegex(text.lower(), r"\b(now|currently|latest|recent|recently|soon|today|yet|still|new|newly|later|upcoming)\b")
+        self.assertIn("Flag one", text)
+        self.assertIn("The catalog has no command set for this device.", text)
+        self.assertIn("deliberately holds no settings", text)
+
+
 class LandingPageTests(unittest.TestCase):
     def test_summary_numbers_are_the_catalogs(self):
         profiles, command_sets, _, parser = catalog_page()

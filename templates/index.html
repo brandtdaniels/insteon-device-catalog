@@ -50,8 +50,8 @@
   .developers summary { cursor: pointer; color: var(--accent); }
   .developers ul { margin: 0.5rem 0 0; padding-left: 1.25rem; color: var(--muted); }
 
-  .coverage, .how { margin-top: 2rem; }
-  .coverage h2, .how h2 { margin: 0 0 0.5rem; font-size: 1.25rem; }
+  .coverage, .how, .capabilities { margin-top: 2rem; }
+  .coverage h2, .how h2, .capabilities h2 { margin: 0 0 0.5rem; font-size: 1.25rem; }
   .totals { display: grid; gap: 0.25rem 2rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr)); margin: 0 0 1rem; padding: 0; list-style: none; color: var(--muted); font-size: 0.9rem; }
   .totals strong { color: var(--text); font-size: 1.1rem; font-variant-numeric: tabular-nums; }
   .statuses-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
@@ -65,6 +65,12 @@
   .status-inferred { border-style: dashed; }
   .status-conflicting { border-style: double; border-width: 3px; }
   .marks { margin: 0; display: flex; flex-wrap: wrap; gap: 0.3rem; align-items: center; font-size: 0.75rem; color: var(--muted); }
+  .legend { display: grid; gap: 1rem 2rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); margin-top: 1rem; }
+  .legend h3 { margin: 0 0 0.35rem; font-size: 1rem; }
+  .legend dl { margin: 0; }
+  .legend dt { margin-top: 0.6rem; font-weight: 600; font-size: 0.9rem; }
+  .legend dd { margin: 0.1rem 0 0; color: var(--muted); font-size: 0.85rem; }
+  .count-inline { margin-left: 0.4rem; color: var(--muted); font-weight: 400; font-size: 0.8rem; font-variant-numeric: tabular-nums; }
   .how ul { padding-left: 1.25rem; }
   .how p, .how li { max-width: 48rem; }
   .how li { margin-bottom: 0.35rem; }
@@ -125,6 +131,12 @@
   .card td, .card th { padding: 0.2rem 0.5rem 0.2rem 0; text-align: left; vertical-align: top; border-top: 1px solid var(--line); }
   .card th { font-weight: 500; color: var(--muted); }
   .card details p { margin: 0.4rem 0 0; color: var(--muted); }
+  .card .describes { margin: 0.4rem 0 0; padding-left: 1.1rem; color: var(--muted); }
+  .card .describes ul { margin: 0.1rem 0 0.2rem; padding-left: 1.1rem; }
+  .card .describes li { margin-top: 0.2rem; overflow-wrap: anywhere; }
+  .card .describes li[data-command-set] { color: var(--text); }
+  .card .describes li li { color: var(--muted); }
+  .card table { overflow-wrap: anywhere; }
   [hidden] { display: none !important; }
 </style>
 </head>
@@ -145,6 +157,7 @@ firmware version a device reports. Version $catalog_version.</p>
 </details>
 <ul class="page-links">
   <li><a href="#coverage-heading">What the catalog covers</a></li>
+  <li><a href="#capabilities-heading">What the filters mean</a></li>
   <li><a href="#products">Products</a></li>
   <li><a href="#how-heading">How it is built and how to help</a></li>
 </ul>
@@ -152,6 +165,8 @@ firmware version a device reports. Version $catalog_version.</p>
 
 <main>
 $coverage
+
+$capabilities
 
 <h2 id="products" class="visually-hidden">Products</h2>
 
@@ -188,6 +203,9 @@ $how
   const battery = document.getElementById("battery");
   const count = document.getElementById("count");
 
+  // A card is found by its identifying words and by anything its detail section says.
+  const haystacks = new Map(cards.map((card) => [card, (card.dataset.search + " " + card.textContent).toLowerCase().replace(/\s+/g, " ")]));
+
   toolbar.hidden = false;
 
   function apply() {
@@ -200,7 +218,7 @@ $how
 
       for (const card of sectionCards) {
         const visible =
-          terms.every((term) => card.dataset.search.includes(term)) &&
+          terms.every((term) => haystacks.get(card).includes(term)) &&
           (!category.value || section.dataset.category === category.value) &&
           (!capability.value || card.dataset.capabilities.split(" ").includes(capability.value)) &&
           (!engine.value || card.dataset.engines.split(" ").includes(engine.value)) &&
