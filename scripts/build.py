@@ -1317,6 +1317,180 @@ def coverage(profiles, command_sets):
     }
 
 
+# One plain sentence for each capability kind, for the page's legend.
+CAPABILITY_EXPLANATIONS = {
+    "onOff": "Switches a load on and off.",
+    "dimmable": "Dims a load to a level between off and full.",
+    "modem": "A modem, which connects a computer or app to the Insteon network, such as a PowerLinc Modem, a USB Adapter or the modem inside a Hub.",
+    "hub": "A Hub, whose modem is driven through the Hub's local HTTP interface.",
+    "hubPro": "A Hub Pro, which also has its own HTTP interface for adding and removing devices and updating its software.",
+    "thermostat": "A thermostat, with the mode values it reports.",
+    "groupEvents": "Sends commands to its ALL-Link groups, and the catalog says what each one means, such as opened or closed.",
+    "heartbeat": "Sends a periodic heartbeat to a group, so software can notice a product that has gone quiet.",
+}
+
+# How each radio is explained, and the profiles that state none.
+RADIO_EXPLANATIONS = {
+    "powerline": "Communicates over the home's power wiring only.",
+    "rf": "Communicates by radio only.",
+    "dual": "Communicates over both the power wiring and radio.",
+    "unstated": "No source the catalog cites states how the product communicates.",
+}
+
+BATTERY_EXPLANATION = "Runs on batteries and sleeps between messages."
+
+# What each engine means for software, as the schema describes it.
+ENGINE_EXPLANATIONS = {
+    "i1": "An engine that does not support Enter Linking Mode, so a person uses the device's controls to link it.",
+    "i2": "An engine that takes Enter Linking Mode as a standard message.",
+    "i2cs": "An engine that rejects an extended message whose D14 checksum is wrong, and takes Enter Linking Mode as an extended message with a checksum.",
+}
+
+RADIO_LABELS = {"powerline": "Powerline", "rf": "RF", "dual": "Dual-band"}
+ROLE_LABELS = {"controller": "Controller", "responder": "Responder", "both": "Controller and responder"}
+
+# The facts a card gives about a command set, in the order it gives them.
+COMMAND_SET_FACTS = ("operatingFlags", "extendedSettings", "standardCommands", "extendedCommands", "serialCommands", "readings")
+
+
+def capability_section(profiles):
+    """The page's legend: what each capability, radio, power source and engine means, and how many
+    profiles have it, counted from the data."""
+
+    def number(metric, value):
+        return f'<span data-metric="{metric}">{value}</span>'
+
+    def term(label, metric, count, sentence):
+        return (
+            f"<dt>{html.escape(label)} "
+            f'<span class="count-inline">{number(metric, count)} {"profile" if count == 1 else "profiles"}</span></dt>'
+            f"<dd>{html.escape(sentence)}</dd>"
+        )
+
+    def count(test):
+        return sum(1 for profile in profiles if test(profile))
+
+    capabilities = "".join(
+        term(CAPABILITY_LABELS[kind], f"capability-{kind}", count(lambda p, k=kind: any(c["kind"] == k for c in p["capabilities"])), sentence)
+        for kind, sentence in CAPABILITY_EXPLANATIONS.items()
+    )
+    power = term("Battery powered", "battery", count(lambda p: p.get("batteryPowered", False)), BATTERY_EXPLANATION)
+    radios = "".join(
+        term(RADIO_LABELS.get(radio, "Radio not stated"), f"radio-{radio}", count(lambda p, r=radio: p.get("radio") == r if r != "unstated" else "radio" not in p), sentence)
+        for radio, sentence in RADIO_EXPLANATIONS.items()
+    )
+    engines = "".join(
+        term(ENGINE_LABELS[engine], f"engine-{engine}", count(lambda p, e=engine: any(entry["engine"] == e for entry in p.get("engines", []))), sentence)
+        for engine, sentence in ENGINE_EXPLANATIONS.items()
+    )
+
+    return (
+        '<section class="capabilities" aria-labelledby="capabilities-heading">'
+        '<h2 id="capabilities-heading">What the filters mean</h2>'
+        '<p class="note">Each term below is a filter on the products. The count is how many profiles carry it, taken from the catalog\'s data. '
+        "Open a card's \"What the catalog describes\" section to see what the catalog holds for that device.</p>"
+        '<div class="legend">'
+        f"<div><h3>Capabilities</h3><dl>{capabilities}</dl></div>"
+        f"<div><h3>Radio and power</h3><dl>{radios}{power}</dl></div>"
+        f"<div><h3>Engines</h3><dl>{engines}</dl></div>"
+        "</div></section>"
+    )
+
+
+def count_noun(count, singular, plural=None):
+    return f"{count} {singular if count == 1 else plural or singular + 's'}"
+
+
+def command_set_facts(command_set):
+    """What a command set covers: (fact, counted phrase, labels) for each part it holds."""
+    settings = command_set.get("extendedSettings") or {}
+    parts = {
+        "operatingFlags": ("operating flag", command_set.get("operatingFlags", [])),
+        "extendedSettings": ("extended setting", settings.get("values", [])),
+        "standardCommands": ("standard command", command_set.get("standardCommands", [])),
+        "extendedCommands": ("extended command", command_set.get("extendedCommands", [])),
+        "serialCommands": ("serial command", command_set.get("serialCommands", [])),
+        "readings": ("reading", command_set.get("readings", [])),
+    }
+    named = {"operatingFlags", "extendedSettings", "readings"}
+    found = []
+
+    for name in COMMAND_SET_FACTS:
+        noun, entries = parts[name]
+
+        if not entries:
+            continue
+
+        phrase = count_noun(len(entries), noun) + (" set per button" if name == "extendedSettings" and settings.get("perButton") else "")
+        found.append((name, phrase, [entry["label"] for entry in entries] if name in named else []))
+
+    return found
+
+
+def group_number(value):
+    return int(value, 16)
+
+
+def capability_detail(profile, command_sets):
+    """The card's "What the catalog describes" list: what the profile and its command sets state,
+    and a plain line where the catalog holds nothing."""
+    escape = html.escape
+    items = []
+
+    def fact(name, text):
+        items.append(f'<li data-fact="{name}">{escape(text)}</li>')
+
+    fact("radio", f"Radio: {RADIO_LABELS[profile['radio']]}." if "radio" in profile else "Radio: the catalog does not state how it communicates.")
+    fact("role", f"Role: {ROLE_LABELS[profile['role']].lower()}." if "role" in profile else "Role: the catalog does not state it.")
+
+    if profile.get("batteryPowered"):
+        fact("battery", "Battery powered.")
+
+    engines = [engine_note(entry)[0] for entry in profile.get("engines", [])]
+    fact("engine", f"Engine: {', '.join(dict.fromkeys(engines))}." if engines else "Engine: the catalog does not state it.")
+
+    groups = profile.get("groups", [])
+    roles = {"controller": "controller", "responder": "responder", "both": "controller and responder"}
+    fact(
+        "groups",
+        f"{count_noun(len(groups), 'ALL-Link group')}: " + ", ".join(f"{group_number(group['number'])} {group['name']} ({roles[group['role']]})" for group in groups) + "."
+        if groups
+        else "The catalog lists no ALL-Link groups for this device.",
+    )
+
+    for capability in profile["capabilities"]:
+        if capability["kind"] == "groupEvents":
+            events = ", ".join(f"{event['event']} (group {group_number(event['group'])}, command {event['command1']})" for event in capability["events"])
+            fact("events", f"Reports: {events}.")
+        elif capability["kind"] == "heartbeat":
+            interval = f" every {count_noun(capability['intervalMinutes'], 'minute')}" if "intervalMinutes" in capability else ""
+            fact("heartbeat", f"Heartbeat: group {group_number(capability['group'])}{interval}.")
+
+    entries = list(dict.fromkeys(entry["commandSet"] for entry in profile.get("commandSets", [])))
+
+    if not entries:
+        items.append('<li data-fact="noCommandSet">The catalog has no command set for this device.</li>')
+
+    for set_id in entries:
+        command_set = command_sets[set_id]
+        parts = command_set_facts(command_set)
+
+        if not parts:
+            items.append(
+                f'<li data-command-set="{escape(set_id)}"><span data-fact="noSettings">The catalog deliberately holds no settings for this device: '
+                "there is nothing for software to read or write.</span></li>"
+            )
+            continue
+
+        lines = "".join(
+            f'<li data-fact="{name}">{escape(phrase)}' + (f": {escape(', '.join(labels))}" if labels else "") + ".</li>"
+            for name, phrase, labels in parts
+        )
+        items.append(f'<li data-command-set="{escape(set_id)}">Command set {escape(command_set["name"])}<ul>{lines}</ul></li>')
+
+    return f'<ul class="describes">{"".join(items)}</ul>'
+
+
 def coverage_section(summary):
     """The page's coverage summary: counts, and a table of statuses."""
 
@@ -1344,8 +1518,8 @@ def coverage_section(summary):
         '<table class="statuses-table"><caption>How sure the catalog is of what it states</caption>'
         '<thead><tr><th scope="col">Status</th><th scope="col">Meaning</th><th scope="col" class="num">Command set values</th><th scope="col" class="num">Identities</th></tr></thead>'
         f"<tbody>{rows}</tbody></table>"
-        '<p class="note">A command set value or profile entry with no mark is documented. The command set column counts only values that carry a mark; '
-        "the identities column counts every identity, and one with no mark counts as documented.</p>"
+        '<p class="note">A command set value or profile entry with no mark is documented. The command set column counts only values that carry a mark. '
+        "The identities column counts every identity. An identity with no mark is counted as documented: it is read from the documents the profile cites, not confirmed on a device.</p>"
         "</section>"
     )
 
@@ -1359,8 +1533,8 @@ def how_section(version):
         '<h2 id="how-heading">How this catalog is built and how to help</h2>'
         "<p>Every fact comes from a public Insteon document, cited by its exact title and version in the profile's <code>sources</code>, "
         "or from an observation on a real device, which names the firmware it was seen on. "
-        "A value that no document states, that documents disagree on, or that a device has shown carries a status and a note that say so. "
-        "A value nobody has checked is marked unverified rather than stated as fact.</p>"
+        "A value that no document states, that documents disagree on, or that a device has shown carries a status (inferred, conflicting or observed) and a note that say so. "
+        "A value with no mark is documented: a public Insteon document gives it.</p>"
         "<p>Help is welcome wherever a value is marked inferred or conflicting, and for devices the catalog has no command set for:</p>"
         "<ul>"
         f'<li>Found a wrong or missing value? <a href="{base}/issues">Open an issue</a> that names the product, the value and the document or device that shows it.</li>'
@@ -1378,8 +1552,9 @@ def index_page(profiles, command_sets, version):
     escape = html.escape
     descriptions = capability_descriptions()
     names = {command_set["id"]: command_set["name"] for command_set in command_sets}
-    radios = {"powerline": "Powerline", "rf": "RF", "dual": "Dual-band"}
-    roles = {"controller": "Controller", "responder": "Responder", "both": "Controller and responder"}
+    command_sets_by_id = {command_set["id"]: command_set for command_set in command_sets}
+    radios = RADIO_LABELS
+    roles = ROLE_LABELS
     cards = {}
 
     def natural(text):
@@ -1432,10 +1607,13 @@ def index_page(profiles, command_sets, version):
         if len(profile.get("description", "")) > 150:
             shared.insert(0, escape(profile["description"]))
 
-        details = ""
-
-        if table or shared:
-            details = "<details><summary>Details</summary>" + "".join(f"<p>{line}</p>" for line in shared) + table + "</details>"
+        details = (
+            '<details class="describes-details"><summary>What the catalog describes</summary>'
+            + capability_detail(profile, command_sets_by_id)
+            + "".join(f"<p>{line}</p>" for line in shared)
+            + table
+            + "</details>"
+        )
 
         statuses = [status for status in STATUSES if status in marked_statuses(profile)]
         marks = "".join(f'<span class="status status-{status}" title="{escape(STATUS_EXPLANATIONS[status])}">{status.capitalize()}</span>' for status in statuses)
@@ -1449,6 +1627,10 @@ def index_page(profiles, command_sets, version):
             *aliases,
             *(f"{i['category']}/{i['subcategory']}" for i in profile["identities"]),
             *(entry["engine"] for entry in profile.get("engines", [])),
+            *(CAPABILITY_LABELS.get(kind, kind) for kind in kinds),
+            *([radios[profile["radio"]]] if "radio" in profile else []),
+            *([roles[profile["role"]]] if "role" in profile else []),
+            *(["battery powered"] if profile.get("batteryPowered") else []),
         ]).lower()
         attributes = {
             "search": search,
@@ -1460,7 +1642,7 @@ def index_page(profiles, command_sets, version):
         }
         data = " ".join(f'data-{key}="{escape(value)}"' for key, value in attributes.items())
         card = (
-            f'<article class="card" {data}>'
+            f'<article class="card" data-model="{escape(profile["model"])}" {data}>'
             f'<div class="top"><span class="model mono">{escape(profile["model"])}</span><span class="chips">{chips}</span></div>'
             f'<h3>{escape(profile["name"])}</h3>'
             + (f'<p class="aliases">Also known as {escape(", ".join(aliases))}</p>' if aliases else "")
@@ -1494,6 +1676,7 @@ def index_page(profiles, command_sets, version):
         catalog_version=version,
         count=len(profiles),
         coverage=coverage_section(coverage(profiles, command_sets)),
+        capabilities=capability_section(profiles),
         how=how_section(version),
         verification_options="".join(
             f'<option value="{status}">{status.capitalize()}</option>' for status in STATUSES if any(status in marked_statuses(profile) for profile in profiles)
