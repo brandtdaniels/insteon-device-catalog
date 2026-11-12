@@ -22,6 +22,17 @@
       }
     }
   ],
+  "commandSets": [
+    {
+      "commandSet": "remoteLinc2Switch",
+      "category": "0x00",
+      "subcategory": "0x11",
+      "verification": {
+        "status": "inferred",
+        "note": "The RemoteLinc 2 Developer Notes (the document Insteon's developer store lists as Mini Remotes - Developer Notes) report subcategory 0x10 in their ID Request reply and name no other Mini Remote. The switch reports subcategory 0x11 in Insteon Device Categories (January 2014), and the catalog reads it as sharing the 0x10 remote's commands."
+      }
+    }
+  ],
   "radio": "rf",
   "role": "controller",
   "batteryPowered": true,
@@ -351,6 +362,7 @@
   ],
   "sources": [
     "HouseLinc Device Definitions (version 2.9.87)",
+    "Insteon Device Categories (January 2014)",
     "Mini Remote Control 2342 Owner's Manual",
     "RemoteLinc 2 Developer Notes"
   ]

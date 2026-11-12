@@ -1,0 +1,328 @@
+{
+  "id": "remoteLinc2EightScene",
+  "name": "Mini Remote, 8 scene",
+  "description": "The 8-scene Mini Remote, a battery-powered keypad of eight scene buttons that sleeps between button presses. It speaks the RemoteLinc 2 commands.",
+  "operatingFlags": [
+    {
+      "name": "programmingLock",
+      "label": "Programming lock",
+      "section": "Linking",
+      "description": "Linking and programming from the remote itself are locked out.",
+      "query": "0x00",
+      "bit": "0x01",
+      "on": "0x00",
+      "off": "0x01",
+      "guard": "neverSet"
+    },
+    {
+      "name": "ledOn",
+      "label": "LED on",
+      "section": "LEDs",
+      "description": "The LED is on.",
+      "query": "0x00",
+      "bit": "0x02",
+      "on": "0x02",
+      "off": "0x03"
+    },
+    {
+      "name": "beeperOn",
+      "label": "Beeper",
+      "section": "Buttons",
+      "description": "The beeper is on.",
+      "query": "0x00",
+      "bit": "0x04",
+      "on": "0x04",
+      "off": "0x05"
+    },
+    {
+      "name": "stayAwake",
+      "label": "Stay awake",
+      "section": "Battery",
+      "advanced": true,
+      "description": "The remote stays awake, with 0xFF as its awake interval.",
+      "query": "0x00",
+      "bit": "0x08",
+      "on": "0x06",
+      "off": "0x07"
+    },
+    {
+      "name": "listenOnly",
+      "label": "Listen only",
+      "section": "Communication",
+      "advanced": true,
+      "description": "The remote only listens.",
+      "query": "0x00",
+      "bit": "0x10"
+    },
+    {
+      "name": "noImAlive",
+      "label": "No heartbeat",
+      "section": "Sensor",
+      "description": "The remote doesn't wake up on its own to send I'm Alive broadcasts.",
+      "query": "0x00",
+      "bit": "0x20",
+      "on": "0x0A",
+      "off": "0x0B"
+    },
+    {
+      "name": "grouped",
+      "label": "Pair buttons by row",
+      "section": "Buttons",
+      "description": "Each row's two buttons share a group, 1 to 4 from the top. Otherwise each button has its own group, 1 to 8.",
+      "query": "0x00",
+      "bit": "0x40",
+      "on": "0x0F",
+      "off": "0x0E",
+      "advanced": true,
+      "verification": {
+        "status": "inferred",
+        "note": "The RemoteLinc 2 Developer Notes describe this flag for a keypad of four rows of an on button and an off button. No document describes it for the 8-scene remote, whose buttons are scenes, so the catalog reads it as pairing each row's two buttons and hides it as advanced."
+      }
+    }
+  ],
+  "readings": [
+    {
+      "name": "databaseDelta",
+      "label": "ALL-Link database changes",
+      "section": "Diagnostics",
+      "advanced": true,
+      "description": "A count that goes up whenever the ALL-Link database changes. It clears when the device loses power.",
+      "query": "0x01"
+    }
+  ],
+  "extendedSettings": {
+    "perButton": false,
+    "values": [
+      {
+        "name": "awakeInterval",
+        "label": "Awake interval",
+        "section": "Battery",
+        "advanced": true,
+        "description": "How long the remote stays awake, in seconds.",
+        "byte": 3
+      },
+      {
+        "name": "sleepInterval",
+        "label": "Sleep interval",
+        "section": "Battery",
+        "advanced": true,
+        "description": "How long the remote sleeps, in steps of 755.2 seconds.",
+        "byte": 4
+      },
+      {
+        "name": "broadcastCount",
+        "label": "Heartbeat broadcasts",
+        "section": "Sensor",
+        "advanced": true,
+        "description": "How many times the remote sends its I'm Alive broadcast.",
+        "byte": 5
+      },
+      {
+        "name": "triggerGroups",
+        "label": "Groups that trigger another device's group",
+        "section": "Buttons",
+        "advanced": true,
+        "description": "The buttons that are trigger buttons.",
+        "byte": 6,
+        "kind": "buttons"
+      },
+      {
+        "name": "sleepIntervalLow",
+        "label": "Sleep interval, low byte",
+        "section": "Battery",
+        "advanced": true,
+        "description": "The low byte of the sleep interval, in steps of 2.3 seconds.",
+        "byte": 7
+      },
+      {
+        "name": "appRetries",
+        "label": "Application retries",
+        "section": "Communication",
+        "advanced": true,
+        "description": "How many times the remote retries a message: 0x01 by default, 0x00 for none, or 0xFF to send broadcasts only.",
+        "byte": 8,
+        "default": "0x01"
+      },
+      {
+        "name": "configuration",
+        "label": "Configuration",
+        "section": "Communication",
+        "advanced": true,
+        "description": "A configuration byte the RemoteLinc 2 Developer Notes don't explain.",
+        "byte": 9
+      },
+      {
+        "name": "batteryLevel",
+        "label": "Battery level",
+        "section": "Battery",
+        "description": "The battery level.",
+        "byte": 10
+      }
+    ],
+    "writes": [
+      {
+        "name": "awakeInterval",
+        "description": "Sets how long the remote stays awake.",
+        "selector": "0x02",
+        "perButton": false,
+        "bytes": [
+          {
+            "position": 3,
+            "value": "awakeInterval"
+          }
+        ]
+      },
+      {
+        "name": "sleepInterval",
+        "description": "Sets how long the remote sleeps.",
+        "selector": "0x03",
+        "perButton": false,
+        "bytes": [
+          {
+            "position": 3,
+            "value": "sleepInterval"
+          },
+          {
+            "position": 4,
+            "value": "sleepIntervalLow"
+          }
+        ]
+      },
+      {
+        "name": "broadcastCount",
+        "description": "Sets how many times the remote sends its I'm Alive broadcast.",
+        "selector": "0x04",
+        "perButton": false,
+        "bytes": [
+          {
+            "position": 3,
+            "value": "broadcastCount"
+          }
+        ]
+      },
+      {
+        "name": "triggerGroups",
+        "description": "Sets the trigger buttons, button 1 in bit 0.",
+        "selector": "0x05",
+        "perButton": false,
+        "bytes": [
+          {
+            "position": 3,
+            "value": "triggerGroups"
+          }
+        ]
+      },
+      {
+        "name": "appRetries",
+        "description": "Sets how many times the remote retries a message.",
+        "selector": "0x06",
+        "perButton": false,
+        "bytes": [
+          {
+            "position": 3,
+            "value": "appRetries"
+          }
+        ]
+      },
+      {
+        "name": "lowBatteryLevel",
+        "description": "Sets the low battery level: 0x00, the default, for none, 0xFF for the device's default level, or another value for a custom level.",
+        "selector": "0x07",
+        "perButton": false,
+        "bytes": [
+          {
+            "position": 3,
+            "value": "lowBatteryLevel"
+          }
+        ]
+      }
+    ]
+  },
+  "extendedCommands": [
+    {
+      "name": "readSettings",
+      "description": "Reads the remote's intervals, trigger buttons, retries and battery level.",
+      "effect": "readOnly",
+      "idempotent": true,
+      "command1": "0x2E",
+      "command2": "0x00",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x01"
+        }
+      ],
+      "reply": {
+        "command2": "0x00",
+        "match": [
+          {
+            "position": 2,
+            "value": "0x01"
+          }
+        ],
+        "values": [
+          {
+            "name": "awakeInterval",
+            "description": "How long the remote stays awake.",
+            "byte": 3,
+            "unit": "seconds",
+            "range": {
+              "from": 0,
+              "through": 255
+            }
+          },
+          {
+            "name": "sleepInterval",
+            "description": "How long the remote sleeps, in steps of 755.2 seconds.",
+            "byte": 4,
+            "scale": 755.2,
+            "unit": "seconds"
+          },
+          {
+            "name": "broadcastCount",
+            "description": "How many times the remote sends its I'm Alive broadcast.",
+            "byte": 5
+          },
+          {
+            "name": "triggerGroups",
+            "description": "The trigger buttons.",
+            "byte": 6,
+            "kind": "buttons"
+          },
+          {
+            "name": "sleepIntervalLow",
+            "description": "The sleep interval's low byte, in steps of 2.3 seconds.",
+            "byte": 7,
+            "scale": 2.3,
+            "unit": "seconds"
+          },
+          {
+            "name": "appRetries",
+            "description": "How many times the remote retries a message.",
+            "byte": 8
+          },
+          {
+            "name": "configuration",
+            "description": "A configuration byte the RemoteLinc 2 Developer Notes don't explain.",
+            "byte": 9
+          },
+          {
+            "name": "batteryLevel",
+            "description": "The battery level.",
+            "byte": 10
+          }
+        ]
+      }
+    }
+  ],
+  "notes": [
+    "Every entry other than the grouped flag is carried over from the RemoteLinc 2 command set, because the RemoteLinc 2 Developer Notes are the only document for the Mini Remote family's commands.",
+    "The RemoteLinc 2 Developer Notes give the sleep interval's first byte in steps of 755.2 seconds, or 12.5 minutes, and its low byte in steps of 2.3 seconds.",
+    "The RemoteLinc 2 Developer Notes' descriptions of Set Operating Flags 0x08 and 0x09 are unclear for the RemoteLinc 2, so listenOnly has no commands here.",
+    "The RemoteLinc 2 Developer Notes' keypad has eight buttons in four rows of two, which is the 8-scene remote's layout, so every other entry is the RemoteLinc 2's.",
+    "Insteon's file for the RemoteLinc 2 Developer Notes are named for the 2342, but its title and ID request reply are the RemoteLinc 2's, subcategory 0x10."
+  ],
+  "sources": [
+    "RemoteLinc 2 Developer Notes"
+  ]
+}

@@ -99,6 +99,89 @@
       "subcategory": "0x19"
     }
   ],
+  "commandSets": [
+    {
+      "commandSet": "remoteLinc2EightScene",
+      "category": "0x00",
+      "subcategory": "0x1A",
+      "verification": {
+        "status": "inferred",
+        "note": "The RemoteLinc 2 Developer Notes (the document Insteon's developer store lists as Mini Remotes - Developer Notes) report subcategory 0x10 in their ID Request reply and name no other Mini Remote. Insteon Device Categories (January 2014) lists subcategory 0x1A as the 2342 8 scene remote for its region, and the catalog reads the 2342 as sharing the RemoteLinc 2 commands."
+      }
+    },
+    {
+      "commandSet": "remoteLinc2",
+      "category": "0x00",
+      "subcategory": "0x1B",
+      "verification": {
+        "status": "inferred",
+        "note": "The RemoteLinc 2 Developer Notes (the document Insteon's developer store lists as Mini Remotes - Developer Notes) report subcategory 0x10 in their ID Request reply and name no other Mini Remote. Insteon Device Categories (January 2014) lists subcategory 0x1B as the 2342 4 scene remote for its region, and the catalog reads the 2342 as sharing the RemoteLinc 2 commands."
+      }
+    },
+    {
+      "commandSet": "remoteLinc2Switch",
+      "category": "0x00",
+      "subcategory": "0x1C",
+      "verification": {
+        "status": "inferred",
+        "note": "The RemoteLinc 2 Developer Notes (the document Insteon's developer store lists as Mini Remotes - Developer Notes) report subcategory 0x10 in their ID Request reply and name no other Mini Remote. Insteon Device Categories (January 2014) lists subcategory 0x1C as the 2342 switch remote for its region, and the catalog reads the 2342 as sharing the RemoteLinc 2 commands."
+      }
+    },
+    {
+      "commandSet": "remoteLinc2EightScene",
+      "category": "0x00",
+      "subcategory": "0x16",
+      "verification": {
+        "status": "inferred",
+        "note": "The RemoteLinc 2 Developer Notes (the document Insteon's developer store lists as Mini Remotes - Developer Notes) report subcategory 0x10 in their ID Request reply and name no other Mini Remote. Insteon Device Categories (January 2014) lists subcategory 0x16 as the 2342 8 scene remote for its region, and the catalog reads the 2342 as sharing the RemoteLinc 2 commands."
+      }
+    },
+    {
+      "commandSet": "remoteLinc2",
+      "category": "0x00",
+      "subcategory": "0x14",
+      "verification": {
+        "status": "inferred",
+        "note": "The RemoteLinc 2 Developer Notes (the document Insteon's developer store lists as Mini Remotes - Developer Notes) report subcategory 0x10 in their ID Request reply and name no other Mini Remote. Insteon Device Categories (January 2014) lists subcategory 0x14 as the 2342 4 scene remote for its region, and the catalog reads the 2342 as sharing the RemoteLinc 2 commands."
+      }
+    },
+    {
+      "commandSet": "remoteLinc2Switch",
+      "category": "0x00",
+      "subcategory": "0x15",
+      "verification": {
+        "status": "inferred",
+        "note": "The RemoteLinc 2 Developer Notes (the document Insteon's developer store lists as Mini Remotes - Developer Notes) report subcategory 0x10 in their ID Request reply and name no other Mini Remote. Insteon Device Categories (January 2014) lists subcategory 0x15 as the 2342 switch remote for its region, and the catalog reads the 2342 as sharing the RemoteLinc 2 commands."
+      }
+    },
+    {
+      "commandSet": "remoteLinc2EightScene",
+      "category": "0x00",
+      "subcategory": "0x18",
+      "verification": {
+        "status": "inferred",
+        "note": "The RemoteLinc 2 Developer Notes (the document Insteon's developer store lists as Mini Remotes - Developer Notes) report subcategory 0x10 in their ID Request reply and name no other Mini Remote. Insteon Device Categories (January 2014) doesn't list subcategory 0x18, and the catalog reads the 2342 as sharing the RemoteLinc 2 commands."
+      }
+    },
+    {
+      "commandSet": "remoteLinc2",
+      "category": "0x00",
+      "subcategory": "0x17",
+      "verification": {
+        "status": "inferred",
+        "note": "The RemoteLinc 2 Developer Notes (the document Insteon's developer store lists as Mini Remotes - Developer Notes) report subcategory 0x10 in their ID Request reply and name no other Mini Remote. Insteon Device Categories (January 2014) lists subcategory 0x17 as the 2342 4 scene remote for its region, and the catalog reads the 2342 as sharing the RemoteLinc 2 commands."
+      }
+    },
+    {
+      "commandSet": "remoteLinc2Switch",
+      "category": "0x00",
+      "subcategory": "0x19",
+      "verification": {
+        "status": "inferred",
+        "note": "The RemoteLinc 2 Developer Notes (the document Insteon's developer store lists as Mini Remotes - Developer Notes) report subcategory 0x10 in their ID Request reply and name no other Mini Remote. Insteon Device Categories (January 2014) lists subcategory 0x19 as the 2342 switch remote for its region, and the catalog reads the 2342 as sharing the RemoteLinc 2 commands."
+      }
+    }
+  ],
   "radio": "rf",
   "role": "controller",
   "batteryPowered": true,
@@ -392,6 +475,7 @@
   ],
   "sources": [
     "HouseLinc Device Definitions (version 2.9.87)",
+    "Insteon Device Categories (January 2014)",
     "insteon.com product catalog",
     "Mini Remote Control 2342 Owner's Manual",
     "Mini Remote Control 2342 Quick Start Guide",

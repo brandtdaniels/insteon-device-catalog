@@ -24,6 +24,17 @@
       }
     }
   ],
+  "commandSets": [
+    {
+      "commandSet": "remoteLinc2EightScene",
+      "category": "0x00",
+      "subcategory": "0x12",
+      "verification": {
+        "status": "inferred",
+        "note": "The RemoteLinc 2 Developer Notes (the document Insteon's developer store lists as Mini Remotes - Developer Notes) report subcategory 0x10 in their ID Request reply and name no other Mini Remote. The 8-scene remote reports subcategory 0x12 in Insteon Device Categories (January 2014), and the catalog reads it as sharing the 0x10 remote's commands, because both are the RemoteLinc 2 keypad of eight buttons."
+      }
+    }
+  ],
   "radio": "rf",
   "role": "controller",
   "batteryPowered": true,
@@ -383,6 +394,7 @@
   ],
   "sources": [
     "HouseLinc Device Definitions (version 2.9.87)",
+    "Insteon Device Categories (January 2014)",
     "Mini Remote - 8 Scene 2444A2WH8 Owner's Manual",
     "Mini Remote - 8 Scene 2444A2WH8 Quick Start Guide",
     "RemoteLinc 2 Developer Notes"
