@@ -227,7 +227,7 @@
       "off": "0x09",
       "verification": {
         "status": "conflicting",
-        "note": "One source swaps 0x08 and 0x09 (backlight on and off); the values here are those other sources give. The Insteon Developer's Guide reads bit 4 of the 0x00 reply as LED on, but later sources read it as LED off, the state 0x08 sets."
+        "note": "One source swaps 0x08 and 0x09 (backlight on and off); the values here are those the 2475SDB Developer Notes give. The Insteon Developer's Guide (2009) reads bit 4 of the 0x00 reply as LED on, but the 2475SDB Developer Notes read it as LED off, the state 0x08 sets."
       }
     },
     {
@@ -241,7 +241,7 @@
       "off": "0x0B",
       "verification": {
         "status": "conflicting",
-        "note": "One source lists bit 5 of the 0x00 reply as load sense, set with 0x06 and 0x07; other sources make bit 5 the key beep on this code base."
+        "note": "The Insteon Developer's Guide (2009) lists bit 5 of the 0x00 reply as load sense, set with 0x06 and 0x07; other sources make bit 5 the key beep on this code base."
       }
     },
     {
@@ -342,7 +342,7 @@
       "query": "0x02",
       "verification": {
         "status": "conflicting",
-        "note": "The Insteon Developer's Guide gives query 0x02 as a signal-to-noise value; later sources count messages with CRC errors there."
+        "note": "The Insteon Developer's Guide (2009) gives query 0x02 as a signal-to-noise value; later sources count messages with CRC errors there."
       }
     },
     {
@@ -428,7 +428,7 @@
         "table": "rampRate",
         "verification": {
           "status": "conflicting",
-          "note": "Earlier sources give ramp rate 0x00 as 9 minutes; the table uses the later reading, 2 seconds."
+          "note": "The Insteon Developer's Guide (2009) gives the ramp rate range 0x00 through 0x1F as 0.1 second to 9 minutes; the 2475SDB Developer Notes give 0x00 as 2 seconds, the reading the table uses."
         }
       },
       {
@@ -568,7 +568,7 @@
             "scale": 0.392157,
             "verification": {
               "status": "inferred",
-              "note": "Read from the Insteon Developer's Guide, which gives Data 1 as the on-level and Data 2 as the ramp rate as examples, and from the KeypadLinc Line and LED Bulb Developer Notes. Inferred: seen on two i2CS devices (Outdoor On/Off Plug 2634-222 firmware 0x42, On/Off Plug 2635-222 firmware 0x48) linked to a Hub 2245, the device itself writes its responder record when it's linked remotely or with the SET button, and takes Data 1 from the load's state at that moment: the two plugs wrote 0x00 when the load was off and 0xFF when it was on. The On/Off Plug 2635-222 Owner's Manual says to make sure the module is on before linking it as a responder; the In-Line Dimmer Module (Dual-Band) 2475DA1 Owner's Manual says to set the load to the state the link should recall before linking it as a responder. The values given here are what to write when writing the record by hand."
+              "note": "Read from the Insteon Developer's Guide (2009), which gives Data 1 as the on-level and Data 2 as the ramp rate as examples, and from the KeypadLinc Line and LED Bulb Developer Notes. Inferred: seen on two i2CS devices (Outdoor On/Off Plug 2634-222 firmware 0x42, On/Off Plug 2635-222 firmware 0x48) linked to a Hub 2245, the device itself writes its responder record when it's linked remotely or with the SET button, and takes Data 1 from the load's state at that moment: the two plugs wrote 0x00 when the load was off and 0xFF when it was on. The On/Off Plug 2635-222 Owner's Manual says to make sure the module is on before linking it as a responder; the In-Line Dimmer Module (Dual-Band) 2475DA1 Owner's Manual says to set the load to the state the link should recall before linking it as a responder. The values given here are what to write when writing the record by hand."
             }
           },
           {
@@ -579,7 +579,7 @@
             "table": "rampRate",
             "verification": {
               "status": "inferred",
-              "note": "Read from the Insteon Developer's Guide, which gives Data 1 as the on-level and Data 2 as the ramp rate as examples, and from the KeypadLinc Line and LED Bulb Developer Notes."
+              "note": "Read from the Insteon Developer's Guide (2009), which gives Data 1 as the on-level and Data 2 as the ramp rate as examples, and from the KeypadLinc Line and LED Bulb Developer Notes."
             }
           }
         ]
@@ -634,7 +634,7 @@
       },
       "verification": {
         "status": "inferred",
-        "note": "No document says that every nonzero level means on; the ranges are read from Light Status Request's level byte (cmd2), as the Insteon Developer's Guide describes it for on/off devices."
+        "note": "No document says that every nonzero level means on; the ranges are read from Light Status Request's level byte (cmd2), as the Insteon Developer's Guide (2009) describes it for on/off devices."
       },
       "stateHolding": {
         "releasedBy": [],
@@ -647,7 +647,7 @@
     }
   ],
   "notes": [
-    "Earlier sources give ramp rates 0x00 through 0x1F as 9 minutes down to 0.1 second; the later ones make 0x01 8 minutes and 0x00 2 seconds."
+    "The Insteon Developer's Guide (2009) gives ramp rates 0x00 through 0x1F as 0.1 second to 9 minutes; the 2475SDB Developer Notes make 0x01 8 minutes and 0x00 2 seconds."
   ],
   "sources": [
     "Insteon Developer's Guide (2009)"

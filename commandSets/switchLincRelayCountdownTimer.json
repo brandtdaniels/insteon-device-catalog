@@ -273,7 +273,7 @@
       },
       "verification": {
         "status": "inferred",
-        "note": "No document says that every nonzero level means on; the ranges are read from Light Status Request's level byte (cmd2), as the Insteon Developer's Guide describes it for on/off devices."
+        "note": "No document says that every nonzero level means on; the ranges are read from Light Status Request's level byte (cmd2), as the Insteon Developer's Guide (2009) describes it for on/off devices."
       }
     }
   ],

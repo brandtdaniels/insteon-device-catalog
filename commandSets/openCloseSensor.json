@@ -256,7 +256,7 @@
     "The sensors sleep to save their batteries, and hear commands only while awake.",
     "Direct commands from a device that isn't in the sensor's ALL-Link database get a NAK with 0xFF in cmd2.",
     "The Open/Close Sensor's configuration byte is 0x43 by default, and the Leak Sensor's is 0x4F.",
-    "The guides give D4 and D5 of the extended Get reply as 0x01 and 0x23 without saying what they hold.",
+    "The Open/Close Sensor Developer Notes and the Leak Sensor Developer Notes give D4 and D5 of the extended Get reply as 0x01 and 0x23 without saying what they hold.",
     "The guides document no Set Operating Flags commands for these sensors. Write the configuration byte with an extended Set instead.",
     "stayAwake, as the Open/Close Sensor Developer Notes and the Leak Sensor Developer Notes give it, keeps the sensor awake for the seconds in D3; it changes no load or output, and as a keepAwake message it's configuration and idempotent."
   ],

@@ -348,7 +348,7 @@
     "Needs no neutral wire.",
     "Repeats RF but not powerline.",
     "In the SwitchLinc 2-Wire Dimmer Developer Notes, Set Operating Flags cmd2 0x0C to 0x0F repeat the LED on transmit and resume dim settings, and 0x10, 0x11 and 0x18 to 0x1D aren't used.",
-    "When its SET button is held, the dimmer broadcasts cmd1 0x01 with its category, subcategory and firmware in the To address; holding it again, to unlink, sends cmd1 0x02. The SwitchLinc 2-Wire Dimmer Developer Notes' example uses flags 0xCF and cmd2 0x01, the group; the Insteon Developer's Guide gives flags 0x8F and cmd2 0xFF, and makes cmd1 0x02 a controller's SET button rather than unlinking. An ID Request (cmd1 0x10) gets the same cmd1 0x01 broadcast with cmd2 0x00.",
+    "When its SET button is held, the dimmer broadcasts cmd1 0x01 with its category, subcategory and firmware in the To address; holding it again, to unlink, sends cmd1 0x02. The SwitchLinc 2-Wire Dimmer Developer Notes' example uses flags 0xCF and cmd2 0x01, the group; the Insteon Developer's Guide (2009) gives flags 0x8F and cmd2 0xFF, and makes cmd1 0x02 a controller's SET button rather than unlinking. An ID Request (cmd1 0x10) gets the same cmd1 0x01 broadcast with cmd2 0x00.",
     "The SwitchLinc 2-Wire Dimmer Developer Notes list no operating flags readings 0x02 to 0x04, no bits 6 and 7 in the 0x00 reply, no X10 bytes in the extended Get reply, and no X10 address or retries writes, though they keep the X10 disable and enable commands and the 0x05 X10 bit.",
     "The SwitchLinc 2-Wire Dimmer Developer Notes send D1 0x00 in the ramp rate and on-level Sets and say other values are ignored; the catalog's settings send 0x01, as for other products."
   ],

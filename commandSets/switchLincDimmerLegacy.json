@@ -213,7 +213,7 @@
       "off": "0x09",
       "verification": {
         "status": "conflicting",
-        "note": "The Insteon Developer's Guide reads bit 4 of the 0x00 reply as LED on, but later sources read it as LED off, the state 0x08 sets."
+        "note": "The Insteon Developer's Guide (2009) reads bit 4 of the 0x00 reply as LED on, but later sources read it as LED off, the state 0x08 sets."
       }
     },
     {
@@ -314,7 +314,7 @@
         "table": "rampRate",
         "verification": {
           "status": "conflicting",
-          "note": "Earlier sources give ramp rate 0x00 as 9 minutes; the table uses the later reading, 2 seconds."
+          "note": "The Insteon Developer's Guide (2009) gives the ramp rate range 0x00 through 0x1F as 0.1 second to 9 minutes; the table gives 0x00 as 2 seconds."
         }
       },
       {
@@ -483,7 +483,7 @@
             "scale": 0.392157,
             "verification": {
               "status": "inferred",
-              "note": "Read from the Insteon Developer's Guide, which gives Data 1 as the on-level and Data 2 as the ramp rate as examples, and from the KeypadLinc Line and LED Bulb Developer Notes. Inferred: seen on two i2CS devices (Outdoor On/Off Plug 2634-222 firmware 0x42, On/Off Plug 2635-222 firmware 0x48) linked to a Hub 2245, the device itself writes its responder record when it's linked remotely or with the SET button, and takes Data 1 from the load's state at that moment: the two plugs wrote 0x00 when the load was off and 0xFF when it was on. The On/Off Plug 2635-222 Owner's Manual says to make sure the module is on before linking it as a responder; the Toggle Dimmer Switch 2466DW Owner's Manual and the Dimmer Switch 2476D Owner's Manual say to set the load to the state the link should recall before linking it as a responder. The values given here are what to write when writing the record by hand."
+              "note": "Read from the Insteon Developer's Guide (2009), which gives Data 1 as the on-level and Data 2 as the ramp rate as examples, and from the KeypadLinc Line and LED Bulb Developer Notes. Inferred: seen on two i2CS devices (Outdoor On/Off Plug 2634-222 firmware 0x42, On/Off Plug 2635-222 firmware 0x48) linked to a Hub 2245, the device itself writes its responder record when it's linked remotely or with the SET button, and takes Data 1 from the load's state at that moment: the two plugs wrote 0x00 when the load was off and 0xFF when it was on. The On/Off Plug 2635-222 Owner's Manual says to make sure the module is on before linking it as a responder; the Toggle Dimmer Switch 2466DW Owner's Manual and the Dimmer Switch 2476D Owner's Manual say to set the load to the state the link should recall before linking it as a responder. The values given here are what to write when writing the record by hand."
             }
           },
           {
@@ -494,7 +494,7 @@
             "table": "rampRate",
             "verification": {
               "status": "inferred",
-              "note": "Read from the Insteon Developer's Guide, which gives Data 1 as the on-level and Data 2 as the ramp rate as examples, and from the KeypadLinc Line and LED Bulb Developer Notes."
+              "note": "Read from the Insteon Developer's Guide (2009), which gives Data 1 as the on-level and Data 2 as the ramp rate as examples, and from the KeypadLinc Line and LED Bulb Developer Notes."
             }
           }
         ]
@@ -502,8 +502,8 @@
     }
   ],
   "notes": [
-    "The Insteon Developer's Guide lists 0x0A and above as unused on this code base; later sources add the cleanup report commands 0x0A and 0x0B.",
-    "Earlier sources give ramp rates 0x00 through 0x1F as 9 minutes down to 0.1 second; the later ones make 0x01 8 minutes and 0x00 2 seconds.",
+    "The Insteon Developer's Guide (2009) lists 0x0A and above as unused on this code base; later sources add the cleanup report commands 0x0A and 0x0B.",
+    "The Insteon Developer's Guide (2009) gives ramp rates 0x00 through 0x1F as 0.1 second to 9 minutes; the table makes 0x01 8 minutes and 0x00 2 seconds.",
     "Earlier sources give the LED setting in D3 and selector 0x03 as a brightness from 0x11 to 0x7F.",
     "Earlier sources give D12 as the signal-to-noise ratio and D13 as a count of messages with CRC errors."
   ],
