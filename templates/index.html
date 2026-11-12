@@ -15,6 +15,9 @@
     --raised: #f6f7f9;
     --chip: #eef1f5;
     --accent: #2457c5;
+    --observed-bg: #1d6b3c;
+    --observed-text: #ffffff;
+    --mark-line: #62666d;
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
     line-height: 1.5;
   }
@@ -27,12 +30,19 @@
       --raised: #1b1d20;
       --chip: #2a2d33;
       --accent: #8fb0ff;
+      --observed-bg: #7fd39b;
+      --observed-text: #07210f;
+      --mark-line: #a0a4ab;
     }
   }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--surface); color: var(--text); }
   main { max-width: 72rem; margin: 0 auto; padding: 2.5rem 1rem 4rem; }
   a { color: var(--accent); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  .skip { position: absolute; left: 0.5rem; top: -4rem; padding: 0.4rem 0.75rem; background: var(--surface); border: 1px solid var(--accent); border-radius: 8px; z-index: 2; }
+  .skip:focus { top: 0.5rem; }
+  .page-links { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; margin: 1rem 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
   code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85em; }
   header h1 { margin: 0 0 0.5rem; font-size: 2rem; letter-spacing: -0.01em; }
   .intro { margin: 0; max-width: 44rem; color: var(--muted); font-size: 1.05rem; }
@@ -40,6 +50,39 @@
   .developers summary { cursor: pointer; color: var(--accent); }
   .developers ul { margin: 0.5rem 0 0; padding-left: 1.25rem; color: var(--muted); }
 
+  .coverage, .how { margin-top: 2rem; }
+  .coverage h2, .how h2 { margin: 0 0 0.5rem; font-size: 1.25rem; }
+  .totals { display: grid; gap: 0.25rem 2rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr)); margin: 0 0 1rem; padding: 0; list-style: none; color: var(--muted); font-size: 0.9rem; }
+  .totals strong { color: var(--text); font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+  .statuses-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+  .statuses-table caption { text-align: left; font-weight: 600; padding-bottom: 0.35rem; }
+  .statuses-table th, .statuses-table td { padding: 0.45rem 0.75rem 0.45rem 0; text-align: left; vertical-align: top; border-top: 1px solid var(--line); }
+  .statuses-table thead th { color: var(--muted); font-weight: 500; font-size: 0.8rem; }
+  .statuses-table .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; padding-right: 0; padding-left: 0.75rem; }
+  .note { margin: 0.5rem 0 0; color: var(--muted); font-size: 0.8rem; max-width: 44rem; }
+  .status { display: inline-block; padding: 0 0.5rem; border: 1px solid var(--mark-line); border-radius: 999px; font-size: 0.75rem; font-weight: 500; white-space: nowrap; color: var(--text); }
+  .status-observed { background: var(--observed-bg); border-color: var(--observed-bg); color: var(--observed-text); font-weight: 700; }
+  .status-inferred { border-style: dashed; }
+  .status-conflicting { border-style: double; border-width: 3px; }
+  .marks { margin: 0; display: flex; flex-wrap: wrap; gap: 0.3rem; align-items: center; font-size: 0.75rem; color: var(--muted); }
+  .how ul { padding-left: 1.25rem; }
+  .how p, .how li { max-width: 48rem; }
+  .how li { margin-bottom: 0.35rem; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+
+  @media (max-width: 40rem) {
+    .toolbar { position: static; margin-top: 1.5rem; }
+    input[type=search], select { font-size: 1rem; }
+    .statuses-table thead { display: none; }
+    .statuses-table tr { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; padding: 0.5rem 0; border-top: 1px solid var(--line); }
+    .statuses-table th, .statuses-table td { border-top: 0; padding: 0.15rem 0; }
+    .statuses-table th[scope=row], .statuses-table td:nth-child(2) { grid-column: 1 / -1; }
+    .statuses-table td.num { text-align: left; padding-left: 0; }
+    .statuses-table td.num:nth-child(3)::before { content: "Command set values: "; color: var(--muted); }
+    .statuses-table td.num:nth-child(4)::before { content: "Identities: "; color: var(--muted); }
+  }
+
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .toolbar {
     position: sticky; top: 0; z-index: 1; margin: 2rem -1rem 0; padding: 0.75rem 1rem;
     background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: blur(8px);
@@ -86,7 +129,7 @@
 </style>
 </head>
 <body>
-<main>
+<a class="skip" href="#products">Skip to the products</a>
 <header>
 <h1>Insteon Device Catalog</h1>
 <p class="intro">What each Insteon product is and what it can do, keyed by the category, subcategory and
@@ -100,22 +143,37 @@ firmware version a device reports. Version $catalog_version.</p>
     <li><a href="https://github.com/brandtdaniels/insteon-device-catalog/blob/main/API.md">How to use the catalog</a> and <a href="https://github.com/brandtdaniels/insteon-device-catalog">its source</a></li>
   </ul>
 </details>
+<ul class="page-links">
+  <li><a href="#coverage-heading">What the catalog covers</a></li>
+  <li><a href="#products">Products</a></li>
+  <li><a href="#how-heading">How it is built and how to help</a></li>
+</ul>
 </header>
 
-<div class="toolbar" hidden>
+<main>
+$coverage
+
+<h2 id="products" class="visually-hidden">Products</h2>
+
+<div class="toolbar" role="search" hidden>
   <div class="row">
     <input type="search" id="search" placeholder="Search by model, name or 0x01/0x20" aria-label="Search" autocomplete="off">
     <select id="category" aria-label="Category"><option value="">All categories</option>$category_options</select>
     <select id="capability" aria-label="Capability"><option value="">Any capability</option>$capability_options</select>
     <select id="radio" aria-label="Radio"><option value="">Any radio</option><option value="powerline">Powerline</option><option value="rf">RF</option><option value="dual">Dual-band</option></select>
     <select id="engine" aria-label="Engine"><option value="">Any engine</option>$engine_options</select>
+    <select id="verification" aria-label="Verification"><option value="">Any verification</option>$verification_options</select>
     <label class="check"><input type="checkbox" id="battery"> Battery powered</label>
   </div>
-  <p class="count" id="count">$count products</p>
+  <p class="count" id="count" aria-live="polite">$count products</p>
 </div>
 
 $sections
+$how
 </main>
+<footer>
+<p>Catalog version $catalog_version. <a href="https://github.com/brandtdaniels/insteon-device-catalog">Source on GitHub</a>, released under the MIT license.</p>
+</footer>
 <script>
 (() => {
   const sections = Array.from(document.querySelectorAll("section.category"));
@@ -126,6 +184,7 @@ $sections
   const capability = document.getElementById("capability");
   const engine = document.getElementById("engine");
   const radio = document.getElementById("radio");
+  const verification = document.getElementById("verification");
   const battery = document.getElementById("battery");
   const count = document.getElementById("count");
 
@@ -145,6 +204,7 @@ $sections
           (!category.value || section.dataset.category === category.value) &&
           (!capability.value || card.dataset.capabilities.split(" ").includes(capability.value)) &&
           (!engine.value || card.dataset.engines.split(" ").includes(engine.value)) &&
+          (!verification.value || card.dataset.verification.split(" ").includes(verification.value)) &&
           (!radio.value || card.dataset.radio === radio.value) &&
           (!battery.checked || card.dataset.battery === "true");
 
@@ -161,7 +221,7 @@ $sections
     count.textContent = shown === cards.length ? cards.length + " products" : shown + " of " + cards.length + " products";
   }
 
-  for (const control of [search, category, capability, engine, radio, battery]) {
+  for (const control of [search, category, capability, engine, radio, verification, battery]) {
     control.addEventListener("input", apply);
   }
 

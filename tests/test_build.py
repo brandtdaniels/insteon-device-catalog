@@ -3,9 +3,12 @@
 Run from the repository's root: python3 -I -m unittest discover -s tests
 """
 
+import collections
 import copy
+import html.parser
 import json
 import pathlib
+import re
 import sys
 import unittest
 
@@ -576,3 +579,191 @@ class StateHoldingTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def marked_statuses(value):
+    """Every verification status in value, found by reading the JSON independently of the build."""
+    found = []
+
+    def visit(node, key=None):
+        if isinstance(node, dict):
+            if key == "verification" and "status" in node:
+                found.append(node["status"])
+            for child_key, child in node.items():
+                visit(child, child_key)
+        elif isinstance(node, list):
+            for child in node:
+                visit(child, key)
+
+    visit(value)
+
+    return found
+
+
+class PageParser(html.parser.HTMLParser):
+    """Reads the page's coverage numbers, links, scripts and headings."""
+
+    def __init__(self):
+        super().__init__()
+        self.metrics = {}
+        self.sources = []
+        self.hrefs = []
+        self.headings = []
+        self.landmarks = set()
+        self._metric = None
+        self._heading = None
+
+    def handle_starttag(self, tag, attributes):
+        attributes = dict(attributes)
+        self.sources += [attributes[name] for name in ("src", "srcset") if name in attributes]
+
+        if tag == "link" and "href" in attributes:
+            self.sources.append(attributes["href"])
+        if tag == "a":
+            self.hrefs.append(attributes.get("href", ""))
+        if tag in ("header", "main", "footer", "nav"):
+            self.landmarks.add(tag)
+        if "data-metric" in attributes:
+            self._metric = attributes["data-metric"]
+        if tag in ("h1", "h2", "h3"):
+            self._heading = tag
+            self.headings.append([tag, ""])
+
+    def handle_endtag(self, tag):
+        self._metric = None
+        self._heading = None
+
+    def handle_data(self, data):
+        if self._metric:
+            self.metrics[self._metric] = self.metrics.get(self._metric, "") + data
+        if self._heading:
+            self.headings[-1][1] += data
+
+
+def catalog_page():
+    profiles, _ = build.load_profiles()
+    command_sets, _ = build.load_command_sets(profiles)
+    page = build.index_page(profiles, command_sets, "0.0.0")
+    parser = PageParser()
+    parser.feed(page)
+
+    return profiles, command_sets, page, parser
+
+
+class CoverageTests(unittest.TestCase):
+    def test_counts_profiles_identities_and_identity_statuses(self):
+        profiles = [
+            {"identities": [{}, {"verification": {"status": "observed", "note": "n"}}], "commandSets": []},
+            {"identities": [{"verification": {"status": "conflicting", "note": "n"}}]},
+        ]
+        coverage = build.coverage(profiles, [])
+
+        self.assertEqual(coverage["profiles"], 2)
+        self.assertEqual(coverage["identities"], 3)
+        self.assertEqual(coverage["identityStatuses"], {"observed": 1, "documented": 1, "inferred": 0, "conflicting": 1})
+
+    def test_separates_described_deliberately_empty_and_undescribed_profiles(self):
+        command_sets = [
+            {"id": "described", "name": "D", "operatingFlags": []},
+            {"id": "empty", "name": "E", "description": "Nothing to read.", "sources": ["S"]},
+        ]
+        profiles = [
+            {"identities": [{}], "commandSets": [{"commandSet": "described"}]},
+            {"identities": [{}], "commandSets": [{"commandSet": "empty"}]},
+            {"identities": [{}], "commandSets": [{"commandSet": "empty"}, {"commandSet": "described"}]},
+            {"identities": [{}]},
+        ]
+        coverage = build.coverage(profiles, command_sets)
+
+        self.assertEqual(coverage["described"], 2)
+        self.assertEqual(coverage["deliberatelyEmpty"], 1)
+        self.assertEqual(coverage["undescribed"], 1)
+
+    def test_counts_the_status_of_every_marked_command_set_value(self):
+        command_sets = [{"id": "a", "name": "A", "operatingFlags": [
+            {"verification": {"status": "inferred", "note": "n"}},
+            {"nested": [{"verification": {"status": "inferred", "note": "n"}}, {"verification": {"status": "observed", "note": "n"}}]},
+        ]}]
+        coverage = build.coverage([], command_sets)
+
+        self.assertEqual(coverage["commandSetStatuses"], {"observed": 1, "documented": 0, "inferred": 2, "conflicting": 0})
+
+    def test_matches_the_catalog_files(self):
+        profiles, command_sets, _, _ = catalog_page()
+        coverage = build.coverage(profiles, command_sets)
+        expected = collections.Counter(status for command_set in command_sets for status in marked_statuses(command_set))
+
+        self.assertEqual(coverage["commandSetStatuses"], {status: expected[status] for status in build.STATUSES})
+        self.assertEqual(coverage["described"] + coverage["deliberatelyEmpty"] + coverage["undescribed"], len(profiles))
+        self.assertEqual(sum(coverage["identityStatuses"].values()), coverage["identities"])
+
+
+class LandingPageTests(unittest.TestCase):
+    def test_summary_numbers_are_the_catalogs(self):
+        profiles, command_sets, _, parser = catalog_page()
+        coverage = build.coverage(profiles, command_sets)
+        metrics = {key: int(value.strip()) for key, value in parser.metrics.items()}
+
+        self.assertEqual(metrics["profiles"], coverage["profiles"])
+        self.assertEqual(metrics["identities"], coverage["identities"])
+        self.assertEqual(metrics["described"], coverage["described"])
+        self.assertEqual(metrics["deliberatelyEmpty"], coverage["deliberatelyEmpty"])
+        self.assertEqual(metrics["undescribed"], coverage["undescribed"])
+
+        for status in build.STATUSES:
+            self.assertEqual(metrics[f"commandSet-{status}"], coverage["commandSetStatuses"][status])
+            self.assertEqual(metrics[f"identity-{status}"], coverage["identityStatuses"][status])
+
+    def test_explains_each_status_in_one_sentence(self):
+        _, _, page, _ = catalog_page()
+
+        for status in build.STATUSES:
+            self.assertIn(html.escape(build.STATUS_EXPLANATIONS[status]), page)
+            self.assertEqual(build.STATUS_EXPLANATIONS[status].count("."), 1)
+
+    def test_a_card_names_the_statuses_its_own_values_carry(self):
+        profile = {"model": "9", "name": "N", "capabilities": [], "sources": ["S"], "identities": [
+            {"category": "0x01", "subcategory": "0x01", "verification": {"status": "observed", "note": "n"}},
+            {"category": "0x01", "subcategory": "0x02", "verification": {"status": "inferred", "note": "n"}},
+        ]}
+        plain = {"model": "8", "name": "M", "capabilities": [], "sources": ["S"], "identities": [{"category": "0x01", "subcategory": "0x03"}]}
+        page = build.index_page([profile, plain], [], "0.0.0")
+        cards = page.split('<article class="card"')[1:]
+
+        self.assertIn('data-verification="observed inferred"', cards[1])
+        self.assertIn('class="status status-observed"', cards[1])
+        self.assertIn('class="status status-inferred"', cards[1])
+        self.assertNotIn("status-conflicting", cards[1])
+        self.assertIn('data-verification=""', cards[0])
+        self.assertNotIn('class="status', cards[0])
+
+    def test_page_has_landmarks_and_ordered_headings(self):
+        _, _, _, parser = catalog_page()
+        levels = [int(tag[1]) for tag, _ in parser.headings]
+
+        self.assertLessEqual({"header", "main", "footer"}, parser.landmarks)
+        self.assertEqual(levels[0], 1)
+        self.assertEqual(levels.count(1), 1)
+        self.assertTrue(all(after - before <= 1 for before, after in zip(levels, levels[1:])))
+        self.assertIn("How this catalog is built and how to help", [text for _, text in parser.headings])
+
+    def test_page_makes_no_external_requests(self):
+        _, _, _, parser = catalog_page()
+
+        self.assertEqual([source for source in parser.sources if "//" in source], [])
+
+    def test_page_links_the_api_the_repository_and_the_issue_route(self):
+        _, _, _, parser = catalog_page()
+        base = "https://github.com/brandtdaniels/insteon-device-catalog"
+
+        for link in (f"{base}/blob/main/API.md", base, f"{base}/issues", f"{base}/pulls"):
+            self.assertIn(link, parser.hrefs)
+
+    def test_page_text_has_no_dash_and_no_temporal_words(self):
+        _, _, page, _ = catalog_page()
+        # The cards quote catalog data; the rest of the page is the page's own wording.
+        text = re.sub(r"<(script|style|article)\b.*?</\1>", "", page, flags=re.S)
+        text = re.sub(r"<[^>]+>", " ", text)
+
+        self.assertNotRegex(page, "[\u2013\u2014]")
+        self.assertNotRegex(text.lower(), r"\b(now|currently|latest|recent|recently|soon|today|yet|still|new|newly|later|upcoming)\b")
