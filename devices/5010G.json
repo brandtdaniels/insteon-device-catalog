@@ -303,7 +303,7 @@
       ],
       "notes": [
         "This learns an X10 address and links responders to it as the address's scene. Repeat the step on the device to be controlled for each further device before ending the session.",
-        "Without an Off delay, skip the taps. The Quick-Start Guide EZX10RF Wireless Sensor Receiver Insteon EZX10RF—Model #5010G adds that if the LED keeps blinking, pressing the SET button once more finishes."
+        "Without an Off delay, skip the taps. The Quick-Start Guide EZX10RF Wireless Sensor Receiver Insteon EZX10RF - Model #5010G adds that if the LED keeps blinking, pressing the SET button once more finishes."
       ],
       "alternatives": [
         {
@@ -432,7 +432,7 @@
         }
       ],
       "notes": [
-        "The Quick-Start Guide EZX10RF Wireless Sensor Receiver Insteon EZX10RF—Model #5010G unlinks with its linking steps, sending the X10 Off command in place of On: if A1 On triggers a scene, A1 Off stops it."
+        "The Quick-Start Guide EZX10RF Wireless Sensor Receiver Insteon EZX10RF - Model #5010G unlinks with its linking steps, sending the X10 Off command in place of On: if A1 On triggers a scene, A1 Off stops it."
       ]
     },
     "reset": {
@@ -514,10 +514,10 @@
   },
   "notes": [
     "Its X10 RF range is up to 200 feet. It can be set to ignore stray X10 signals from neighbors.",
-    "The Quick-Start Guide EZX10RF Wireless Sensor Receiver Insteon EZX10RF—Model #5010G applies to firmware 1.5 and above."
+    "The Quick-Start Guide EZX10RF Wireless Sensor Receiver Insteon EZX10RF - Model #5010G applies to firmware 1.5 and above."
   ],
   "sources": [
-    "Quick-Start Guide EZX10RF Wireless Sensor Receiver Insteon EZX10RF—Model #5010G",
+    "Quick-Start Guide EZX10RF Wireless Sensor Receiver Insteon EZX10RF - Model #5010G",
     "EZX10RF Insteon Messages/Commands",
     "Insteon Device Categories and Product Keys (October 2008)"
   ]

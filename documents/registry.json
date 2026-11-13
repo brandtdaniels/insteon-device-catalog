@@ -1,0 +1,797 @@
+{
+  "documents": [
+    {
+      "title": "0-10V Ballast Dimmer 2475DA2 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "0-10V Ballast Dimmer 2475DA2 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "2-Wire Dimmer Switch 2474DWH Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "240V Load Controller 2477SA Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "240V Load Controller 2477SA Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "2472D Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "2475SDB Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "2477S Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "Access Point 2443 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Access Point 2443 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Appliance Status Sensor 2423A5 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Ballast Dimmer 2446 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Ballast Dimmer 2446 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Ceiling Fan and Light Control Module 2475F Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Ceiling Fan and Light Control Module 2475F Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Central Controller 2412N Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Central Controller 2412N Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Countdown Timer Dimmer Keypad, 8 Buttons 2484D Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Diagnostics Keypad 2993-222 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Dimmer DIN Rail Module 2452 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Dimmer DIN Rail Module 2452 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Dimmer Keypad 2334 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Dimmer Keypad 2334 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Dimmer Keypad, 6 Buttons 2486DWH6 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Dimmer Keypad, 6 Buttons 2486DWH6 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Dimmer Keypad, 8 Buttons 2486DWH8 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Dimmer Keypad, 8 Buttons 2486DWH8 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Dimmer Module 2456D3 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Dimmer Module 2456D3 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Dimmer Module 2632 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Dimmer Module 2632 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Dimmer Module 2632-452 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Dimmer Plug 2457D2 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Dimmer Plug 2457D2 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Dimmer Switch 240V 2478D Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Dimmer Switch 240V 2478D Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Dimmer Switch 2476D Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Dimmer Switch 2476D Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Dimmer Switch 2477D Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Dimmer Switch 2477D Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Dimmer Switch 2477DH Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Dimmer Switch 2477DH Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "EZFlora Insteon and X10 Messages/Commands",
+      "kind": "other"
+    },
+    {
+      "title": "EZIOxx Advanced Details",
+      "kind": "other"
+    },
+    {
+      "title": "EZSnsRF Insteon Messages/Commands",
+      "kind": "other"
+    },
+    {
+      "title": "EZX10RF Insteon Messages/Commands",
+      "kind": "other"
+    },
+    {
+      "title": "Energy Display 2448A2 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Energy Display Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "Factory Resetting Insteon Devices (Insteon support article)",
+      "kind": "supportArticle"
+    },
+    {
+      "title": "FanLinc Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "Global Line Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "Hidden Door Sensor 2845 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Hidden Door Sensor Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "HouseLinc Device Definitions (version 2.9.87)",
+      "kind": "deviceDefinitions",
+      "edition": "version 2.9.87"
+    },
+    {
+      "title": "HouseLinc Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Hub 2242 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Hub 2242 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Hub 2245 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Hub 2245 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Hub Pro 2243 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "I/O Module 2450 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "In-Line 0-10VDC Dimmer Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "In-Line Dimmer Module (Dual-Band) 2475DA1 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "In-Line Dimmer Module (Dual-Band) 2475DA1 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "In-Line Dimmer Module 2475D Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "In-Line On/Off Module with Sense 2475S2 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "In-Line On/Off Module with Sense 2475S2 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "In-LineLinc On/Off 2475SDB Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "In-LineLinc On/Off 2475SDB Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Infrared Receiver 2411R Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Infrared Receiver 2411R Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Infrared Transmitter 2411T Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Infrared Transmitter 2411T Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Insteon Command Tables (2007)",
+      "kind": "commandTables",
+      "edition": "2007"
+    },
+    {
+      "title": "Insteon Developer's Guide (2009)",
+      "kind": "developersGuide",
+      "edition": "2009"
+    },
+    {
+      "title": "Insteon Device Categories (January 2014)",
+      "kind": "deviceCategories",
+      "edition": "January 2014"
+    },
+    {
+      "title": "Insteon Device Categories and Product Keys (October 2008)",
+      "kind": "deviceCategories",
+      "edition": "October 2008"
+    },
+    {
+      "title": "Insteon Firmware Update i2CS Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "Insteon Hub Developer's Guide",
+      "kind": "developersGuide"
+    },
+    {
+      "title": "Insteon Modem Developer's Guide",
+      "kind": "developersGuide"
+    },
+    {
+      "title": "Integrated Remote Control Thermostat 2491T1E Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "KeypadLinc Line Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "LED Bulb 2672 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "LED Bulb A19 2672 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "LED Bulb A19 2672 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "LED Bulb Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "LED Bulb PAR38 2674 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "LED Bulb PAR38 2674 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Lamp Dimmer Module 2456D2 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Leak Sensor 2852 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Leak Sensor 2852 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Leak Sensor Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "Lock Controller 2862 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Lock Controller 2862 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Micro Dimmer 2442 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Micro Dimmer 2442 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Micro On/Off 2443 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Micro On/Off 2443 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Micro Open/Close Module 2444 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Mini Remote - 4 Scene 2444A2WH4 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Mini Remote - 8 Scene 2444A2WH8 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Mini Remote - 8 Scene 2444A2WH8 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Mini Remote Control 2342 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Mini Remote Control 2342 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Morning Industry Lock Controller 2458A1 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "MorningLinc Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "Motion Sensor 2842 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Motion Sensor 2842 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Motion Sensor II 2844 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Motion Sensor II 2844 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Mutually Exclusive Buttons for KeypadLinc",
+      "kind": "other"
+    },
+    {
+      "title": "On/Off DIN Rail Module 2453 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "On/Off DIN Rail Module 2453 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "On/Off Keypad 2487S Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "On/Off Keypad 2487S Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "On/Off Module 2456S3 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "On/Off Module 2633 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "On/Off Module, Dual-Band Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "On/Off Outlet 2473SWH Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "On/Off Outlet 2473SWH Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "On/Off Outlet 2663-222 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "On/Off Outlet 2663-222 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "On/Off Outlet Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "On/Off Plug 2635-222 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "On/Off Plug 2635-222 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "On/Off Switch 2476S Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "On/Off Switch 2476S Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "On/Off Switch 2477S Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "On/Off Switch 2477S Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Open/Close Micro Module - Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "Open/Close Sensor 2843 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Open/Close Sensor 2843 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Open/Close Sensor Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "Outdoor ApplianceLinc with RF Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "Outdoor On/Off Module 2456S3E Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Outdoor On/Off Plug 2634-222 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Outdoor On/Off Plug 2634-222 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "OutletLinc Dimmer 2472D Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "OutletLinc Dimmer 2472D Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Portable USB Adapter 2448A7 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Power Meter 2423A1 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Power Meter 2423A1 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Product Guide EZEye Ambient Light Sensor - Model #1011A",
+      "kind": "productGuide"
+    },
+    {
+      "title": "Quick Start Guide - EZFlora Model #5010A",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Quick Start Guide - EZIComm Model #5010K",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Quick Start Guide - EZIO8SA",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Quick Start Guide - EZIO8SA & PLM Combo",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Quick-Start Guide EZIO2X4 - Model #5010D - 2-Relay/4-Input Controller",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Quick-Start Guide EZIO4O - Model #5010J - 4-Relay Load Controller",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Quick-Start Guide EZSnsRF Wireless Sensor Receiver Model #5010E",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Quick-Start Guide EZX10RF Wireless Sensor Receiver Insteon EZX10RF - Model #5010G",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Range Extender 2992-222 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Range Extender 2992-222 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Remote Control 2440 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Remote Control 2440 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "RemoteLinc 2 Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "SeriaLinc 2410S Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "SeriaLinc 2410S Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Serial Modem 2413S Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Siren 2868-222 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Siren 2868-222 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Siren Module Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "Smoke Bridge 2982-222 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Smoke Bridge 2982-222 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Smoke Bridge Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "SwitchLinc 2-Wire Dimmer Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "SynchroLinc Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "Tabletop Controller 2430 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Thermostat 2441TH Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Thermostat 2441TH Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Thermostat Adapter 2441V Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Thermostat Adapter 2441V Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Thermostat Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "Thermostat for Heat Pump 2732 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Timer Module 2456S3T Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Timer Module 2456S3T Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Toggle Dimmer Switch 2466DW Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Toggle Dimmer Switch 2466DW Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Toggle On/Off Switch 2466SW Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Toggle On/Off Switch 2466SW Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "Touchscreen Controller 2448 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Touchscreen Controller 2448 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "USB Modem 2413U Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "USB Stick 2448A7 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "USB Wireless Adapter Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "Wireless Thermostat Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "Wireless Zone Thermostat 2441ZTH Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "Wireless Zone Thermostat 2441ZTH Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "i3 Keypad (Insteon Developer Documentation, December 2023)",
+      "kind": "developerDocumentation",
+      "edition": "December 2023"
+    },
+    {
+      "title": "i3 Keypad (Insteon Developer Documentation, October 2025)",
+      "kind": "developerDocumentation",
+      "edition": "October 2025"
+    },
+    {
+      "title": "i3 Paddle/Dial (Insteon Developer Documentation, December 2023)",
+      "kind": "developerDocumentation",
+      "edition": "December 2023"
+    },
+    {
+      "title": "i3 Paddle/Dial (Insteon Developer Documentation, October 2025)",
+      "kind": "developerDocumentation",
+      "edition": "October 2025"
+    },
+    {
+      "title": "iGateway 2423A4 Owner's Manual",
+      "kind": "ownersManual"
+    },
+    {
+      "title": "iGateway 2423A4 Quick Start Guide",
+      "kind": "quickStart"
+    },
+    {
+      "title": "iMeter Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "insteon.com product catalog",
+      "kind": "productCatalog"
+    }
+  ]
+}

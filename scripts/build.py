@@ -1113,6 +1113,128 @@ def term_problems(label, value, key=None):
 
     return problems
 
+REGISTRY_PATH = ROOT / "documents" / "registry.json"
+# What kind of document a registry entry is.
+DOCUMENT_KINDS = {
+    "commandTables",
+    "developerDocumentation",
+    "developerNotes",
+    "developersGuide",
+    "deviceCategories",
+    "deviceDefinitions",
+    "ownersManual",
+    "productCatalog",
+    "productGuide",
+    "quickStart",
+    "supportArticle",
+    "other",
+}
+DOCUMENT_FIELDS = {"title", "kind", "edition", "url"}
+
+
+def document_problems(position, entry):
+    """What is wrong with one registry entry."""
+
+    if not isinstance(entry, dict):
+        return [f"{REGISTRY_PATH.name}: entry {position} must be an object"]
+
+    problems = []
+    title = entry.get("title")
+    label = f"{REGISTRY_PATH.name}: entry {position}" + (f" ({title!r})" if isinstance(title, str) else "")
+
+    for field in sorted(set(entry) - DOCUMENT_FIELDS):
+        problems.append(f"{label}: unknown field {field!r}")
+
+    for field in ("title", "kind"):
+        if not isinstance(entry.get(field), str) or not entry[field].strip():
+            problems.append(f"{label}: {field} must be a non-empty string")
+
+    if entry.get("kind") not in DOCUMENT_KINDS and isinstance(entry.get("kind"), str):
+        problems.append(f"{label}: kind {entry['kind']!r} is not one of {sorted(DOCUMENT_KINDS)}")
+
+    if "edition" in entry and (not isinstance(entry["edition"], str) or not entry["edition"].strip()):
+        problems.append(f"{label}: edition must be a non-empty string")
+
+    if "url" in entry and (not isinstance(entry["url"], str) or not re.fullmatch(r"https://[^\s/]+(/\S*)?", entry["url"])):
+        problems.append(f"{label}: url must be an https URL")
+
+    for field, value in entry.items():
+        if isinstance(value, str) and re.search("[\u2013\u2014]", value):
+            problems.append(f"{label}: {field} has a dash; rewrite it with a comma, colon or hyphen")
+
+    if isinstance(title, str):
+        problems += term_problems(label, title, "sources")
+
+    return problems
+
+
+def dash_problems(root=ROOT):
+    """The files under devices, commandSets and documents that hold an em or en dash."""
+
+    problems = []
+
+    for directory in ("devices", "commandSets", "documents"):
+        for path in sorted((root / directory).glob("*.json")):
+            if re.search("[\u2013\u2014]", path.read_text()):
+                problems.append(f"{directory}/{path.name}: has an em or en dash; use a hyphen, comma or colon")
+
+    return problems
+
+
+def registry_problems(registry):
+    """What is wrong with the document registry: its shape, each entry, and repeated titles."""
+
+    if not isinstance(registry, dict) or set(registry) != {"documents"} or not isinstance(registry["documents"], list):
+        return [f'{REGISTRY_PATH.name}: must be an object with only a "documents" list']
+
+    problems = []
+    seen = set()
+
+    for position, entry in enumerate(registry["documents"]):
+        problems += document_problems(position, entry)
+        title = entry.get("title") if isinstance(entry, dict) else None
+
+        if isinstance(title, str) and title in seen:
+            problems.append(f"{REGISTRY_PATH.name}: title {title!r} appears more than once")
+
+        if isinstance(title, str):
+            seen.add(title)
+
+    return problems
+
+
+def load_registry():
+    """The registered titles, and what is wrong with the registry file."""
+
+    try:
+        registry = json.loads(REGISTRY_PATH.read_text())
+    except (OSError, ValueError) as error:
+        return set(), [f"{REGISTRY_PATH.name}: {error}"]
+
+    problems = registry_problems(registry)
+
+    if problems:
+        return set(), problems
+
+    return {entry["title"] for entry in registry["documents"]}, []
+
+
+def source_problems(label, value, titles, key=None):
+    """The strings in any sources list of a profile or command set that are not registered titles."""
+
+    problems = []
+
+    if isinstance(value, dict):
+        for child_key, child in value.items():
+            problems += source_problems(label, child, titles, child_key)
+    elif isinstance(value, list):
+        for child in value:
+            problems += source_problems(label, child, titles, key)
+    elif key == "sources" and isinstance(value, str) and value not in titles:
+        problems.append(f"{label}: source {value!r} is not in {REGISTRY_PATH.relative_to(ROOT)}; register the document or cite its exact title")
+
+    return problems
+
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
@@ -1124,12 +1246,21 @@ def main():
     profiles, errors = load_profiles()
     command_sets, command_set_errors = load_command_sets(profiles)
     errors += command_set_errors
+    titles, registry_errors = load_registry()
+    errors += registry_errors
+    errors += dash_problems()
 
     for profile in profiles:
         errors += term_problems(f"{profile['model']}.json", profile)
 
+        if not registry_errors:
+            errors += source_problems(f"{profile['model']}.json", profile, titles)
+
     for command_set in command_sets:
         errors += term_problems(f"{command_set['id']}.json", command_set)
+
+        if not registry_errors:
+            errors += source_problems(f"{command_set['id']}.json", command_set, titles)
 
     for error in errors:
         print(error, file=sys.stderr)

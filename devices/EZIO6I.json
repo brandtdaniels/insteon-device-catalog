@@ -160,11 +160,11 @@
   "notes": [
     "No document gives a model number; the profile is named for the product.",
     "As a responder, a record whose Data 2 is 0x01 triggers the input in Data 3 (0x00 for input 1) as if it had turned on, so the input sends its own group command. No document gives a way to link one from the device.",
-    "It has opto-isolated inputs and analog inputs: the Product Guide EZEye Ambient Light Sensor —Model #1011A wires an EZEye to it as to the EZIO8SA, its digital output to an opto-isolated input (I1) and its analog output to an analog input (AN1)."
+    "It has opto-isolated inputs and analog inputs: the Product Guide EZEye Ambient Light Sensor - Model #1011A wires an EZEye to it as to the EZIO8SA, its digital output to an opto-isolated input (I1) and its analog output to an analog input (AN1)."
   ],
   "sources": [
     "Insteon Device Categories and Product Keys (October 2008)",
     "EZIOxx Advanced Details",
-    "Product Guide EZEye Ambient Light Sensor —Model #1011A"
+    "Product Guide EZEye Ambient Light Sensor - Model #1011A"
   ]
 }

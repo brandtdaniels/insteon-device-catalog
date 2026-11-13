@@ -38,7 +38,7 @@
       "type": "output1",
       "verification": {
         "status": "inferred",
-        "note": "The Quick-Start Guide EZIO4O—Model #5010J—4-Relay Load Controller links relay N by tapping the SET button N times; numbering the relays as groups 1 to 4 follows that."
+        "note": "The Quick-Start Guide EZIO4O - Model #5010J - 4-Relay Load Controller links relay N by tapping the SET button N times; numbering the relays as groups 1 to 4 follows that."
       }
     },
     {
@@ -48,7 +48,7 @@
       "type": "output2",
       "verification": {
         "status": "inferred",
-        "note": "The Quick-Start Guide EZIO4O—Model #5010J—4-Relay Load Controller links relay N by tapping the SET button N times; numbering the relays as groups 1 to 4 follows that."
+        "note": "The Quick-Start Guide EZIO4O - Model #5010J - 4-Relay Load Controller links relay N by tapping the SET button N times; numbering the relays as groups 1 to 4 follows that."
       }
     },
     {
@@ -58,7 +58,7 @@
       "type": "output3",
       "verification": {
         "status": "inferred",
-        "note": "The Quick-Start Guide EZIO4O—Model #5010J—4-Relay Load Controller links relay N by tapping the SET button N times; numbering the relays as groups 1 to 4 follows that."
+        "note": "The Quick-Start Guide EZIO4O - Model #5010J - 4-Relay Load Controller links relay N by tapping the SET button N times; numbering the relays as groups 1 to 4 follows that."
       }
     },
     {
@@ -68,7 +68,7 @@
       "type": "output4",
       "verification": {
         "status": "inferred",
-        "note": "The Quick-Start Guide EZIO4O—Model #5010J—4-Relay Load Controller links relay N by tapping the SET button N times; numbering the relays as groups 1 to 4 follows that."
+        "note": "The Quick-Start Guide EZIO4O - Model #5010J - 4-Relay Load Controller links relay N by tapping the SET button N times; numbering the relays as groups 1 to 4 follows that."
       }
     }
   ],
@@ -137,8 +137,8 @@
       ],
       "notes": [
         "The EZIO4O links as a responder.",
-        "To link a snapshot of all the relays as they are, for the controller to recall, skip the taps: the Quick-Start Guide EZIO4O—Model #5010J—4-Relay Load Controller gives this first, and linking one relay as the other way.",
-        "X10: relays 1 to 4 answer X10 units 1 to 4, and the device takes a whole house code. To enable X10, press and hold the SET button for about 4 seconds (the LED blinks slowly) and send an On from an X10 controller; the LED stops blinking. An Off disables it. The Quick-Start Guide EZIO4O—Model #5010J—4-Relay Load Controller sends one On; the EZIOxx Advanced Details choose the house code on the X10 controller first and send 3 On commands in succession. This note follows the Quick-Start Guide EZIO4O—Model #5010J—4-Relay Load Controller."
+        "To link a snapshot of all the relays as they are, for the controller to recall, skip the taps: the Quick-Start Guide EZIO4O - Model #5010J - 4-Relay Load Controller gives this first, and linking one relay as the other way.",
+        "X10: relays 1 to 4 answer X10 units 1 to 4, and the device takes a whole house code. To enable X10, press and hold the SET button for about 4 seconds (the LED blinks slowly) and send an On from an X10 controller; the LED stops blinking. An Off disables it. The Quick-Start Guide EZIO4O - Model #5010J - 4-Relay Load Controller sends one On; the EZIOxx Advanced Details choose the house code on the X10 controller first and send 3 On commands in succession. This note follows the Quick-Start Guide EZIO4O - Model #5010J - 4-Relay Load Controller."
       ],
       "alternatives": [
         {
@@ -303,10 +303,10 @@
   },
   "notes": [
     "Each relay is a switch rated 0.5 A at 30 V DC or 120 V AC, with normally open, common and normally closed terminals (Rx_NO, RxCM, Rx_NC). Timers can pulse a relay from 1 second to 255 minutes; setting them takes software.",
-    "The Quick-Start Guide EZIO4O—Model #5010J—4-Relay Load Controller applies to firmware 2.0 and above."
+    "The Quick-Start Guide EZIO4O - Model #5010J - 4-Relay Load Controller applies to firmware 2.0 and above."
   ],
   "sources": [
-    "Quick-Start Guide EZIO4O—Model #5010J—4-Relay Load Controller",
+    "Quick-Start Guide EZIO4O - Model #5010J - 4-Relay Load Controller",
     "EZIOxx Advanced Details",
     "Insteon Device Categories and Product Keys (October 2008)",
     "Insteon Developer's Guide (2009)"
