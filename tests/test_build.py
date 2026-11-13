@@ -1071,3 +1071,110 @@ class LandingPageTests(unittest.TestCase):
 
         self.assertNotRegex(page, "[\u2013\u2014]")
         self.assertNotRegex(text.lower(), r"\b(now|currently|latest|recent|recently|soon|today|yet|still|new|newly|later|upcoming)\b")
+
+
+def registry_with(*documents):
+    return {"documents": list(documents)}
+
+
+def document(title="Leak Sensor Developer Notes", kind="developerNotes", **optional):
+    return {"title": title, "kind": kind, **optional}
+
+
+class DocumentRegistryTests(unittest.TestCase):
+    def test_a_registered_title_is_accepted(self):
+        titles = {"Leak Sensor Developer Notes"}
+
+        self.assertEqual(build.source_problems("2852.json", {"sources": ["Leak Sensor Developer Notes"]}, titles), [])
+
+    def test_an_unregistered_title_names_the_file_and_the_string(self):
+        found = build.source_problems("2852.json", {"sources": ["Leak Sensor Developer Notes (draft)"]}, {"Leak Sensor Developer Notes"})
+
+        self.assertEqual(len(found), 1)
+        self.assertIn("2852.json", found[0])
+        self.assertIn("Leak Sensor Developer Notes (draft)", found[0])
+
+    def test_a_title_matches_exactly(self):
+        titles = {"Leak Sensor Developer Notes"}
+
+        for near in ("leak sensor developer notes", "Leak Sensor Developer Notes ", "Leak Sensor  Developer Notes"):
+            self.assertEqual(len(build.source_problems("2852.json", {"sources": [near]}, titles)), 1, near)
+
+    def test_nested_sources_are_checked(self):
+        data = {"commands": [{"name": "x", "sources": ["Missing Title"]}]}
+
+        self.assertEqual(len(build.source_problems("set.json", data, set())), 1)
+
+    def test_a_valid_registry_has_no_problems(self):
+        registry = registry_with(
+            document(),
+            document("Insteon Developer's Guide (2009)", "developersGuide", edition="2009"),
+            document("Hub 2242 Quick Start Guide", "quickStart", url="https://cache.insteon.com/documentation/2242-qsg.pdf"),
+        )
+
+        self.assertEqual(build.registry_problems(registry), [])
+
+    def test_a_duplicate_title_fails(self):
+        found = build.registry_problems(registry_with(document(), document(kind="other")))
+
+        self.assertEqual(len(found), 1)
+        self.assertIn("Leak Sensor Developer Notes", found[0])
+        self.assertIn("more than once", found[0])
+
+    def test_a_malformed_entry_fails(self):
+        malformed = [
+            {"documents": "not a list"},
+            registry_with("a string"),
+            registry_with({"kind": "other"}),
+            registry_with({"title": "No Kind"}),
+            registry_with(document(title="")),
+            registry_with(document(kind="notAKind")),
+            registry_with(document(edition="")),
+            registry_with(document(url="http://cache.insteon.com/a.pdf")),
+            registry_with(document(url="not a url")),
+            registry_with(document(unknown="field")),
+            {"documents": [], "extra": 1},
+            ["not an object"],
+        ]
+
+        for registry in malformed:
+            self.assertNotEqual(build.registry_problems(registry), [], registry)
+
+    def test_a_dash_in_any_field_fails(self):
+        for entry in (
+            document(title="Leak Sensor \u2014 Developer Notes"),
+            document(title="Leak Sensor \u2013 Developer Notes"),
+            document(edition="2009 \u2013 2010"),
+        ):
+            self.assertNotEqual(build.registry_problems(registry_with(entry)), [], entry)
+
+    def test_a_ruled_out_term_in_a_title_fails(self):
+        self.assertNotEqual(build.registry_problems(registry_with(document(title="INSTEON Leak Sensor Developer Notes"))), [])
+
+    def test_the_catalogs_registry_is_valid(self):
+        registry = json.loads((build.ROOT / "documents" / "registry.json").read_text())
+
+        self.assertEqual(build.registry_problems(registry), [])
+
+    def test_every_source_in_the_catalog_is_registered(self):
+        titles, errors = build.load_registry()
+        profiles, profile_errors = build.load_profiles()
+        command_sets, command_set_errors = build.load_command_sets(profiles)
+        found = []
+
+        for profile in profiles:
+            found += build.source_problems(f"{profile['model']}.json", profile, titles)
+
+        for command_set in command_sets:
+            found += build.source_problems(f"{command_set['id']}.json", command_set, titles)
+
+        self.assertEqual(errors + profile_errors + command_set_errors + found, [])
+
+    def test_the_registry_is_not_published(self):
+        import subprocess
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as directory:
+            subprocess.run([sys.executable, "-I", str(build.ROOT / "scripts" / "build.py"), "--output", directory], check=True, capture_output=True)
+
+            self.assertEqual([path for path in pathlib.Path(directory).rglob("*") if "registry" in path.name], [])
