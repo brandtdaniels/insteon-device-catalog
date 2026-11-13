@@ -738,7 +738,7 @@
       },
       "verification": {
         "status": "conflicting",
-        "note": "The SwitchLinc 2-Wire Dimmer Developer Notes send 0x00 to set the on-level and 0x02 the ramp rate, as used here; the Insteon Developer's Guide (2009) calls 0x00 unused and counts taps in cmd2, one tap 0x01 and two 0x02."
+        "note": "The SwitchLinc 2-Wire Dimmer Developer Notes send 0x00 to set the on-level and 0x02 to set the ramp rate, as used here (Remote Tap of Set Button, PDF page 6); the Insteon Developer's Guide (2009) (Remote SET Button Tap, Chapter 8, printed pages 131 and 132) and the Insteon Command Tables (2007) (printed page 10) call cmd2 0x00 unused and count taps there, 0x01 for one tap and 0x02 for two."
       }
     },
     {
