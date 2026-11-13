@@ -404,7 +404,7 @@
       "query": "0x02",
       "verification": {
         "status": "conflicting",
-        "note": "The Insteon Developer's Guide (2009) gives query 0x02 as a signal-to-noise value; later sources count messages with CRC errors there."
+        "note": "The Insteon Developer's Guide (2009) lists query 0x02 as the Signal-to-Noise Value for dimmers (Get Operating Flags, Chapter 8, printed page 128), and the SwitchLinc 2-Wire Dimmer Developer Notes mark it N/A (Read Operating Flags Table, PDF page 5); the KeypadLinc Line Developer Notes give it as the CRC error count (Read Operating Flags Table, PDF page 8). The catalog uses the CRC error count."
       }
     },
     {

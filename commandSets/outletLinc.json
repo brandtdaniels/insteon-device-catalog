@@ -404,7 +404,7 @@
       "query": "0x02",
       "verification": {
         "status": "conflicting",
-        "note": "The Insteon Developer's Guide (2009) gives query 0x02 as a signal-to-noise value; later sources count messages with CRC errors there. The 2472D Developer Notes give query 0x02 as the signal-to-noise ratio of the last failure; later sources count messages with CRC errors there."
+        "note": "The 2472D Developer Notes give query 0x02 as the signal-to-noise ratio of the last failure (Read Operating Flags Table, PDF page 5), as the Insteon Developer's Guide (2009) does for dimmers (Get Operating Flags, Chapter 8, printed page 128); the KeypadLinc Line Developer Notes give it as the CRC error count (Read Operating Flags Table, PDF page 8). The catalog uses the CRC error count."
       }
     },
     {

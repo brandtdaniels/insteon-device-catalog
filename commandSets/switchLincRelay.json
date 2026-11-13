@@ -381,8 +381,8 @@
       "description": "The number of messages received with a CRC error.",
       "query": "0x02",
       "verification": {
-        "status": "conflicting",
-        "note": "The Insteon Developer's Guide (2009) gives query 0x02 as a signal-to-noise value; later sources count messages with CRC errors there."
+        "status": "inferred",
+        "note": "The 2477S Developer Notes list only the flags byte and the database delta in their Read Operating Flags Table (PDF page 3), and the Insteon Developer's Guide (2009) and the Insteon Command Tables (2007) mark cmd2 0x02 unused for relays (Get Operating Flags, Chapter 8, printed page 129; Command Tables, printed page 7). No document gives a signal-to-noise reading for this product. The CRC error count is the reading the KeypadLinc Line Developer Notes give for cmd2 0x02 (Read Operating Flags Table, PDF page 8)."
       }
     },
     {

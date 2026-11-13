@@ -409,7 +409,7 @@
       "query": "0x02",
       "verification": {
         "status": "conflicting",
-        "note": "The Insteon Developer's Guide (2009) and the 2475SDB Developer Notes give query 0x02 as the signal-to-noise value of the last failure; later sources count messages with CRC errors there."
+        "note": "The 2475SDB Developer Notes give query 0x02 as the signal-to-noise ratio of the last failure (Read Operating Flags Table, PDF page 4); the KeypadLinc Line Developer Notes give it as the CRC error count (Read Operating Flags Table, PDF page 8) The catalog uses the CRC error count."
       }
     },
     {
