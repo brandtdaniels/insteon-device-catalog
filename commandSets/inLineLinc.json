@@ -241,7 +241,7 @@
       "off": "0x0B",
       "verification": {
         "status": "conflicting",
-        "note": "The Insteon Developer's Guide (2009) lists bit 5 of the 0x00 reply as load sense, set with 0x06 and 0x07; other sources make bit 5 the key beep on this code base."
+        "note": "The Insteon Developer's Guide (2009) lists bit 5 of the 0x00 reply as load sense, set with 0x06 and 0x07 (Get Operating Flags, printed page 128; Set Operating Flags, printed page 130); the In-Line 0-10VDC Dimmer Developer Notes give bit 5 as the key beep, set with 0x0A and 0x0B (Read Operating Flags Table, PDF page 7; Set Operating Flags Table, PDF page 8). The catalog uses the key beep."
       }
     },
     {
@@ -342,7 +342,7 @@
       "query": "0x02",
       "verification": {
         "status": "conflicting",
-        "note": "The Insteon Developer's Guide (2009) gives query 0x02 as a signal-to-noise value; later sources count messages with CRC errors there."
+        "note": "The Insteon Developer's Guide (2009) lists query 0x02 as the Signal-to-Noise Value for dimmers (Get Operating Flags, Chapter 8, printed page 128); the In-Line 0-10VDC Dimmer Developer Notes give it as the CRC error count (Read Operating Flags Table, PDF page 7). The catalog uses the CRC error count."
       }
     },
     {

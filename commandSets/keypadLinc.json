@@ -275,7 +275,7 @@
       "off": "0x07",
       "verification": {
         "status": "conflicting",
-        "note": "One source swaps 0x06 and 0x07 (the 6- and 8-button layouts) and 0x08 and 0x09 (backlight on and off); the values here are those the KeypadLinc Line Developer Notes and the Insteon Command Tables (2007) give."
+        "note": "The Insteon Developer's Guide (2009) (Get Operating Flags, printed pages 128 and 129) and the Insteon Command Tables (2007) (printed pages 5 and 6) give bit 3 of the 0x00 reply as 0 for 6 keys and 1 for 8 keys; the KeypadLinc Line Developer Notes mark bit 3 N/A in their Read Operating Flags Table (PDF page 8). All three set 0x06 for 8 keys and 0x07 for 6 keys (Guide, Set Operating Flags, printed pages 130 and 131; Command Tables, printed pages 8 and 9; Notes, Set Operating Flags Table, PDF page 8). No document swaps 0x06 and 0x07."
       },
       "advanced": true
     },
@@ -424,7 +424,7 @@
       "query": "0x02",
       "verification": {
         "status": "conflicting",
-        "note": "The Insteon Developer's Guide (2009) gives query 0x02 as a signal-to-noise value; the KeypadLinc Line Developer Notes count messages with CRC errors there."
+        "note": "The Insteon Developer's Guide (2009) lists query 0x02 as the Signal-to-Noise Value for the KeypadLinc Relay (Get Operating Flags, Chapter 8, printed page 129) and the Insteon Command Tables (2007) do the same (printed page 7); the KeypadLinc Line Developer Notes give it as the CRC error count (Read Operating Flags Table, PDF page 8). The catalog uses the CRC error count."
       }
     },
     {

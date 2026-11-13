@@ -277,7 +277,7 @@
       "off": "0x06",
       "verification": {
         "status": "conflicting",
-        "note": "The 2472D and KeypadLinc Line Developer Notes give Set Operating Flags 0x06 as load sense off and 0x07 as on, used here; the Insteon Developer's Guide (2009) and the Insteon Command Tables (2007) give 0x06 as on and 0x07 as off."
+        "note": "The 2472D Developer Notes (Set Operating Flags Table, PDF page 5) and the KeypadLinc Line Developer Notes (Set Operating Flags Table, PDF page 8) give 0x06 as load sense off and 0x07 as on, as used here; the Insteon Developer's Guide (2009) (Set Operating Flags, Chapter 8, printed page 130) and the Insteon Command Tables (2007) (printed page 8) give 0x06 as load sense on and 0x07 as off. No document for this product lists bit 3 of the 0x00 reply as load sense: the Guide and the Command Tables put load sense in bit 5, and the 2472D Read Operating Flags Table lists no load sense bit (PDF page 5)."
       }
     },
     {
@@ -404,7 +404,7 @@
       "query": "0x02",
       "verification": {
         "status": "conflicting",
-        "note": "The Insteon Developer's Guide (2009) gives query 0x02 as a signal-to-noise value; later sources count messages with CRC errors there. The 2472D Developer Notes give query 0x02 as the signal-to-noise ratio of the last failure; later sources count messages with CRC errors there."
+        "note": "The 2472D Developer Notes give query 0x02 as the signal-to-noise ratio of the last failure (Read Operating Flags Table, PDF page 5), as the Insteon Developer's Guide (2009) does for dimmers (Get Operating Flags, Chapter 8, printed page 128); the KeypadLinc Line Developer Notes give it as the CRC error count (Read Operating Flags Table, PDF page 8). The catalog uses the CRC error count."
       }
     },
     {
@@ -746,7 +746,7 @@
       },
       "verification": {
         "status": "conflicting",
-        "note": "The 2472D Developer Notes give cmd2 of cmd1 0x25 as 0x00 to set the on-level and 0x02 to set the ramp rate; the Insteon Command Tables (2007) give it as the number of taps, 0x01 or 0x02."
+        "note": "The 2472D Developer Notes send 0x00 to set the on-level and 0x02 to set the ramp rate, as used here (Remote Tap of Set Button, PDF page 6); the Insteon Developer's Guide (2009) (Remote SET Button Tap, Chapter 8, printed pages 131 and 132) and the Insteon Command Tables (2007) (printed page 10) call cmd2 0x00 unused and count taps there, 0x01 for one tap and 0x02 for two."
       }
     },
     {

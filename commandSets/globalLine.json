@@ -297,7 +297,7 @@
       "off": "0x0B",
       "verification": {
         "status": "conflicting",
-        "note": "The Insteon Developer's Guide (2009) lists bit 5 of the 0x00 reply as load sense; the Global Line Developer Notes give bit 5 as the key beep and bit 3 as load sense on the dimmers."
+        "note": "The Insteon Developer's Guide (2009) lists bit 5 of the 0x00 reply as load sense for dimmers and relays (Get Operating Flags, Chapter 8, printed pages 128 and 129); the Global Line Developer Notes give bit 5 as the key beep and bit 3 as load sense on dimmers (Read Operating Flags Table, PDF page 20) and set the key beep with 0x0A and 0x0B (Set Operating Flags Table, PDF pages 32 and 33). The catalog uses the key beep."
       }
     },
     {
@@ -453,7 +453,7 @@
       "query": "0x02",
       "verification": {
         "status": "conflicting",
-        "note": "The Insteon Developer's Guide (2009) gives query 0x02 as a signal-to-noise value; the Global Line Developer Notes count messages with CRC errors there."
+        "note": "The Insteon Developer's Guide (2009) lists query 0x02 as the Signal-to-Noise Value for dimmers (Get Operating Flags, Chapter 8, printed page 128); the Global Line Developer Notes label the command with cmd1 0x1F and cmd2 0x02 Read CRC Error Count in their message log (PDF page 23). The catalog uses the CRC error count."
       }
     },
     {
@@ -804,7 +804,7 @@
             "scale": 0.392157,
             "verification": {
               "status": "conflicting",
-              "note": "The Global Line Developer Notes list Data 1 to 3 as not used; the Insteon Developer's Guide (2009) gives Data 1 as the on-level and Data 2 as the ramp rate, as examples, as used here."
+              "note": "The Global Line Developer Notes list Data 1 to 3 of a responder ALL-Link record as not used (ALL-Link database record format, PDF page 77); the KeypadLinc Line Developer Notes (PDF page 19), the LED Bulb Developer Notes (PDF page 47) and the 2472D Developer Notes (PDF page 12) give Data 1 as the on-level, and the Insteon Developer's Guide (2009) gives Data 1 as link-specific data, for example the on-level, and Data 2 as link-specific data, for example the ramp rate (ALL-Link database record format, Chapter 7, printed page 103). The catalog uses the on-level."
             }
           },
           {
@@ -815,7 +815,7 @@
             "table": "rampRate",
             "verification": {
               "status": "conflicting",
-              "note": "The Global Line Developer Notes list Data 2 as not used; the Insteon Developer's Guide (2009) gives it as the ramp rate, as used here."
+              "note": "The Global Line Developer Notes list Data 1 to 3 of a responder ALL-Link record as not used (ALL-Link database record format, PDF page 77); the KeypadLinc Line Developer Notes (PDF page 19), the LED Bulb Developer Notes (PDF page 47) and the 2472D Developer Notes (PDF page 12) give Data 2 as the ramp rate, and the Insteon Developer's Guide (2009) gives Data 1 as link-specific data, for example the on-level, and Data 2 as link-specific data, for example the ramp rate (ALL-Link database record format, Chapter 7, printed page 103). The catalog uses the ramp rate."
             }
           }
         ]
@@ -863,7 +863,7 @@
             "table": "onOff",
             "verification": {
               "status": "conflicting",
-              "note": "The Global Line Developer Notes list Data 1 to 3 as not used; the On/Off Outlet Developer Notes give Data 1 as the on-level, as used here."
+              "note": "The Global Line Developer Notes list Data 1 to 3 of a responder ALL-Link record as not used (ALL-Link database record format, PDF page 77); the On/Off Outlet Developer Notes give Data 1 as the on-level (ALL-Link database record format, PDF page 66). The catalog uses the on-level."
             }
           }
         ]

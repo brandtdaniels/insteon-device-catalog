@@ -281,7 +281,7 @@
       "off": "0x0B",
       "verification": {
         "status": "conflicting",
-        "note": "The 2477S Developer Notes list bit 5 of the 0x00 reply as load sense, set with 0x06 and 0x07; other sources make bit 5 the key beep on this code base."
+        "note": "The 2477S Developer Notes list bit 5 of the 0x00 reply as load sense, set with 0x06 and 0x07 (Read Operating Flags Table, PDF page 3; Set Operating Flags Table, PDF page 6), as the Insteon Developer's Guide (2009) does (Get Operating Flags, printed page 129; Set Operating Flags, printed page 131); the KeypadLinc Line Developer Notes give bit 5 as the key beep, set with 0x0A and 0x0B (PDF page 8). The catalog uses the key beep."
       }
     },
     {
@@ -381,8 +381,8 @@
       "description": "The number of messages received with a CRC error.",
       "query": "0x02",
       "verification": {
-        "status": "conflicting",
-        "note": "The Insteon Developer's Guide (2009) gives query 0x02 as a signal-to-noise value; later sources count messages with CRC errors there."
+        "status": "inferred",
+        "note": "The 2477S Developer Notes list only the flags byte and the database delta in their Read Operating Flags Table (PDF page 3), and the Insteon Developer's Guide (2009) and the Insteon Command Tables (2007) mark cmd2 0x02 unused for relays (Get Operating Flags, Chapter 8, printed page 129; Command Tables, printed page 7). No document gives a signal-to-noise reading for this product. The CRC error count is the reading the KeypadLinc Line Developer Notes give for cmd2 0x02 (Read Operating Flags Table, PDF page 8)."
       }
     },
     {
@@ -660,7 +660,7 @@
       },
       "verification": {
         "status": "conflicting",
-        "note": "The 2477S Developer Notes give cmd2 of cmd1 0x25 as 0x00 to set the on-level and 0x02 to set the ramp rate; the Insteon Command Tables (2007) give it as the number of taps, 0x01 or 0x02."
+        "note": "The 2477S Developer Notes send 0x00 to set the on-level and 0x02 to set the ramp rate, as used here (Remote Tap of Set Button, PDF page 4); the Insteon Developer's Guide (2009) (Remote SET Button Tap, Chapter 8, printed pages 131 and 132) and the Insteon Command Tables (2007) (printed page 10) call cmd2 0x00 unused and count taps there, 0x01 for one tap and 0x02 for two."
       }
     },
     {

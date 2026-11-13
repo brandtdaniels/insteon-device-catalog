@@ -306,7 +306,7 @@
       "off": "0x0B",
       "verification": {
         "status": "conflicting",
-        "note": "The 2475SDB Developer Notes list bit 5 of the 0x00 reply as load sense, but its Set Operating Flags table makes 0x0A and 0x0B the key beep, as other sources do."
+        "note": "The 2475SDB Developer Notes list bit 5 of the 0x00 reply as load sense (Read Operating Flags Table, PDF page 4) but their Set Operating Flags Table makes 0x0A and 0x0B the key beep (PDF page 4); the KeypadLinc Line Developer Notes give bit 5 as the key beep (Read Operating Flags Table, PDF page 8). The catalog uses the key beep."
       }
     },
     {
@@ -409,7 +409,7 @@
       "query": "0x02",
       "verification": {
         "status": "conflicting",
-        "note": "The Insteon Developer's Guide (2009) and the 2475SDB Developer Notes give query 0x02 as the signal-to-noise value of the last failure; later sources count messages with CRC errors there."
+        "note": "The 2475SDB Developer Notes give query 0x02 as the signal-to-noise ratio of the last failure (Read Operating Flags Table, PDF page 4); the KeypadLinc Line Developer Notes give it as the CRC error count (Read Operating Flags Table, PDF page 8) The catalog uses the CRC error count."
       }
     },
     {
@@ -766,7 +766,7 @@
       },
       "verification": {
         "status": "conflicting",
-        "note": "The 2475SDB Developer Notes give cmd2 of cmd1 0x25 as 0x00 to set the on-level and 0x02 to set the ramp rate; the Insteon Command Tables (2007) give it as the number of taps, 0x01 or 0x02."
+        "note": "The 2475SDB Developer Notes send 0x00 to set the on-level and 0x02 to set the ramp rate, as used here (Remote Tap of Set Button, PDF page 5); the Insteon Developer's Guide (2009) (Remote SET Button Tap, Chapter 8, printed pages 131 and 132) and the Insteon Command Tables (2007) (printed page 10) call cmd2 0x00 unused and count taps there, 0x01 for one tap and 0x02 for two."
       }
     },
     {
