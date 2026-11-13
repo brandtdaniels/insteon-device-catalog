@@ -699,7 +699,7 @@ class CoverageTests(unittest.TestCase):
 
 
 class CardParser(html.parser.HTMLParser):
-    """Reads each card's model, its filter attributes and the facts in its detail section."""
+    """Reads each card's model, filter attributes, paragraphs, labeled rows and the structure of its detail section."""
 
     def __init__(self):
         super().__init__()
@@ -707,53 +707,101 @@ class CardParser(html.parser.HTMLParser):
         self._card = None
         self._command_set = None
         self._fact = None
-        self._depth = 0
-        self._in_details = False
+        self._list = None
+        self._item = None
+        self._paragraph = None
+        self._term = None
+        self._details_depth = 0
         self._summary = False
 
     def handle_starttag(self, tag, attributes):
         attributes = dict(attributes)
 
         if tag == "article":
-            self._card = {"attributes": attributes, "facts": [], "details": False, "summary": "", "outside": ""}
+            self._card = {"attributes": attributes, "facts": [], "lists": {}, "details": False, "summary": "", "outside": "", "inside": "", "paragraphs": [], "terms": [], "headings": [], "nested": 0, "html_classes": []}
             self.cards[attributes["data-model"]] = self._card
-        elif self._card is not None:
-            if tag == "details":
-                self._in_details = True
-                self._card["details"] = True
-            if tag == "summary":
-                self._summary = True
-            if "data-command-set" in attributes:
-                self._command_set = attributes["data-command-set"]
-            if "data-fact" in attributes:
-                self._fact = [self._command_set, attributes["data-fact"], ""]
-                self._card["facts"].append(self._fact)
+            return
+
+        if self._card is None:
+            return
+
+        self._card["html_classes"].append((tag, attributes.get("class", "")))
+        self._card["inside" if self._details_depth else "outside"] += " "
+
+        if tag == "details":
+            self._details_depth += 1
+            self._card["details"] = True
+            self._card["nested"] += self._details_depth > 1
+        if tag == "summary":
+            self._summary = True
+        if tag == "p":
+            self._paragraph = [attributes.get("class", ""), self._details_depth > 0, ""]
+            self._card["paragraphs"].append(self._paragraph)
+        if tag in ("dt", "th", "h4"):
+            self._term = [tag, ""]
+            self._card["terms"].append(self._term)
+        if "data-command-set" in attributes:
+            self._command_set = attributes["data-command-set"]
+        if "data-list" in attributes:
+            self._list = (self._command_set, attributes["data-list"])
+            self._card["lists"][self._list] = []
+        if tag == "li" and self._list is not None:
+            self._item = ""
+        if "data-fact" in attributes:
+            self._fact = [self._command_set, attributes["data-fact"], "", tag, 0]
+            self._card["facts"].append(self._fact)
+        elif self._fact is not None and tag == self._fact[3]:
+            self._fact[4] += 1
 
     def handle_endtag(self, tag):
         if tag == "article":
             self._card = None
             self._command_set = None
-            self._in_details = False
-        elif tag in ("p", "li") and self._fact is not None:
-            self._fact = None
-        elif tag == "details":
-            self._in_details = False
+            self._details_depth = 0
+            return
+
+        if self._card is None:
+            return
+
+        if tag == "details":
+            if self._list is not None and self._details_depth > 1:
+                self._list = None
+            self._details_depth -= 1
         elif tag == "summary":
             self._summary = False
+        elif tag == "p":
+            self._paragraph = None
+        elif tag in ("dt", "th", "h4"):
+            self._term = None
+        elif tag == "li" and self._item is not None:
+            self._card["lists"][self._list].append(self._item.strip())
+            self._item = None
+
+        if self._fact is not None and tag == self._fact[3]:
+            if self._fact[4] == 0:
+                self._fact = None
+            else:
+                self._fact[4] -= 1
 
     def handle_data(self, data):
         if self._card is None:
             return
         if self._fact is not None:
             self._fact[2] += data
+        if self._item is not None:
+            self._item += data
+        if self._paragraph is not None:
+            self._paragraph[2] += data
         if self._summary:
             self._card["summary"] += data
-        if not self._in_details:
-            self._card["outside"] += data
+        if self._term is not None:
+            self._term[1] += data
+
+        self._card["inside" if self._details_depth else "outside"] += data
 
 
 def facts(card, name, command_set=None):
-    return [text.strip() for owner, fact, text in card["facts"] if fact == name and (command_set is None or owner == command_set)]
+    return [re.sub(r"\s+", " ", text).strip() for owner, fact, text, _, _ in card["facts"] if fact == name and (command_set is None or owner == command_set)]
 
 
 def read_cards(page):
@@ -817,6 +865,10 @@ class CapabilityLegendTests(unittest.TestCase):
         self.assertIn('aria-labelledby="capabilities-heading"', self.page)
 
 
+def command_set_ids(profile):
+    return list(dict.fromkeys(entry["commandSet"] for entry in profile.get("commandSets", [])))
+
+
 class CapabilityDetailTests(unittest.TestCase):
     def setUp(self):
         self.profiles, self.command_sets, self.page, _ = catalog_page()
@@ -829,47 +881,128 @@ class CapabilityDetailTests(unittest.TestCase):
             self.assertTrue(card["details"])
             self.assertIn("What the catalog describes", card["summary"])
 
-    def test_the_first_lines_of_a_card_carry_no_counts(self):
-        for card in self.cards.values():
-            self.assertNotRegex(card["outside"], r"\boperating flags?\b|\bextended settings?\b|\bstandard commands?\b|\bserial commands?\b")
+    def test_the_first_lines_of_a_card_are_the_model_name_aliases_description_and_marks_only(self):
+        for profile in self.profiles:
+            card = self.cards[profile["model"]]
+            outside = [(cls, text) for cls, inside, text in card["paragraphs"] if not inside]
 
-    def test_a_command_set_s_counts_and_labels_are_the_data_s(self):
+            self.assertEqual([cls for cls, _ in outside if cls not in ("aliases", "description", "marks")], [], profile["model"])
+            self.assertNotRegex(card["outside"], r"\boperating flags?\b|\bextended settings?\b|\bstandard commands?\b|\bserial commands?\b|Battery powered|Powerline|Dual-band")
+
+    def test_the_description_appears_once_in_full(self):
+        for profile in self.profiles:
+            card = self.cards[profile["model"]]
+            description = [text for cls, _, text in card["paragraphs"] if cls == "description"]
+
+            self.assertEqual(len(description), 1 if "description" in profile else 0, profile["model"])
+            self.assertEqual(description[0].strip() if description else "", profile.get("description", ""), profile["model"])
+            self.assertEqual(self.page.count(html.escape(profile["description"])) if "description" in profile else 1, 1, profile["model"])
+
+    def test_the_description_is_not_cut_off_by_the_stylesheet(self):
+        self.assertNotIn("line-clamp", self.page)
+
+    def test_the_detail_section_is_labeled_groups_with_identity_last(self):
+        for card in self.cards.values():
+            groups = [text.strip() for tag, text in card["terms"] if tag == "h4"]
+
+            self.assertEqual(groups[0], "Hardware")
+            self.assertEqual(groups[1], "ALL-Link groups and events")
+            self.assertEqual(groups[-1], "Identity")
+            self.assertEqual(groups[2:-1], ["What software can read or write"])
+
+    def test_no_paragraph_in_the_detail_section_is_longer_than_a_sentence(self):
+        for profile in self.profiles:
+            for cls, inside, text in self.cards[profile["model"]]["paragraphs"]:
+                if inside:
+                    self.assertNotRegex(text.strip(), r"[.!?] \S", (profile["model"], text))
+
+    def test_no_fact_is_a_run_on_list(self):
+        for profile in self.profiles:
+            for owner, name, text, _, _ in self.cards[profile["model"]]["facts"]:
+                self.assertLessEqual(text.count(","), 2, (profile["model"], name, text))
+                self.assertLess(len(text), 160, (profile["model"], name, text))
+
+    def test_each_fact_appears_once_on_a_card(self):
+        for profile in self.profiles:
+            card = self.cards[profile["model"]]
+            terms = [text.strip() for tag, text in card["terms"] if tag == "dt"]
+
+            for term in ("Radio", "Role", "Engine", "Battery", "Groups", "Reports", "Heartbeat", "Sold in"):
+                self.assertLessEqual(terms.count(term), 1, (profile["model"], term))
+
+            self.assertNotRegex(card["inside"], r"Engine: |Settings: |Subcategory: |Radio: |Role: ", profile["model"])
+            subcategory = [text for tag, text in card["terms"] if tag in ("dt", "th") and text.strip() == "Subcategory"]
+            self.assertEqual(len(subcategory), 1, profile["model"])
+
+            if facts(card, "engine") not in (["Not stated"], ["Varies by identity"]):
+                for note in {build.engine_note(entry)[0] for entry in profile["engines"]}:
+                    self.assertEqual(len(re.findall(rf"(?<![\w/]){re.escape(note)}(?![\w/])", card["inside"])), 1, (profile["model"], note))
+
+    def test_the_engine_row_names_the_engine_or_points_to_the_identity_table(self):
+        for profile in self.profiles:
+            card = self.cards[profile["model"]]
+            engine = facts(card, "engine")
+            per_identity = []
+
+            for identity in profile["identities"]:
+                key = (identity["category"], identity["subcategory"])
+                per_identity.append(tuple(build.engine_note(entry)[0] for entry in profile.get("engines", []) if (entry["category"], entry["subcategory"]) == key))
+
+            self.assertEqual(len(engine), 1, profile["model"])
+
+            if not profile.get("engines"):
+                self.assertEqual(engine, ["Not stated"], profile["model"])
+            elif len(set(per_identity)) > 1:
+                self.assertEqual(engine, ["Varies by identity"], profile["model"])
+                self.assertIn("Engine", [text.strip() for tag, text in card["terms"] if tag == "th"], profile["model"])
+            else:
+                for note in per_identity[0]:
+                    self.assertIn(note, engine[0], profile["model"])
+
+    def test_a_command_set_s_counts_are_a_row_of_figures_and_its_names_are_nested_lists(self):
+        named = {"operatingFlags": "operatingFlags", "extendedSettings": None, "readings": "readings"}
+
         for profile in self.profiles:
             card = self.cards[profile["model"]]
 
-            for set_id in dict.fromkeys(entry["commandSet"] for entry in profile.get("commandSets", [])):
+            for set_id in command_set_ids(profile):
                 command_set = disk_json("commandSets", set_id)
-                flags = command_set.get("operatingFlags", [])
                 settings = (command_set.get("extendedSettings") or {}).get("values", [])
+                parts = {
+                    "operatingFlags": command_set.get("operatingFlags", []),
+                    "extendedSettings": settings,
+                    "standardCommands": command_set.get("standardCommands", []),
+                    "extendedCommands": command_set.get("extendedCommands", []),
+                    "serialCommands": command_set.get("serialCommands", []),
+                    "readings": command_set.get("readings", []),
+                }
 
-                for name, items in (("operatingFlags", flags), ("extendedSettings", settings)):
+                for name, items in parts.items():
                     found = facts(card, name, set_id)
 
                     if not items:
                         self.assertEqual(found, [], (profile["model"], name))
+                        self.assertNotIn((set_id, name), card["lists"])
                         continue
 
                     self.assertEqual(len(found), 1, (profile["model"], name))
-                    self.assertRegex(found[0], rf"^{len(items)} ")
+                    self.assertRegex(found[0], rf"^{len(items)} [a-z]")
 
-                    for item in items:
-                        self.assertIn(item["label"], found[0])
-
-                for name, key in (("standardCommands", "standardCommands"), ("extendedCommands", "extendedCommands"), ("serialCommands", "serialCommands"), ("readings", "readings")):
-                    found = facts(card, name, set_id)
-                    items = command_set.get(key, [])
-
-                    if items:
-                        self.assertEqual(len(found), 1, (profile["model"], name))
-                        self.assertRegex(found[0], rf"^{len(items)} ")
+                    if name in named:
+                        self.assertEqual(card["lists"][(set_id, name)], [item["label"] for item in items], (profile["model"], name))
                     else:
-                        self.assertEqual(found, [], (profile["model"], name))
+                        self.assertNotIn((set_id, name), card["lists"])
+
+    def test_nested_lists_are_expandable_and_open_inside_the_detail_section(self):
+        card = self.cards["2477D"]
+
+        self.assertGreaterEqual(card["nested"], 2)
+        self.assertIn(("details", "list"), card["html_classes"])
 
     def test_a_modem_reports_its_serial_commands(self):
         card = self.cards["2413U"]
-        entries = catalog_profile("2413U")["commandSets"]
 
-        for entry in entries:
+        for entry in catalog_profile("2413U")["commandSets"]:
             expected = len(disk_json("commandSets", entry["commandSet"]).get("serialCommands", []))
             self.assertRegex(facts(card, "serialCommands", entry["commandSet"])[0], rf"^{expected} serial commands")
 
@@ -881,7 +1014,7 @@ class CapabilityDetailTests(unittest.TestCase):
             card = self.cards[profile["model"]]
 
             self.assertEqual(facts(card, "noCommandSet"), ["The catalog has no command set for this device."], profile["model"])
-            self.assertEqual([fact for _, fact, _ in card["facts"] if fact in build.COMMAND_SET_FACTS], [], profile["model"])
+            self.assertEqual([fact for _, fact, _, _, _ in card["facts"] if fact in build.COMMAND_SET_FACTS], [], profile["model"])
 
     def test_a_profile_deliberately_without_settings_says_so(self):
         empty = [p for p in self.profiles if p.get("commandSets") and all(not (set(disk_json("commandSets", e["commandSet"])) - build.COMMAND_SET_DESCRIPTIVE_KEYS) for e in p["commandSets"])]
@@ -892,58 +1025,45 @@ class CapabilityDetailTests(unittest.TestCase):
 
             self.assertEqual(facts(card, "noSettings"), ["The catalog deliberately holds no settings for this device: there is nothing for software to read or write."], profile["model"])
             self.assertEqual(facts(card, "noCommandSet"), [])
-            self.assertEqual([fact for _, fact, _ in card["facts"] if fact in build.COMMAND_SET_FACTS], [], profile["model"])
+            self.assertEqual([fact for _, fact, _, _, _ in card["facts"] if fact in build.COMMAND_SET_FACTS], [], profile["model"])
 
-    def test_radio_role_battery_and_engine_follow_the_profile(self):
+    def test_radio_role_and_battery_follow_the_profile(self):
         radios = {"powerline": "Powerline", "rf": "RF", "dual": "Dual-band"}
+        roles = {"controller": "Controller", "responder": "Responder", "both": "Controller and responder"}
 
         for profile in self.profiles:
             card = self.cards[profile["model"]]
-            radio = facts(card, "radio")
-            engine = facts(card, "engine")
 
-            self.assertEqual(len(radio), 1)
-            self.assertIn(radios[profile["radio"]] if "radio" in profile else "does not state", radio[0], profile["model"])
+            self.assertEqual(facts(card, "radio"), [radios[profile["radio"]] if "radio" in profile else "Not stated"], profile["model"])
+            self.assertEqual(facts(card, "role"), [roles[profile["role"]] if "role" in profile else "Not stated"], profile["model"])
             self.assertEqual(bool(facts(card, "battery")), bool(profile.get("batteryPowered")), profile["model"])
-            self.assertEqual(len(engine), 1)
-
-            if profile.get("engines"):
-                for entry in profile["engines"]:
-                    self.assertIn(build.ENGINE_LABELS[entry["engine"]], engine[0])
-            else:
-                self.assertIn("does not state", engine[0])
 
     def test_groups_events_and_heartbeat_follow_the_profile(self):
         for profile in self.profiles:
             card = self.cards[profile["model"]]
-            groups = facts(card, "groups")
+            groups = facts(card, "group")
 
-            self.assertEqual(len(groups), 1, profile["model"])
+            self.assertEqual(len(groups), len(profile.get("groups", [])), profile["model"])
+            self.assertEqual(len(facts(card, "noGroups")), 0 if profile.get("groups") else 1, profile["model"])
 
-            for group in profile.get("groups", []):
-                self.assertIn(group["name"], groups[0], profile["model"])
+            for group, text in zip(profile.get("groups", []), groups):
+                self.assertIn(group["name"], text, profile["model"])
+                self.assertTrue(text.startswith(f"{int(group['number'], 16)} "), text)
 
-            if not profile.get("groups"):
-                self.assertIn("lists no ALL-Link groups", groups[0])
+            events = [event for capability in profile["capabilities"] if capability["kind"] == "groupEvents" for event in capability["events"]]
+            self.assertEqual(len(facts(card, "event")), len(events), profile["model"])
+
+            for event, text in zip(events, facts(card, "event")):
+                self.assertIn(event["event"], text)
+                self.assertIn(event["command1"], text)
 
             for capability in profile["capabilities"]:
-                if capability["kind"] == "groupEvents":
-                    text = " ".join(facts(card, "events"))
-                    self.assertTrue(text, profile["model"])
-
-                    for event in capability["events"]:
-                        self.assertIn(event["event"], text)
-                        self.assertIn(event["command1"], text)
-
                 if capability["kind"] == "heartbeat":
                     text = " ".join(facts(card, "heartbeat"))
                     self.assertIn(f"group {int(capability['group'], 16)}", text)
 
                     if "intervalMinutes" in capability:
                         self.assertIn(str(capability["intervalMinutes"]), text)
-
-            if not any(c["kind"] == "groupEvents" for c in profile["capabilities"]):
-                self.assertEqual(facts(card, "events"), [])
 
             if not any(c["kind"] == "heartbeat" for c in profile["capabilities"]):
                 self.assertEqual(facts(card, "heartbeat"), [])
@@ -966,7 +1086,57 @@ class CapabilityDetailTests(unittest.TestCase):
         self.assertIn("textContent", self.page)
 
     def test_the_page_stays_a_sane_size(self):
-        self.assertLess(len(self.page.encode()), 400_000)
+        self.assertLess(len(self.page.encode()), 450_000)
+
+
+class LayoutTests(unittest.TestCase):
+    def setUp(self):
+        _, _, self.page, _ = catalog_page()
+        self.css = re.search(r"<style>(.*?)</style>", self.page, flags=re.S).group(1)
+        self.rules = re.findall(r"([^{}]+)\{([^{}]*)\}", re.sub(r"@media[^{]*\{", "", re.sub(r"/\*.*?\*/", "", self.css, flags=re.S)))
+
+    def declarations(self, selector):
+        return [body for head, body in self.rules if selector in [part.strip() for part in head.split(",")]]
+
+    def test_header_main_and_footer_share_one_container(self):
+        for tag in ("header", "main", "footer"):
+            self.assertRegex(self.page, rf'<{tag} class="container"[ >]')
+
+        container = " ".join(self.declarations(".container"))
+
+        self.assertIn("max-width: var(--page-width)", container)
+        self.assertIn("margin-inline: auto", container)
+        self.assertIn("padding-inline: var(--gutter)", container)
+
+        for tag in ("header", "main", "footer", "nav", "body"):
+            self.assertNotRegex(" ".join(self.declarations(tag)), r"max-width|padding-inline|margin-inline|padding: [^;]*var\(--gutter")
+
+    def test_the_page_links_are_a_labeled_nav_inside_the_header(self):
+        header = re.search(r"<header.*?</header>", self.page, flags=re.S).group(0)
+
+        self.assertRegex(header, r'(?s)<nav aria-label="[^"]+">.*What the catalog covers.*</nav>')
+
+    def test_spacing_type_and_radius_are_tokens_defined_once(self):
+        root = " ".join(self.declarations(":root"))
+
+        for token in ("--space-1", "--space-2", "--space-3", "--space-4", "--space-5", "--space-6", "--text-xs", "--text-sm", "--text-base", "--text-lg", "--text-xl", "--radius-control", "--radius-card", "--radius-pill", "--page-width"):
+            self.assertEqual(len(re.findall(rf"{re.escape(token)}:", root)), 1, token)
+
+    def test_spacing_and_type_use_tokens_not_raw_values(self):
+        for head, body in self.rules:
+            if head.strip() == ":root":
+                continue
+
+            for property_name, value in re.findall(r"(font-size|gap|padding[a-z-]*|margin[a-z-]*|border-radius)\s*:\s*([^;]+)", body):
+                self.assertNotRegex(value, r"\d(rem|em|px)\b", (head.strip(), property_name, value))
+
+    def test_cards_align_to_the_top_so_an_open_card_does_not_stretch_its_row(self):
+        self.assertTrue(any("align-items: start" in body for body in self.declarations(".grid")))
+
+    def test_chips_and_status_marks_share_one_pill(self):
+        self.assertEqual(len(self.declarations(".pill")), 1)
+        self.assertRegex(self.page, r'class="chip pill"')
+        self.assertRegex(self.page, r'class="status pill status-')
 
 
 class CapabilityWordingTests(unittest.TestCase):
@@ -1035,8 +1205,8 @@ class LandingPageTests(unittest.TestCase):
         cards = page.split('<article class="card"')[1:]
 
         self.assertIn('data-verification="observed inferred"', cards[1])
-        self.assertIn('class="status status-observed"', cards[1])
-        self.assertIn('class="status status-inferred"', cards[1])
+        self.assertIn('class="status pill status-observed"', cards[1])
+        self.assertIn('class="status pill status-inferred"', cards[1])
         self.assertNotIn("status-conflicting", cards[1])
         self.assertIn('data-verification=""', cards[0])
         self.assertNotIn('class="status', cards[0])
