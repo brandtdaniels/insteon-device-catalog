@@ -1130,14 +1130,6 @@ DOCUMENT_KINDS = {
     "other",
 }
 DOCUMENT_FIELDS = {"title", "kind", "edition", "url"}
-# Titles the documents print with a dash. A title matches the data character for character, so
-# these stay; no other registry text may carry one.
-DASHED_TITLES = {
-    "Product Guide EZEye Ambient Light Sensor \u2014Model #1011A",
-    "Quick-Start Guide EZIO2X4\u2014Model #5010D\u20142-Relay/4-Input Controller",
-    "Quick-Start Guide EZIO4O\u2014Model #5010J\u20144-Relay Load Controller",
-    "Quick-Start Guide EZX10RF Wireless Sensor Receiver Insteon EZX10RF\u2014Model #5010G",
-}
 
 
 def document_problems(position, entry):
@@ -1167,11 +1159,24 @@ def document_problems(position, entry):
         problems.append(f"{label}: url must be an https URL")
 
     for field, value in entry.items():
-        if isinstance(value, str) and re.search("[\u2013\u2014]", value) and not (field == "title" and value in DASHED_TITLES):
+        if isinstance(value, str) and re.search("[\u2013\u2014]", value):
             problems.append(f"{label}: {field} has a dash; rewrite it with a comma, colon or hyphen")
 
     if isinstance(title, str):
         problems += term_problems(label, title, "sources")
+
+    return problems
+
+
+def dash_problems(root=ROOT):
+    """The files under devices, commandSets and documents that hold an em or en dash."""
+
+    problems = []
+
+    for directory in ("devices", "commandSets", "documents"):
+        for path in sorted((root / directory).glob("*.json")):
+            if re.search("[\u2013\u2014]", path.read_text()):
+                problems.append(f"{directory}/{path.name}: has an em or en dash; use a hyphen, comma or colon")
 
     return problems
 
@@ -1243,6 +1248,7 @@ def main():
     errors += command_set_errors
     titles, registry_errors = load_registry()
     errors += registry_errors
+    errors += dash_problems()
 
     for profile in profiles:
         errors += term_problems(f"{profile['model']}.json", profile)

@@ -1178,3 +1178,21 @@ class DocumentRegistryTests(unittest.TestCase):
             subprocess.run([sys.executable, "-I", str(build.ROOT / "scripts" / "build.py"), "--output", directory], check=True, capture_output=True)
 
             self.assertEqual([path for path in pathlib.Path(directory).rglob("*") if "registry" in path.name], [])
+
+
+class NoDashTests(unittest.TestCase):
+    def test_no_data_file_has_a_dash_character(self):
+        self.assertEqual(build.dash_problems(), [])
+
+    def test_a_dash_in_a_data_file_is_reported_with_its_file(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = pathlib.Path(directory)
+            (root / "devices").mkdir()
+            (root / "devices" / "1234.json").write_text('{"sources": ["A \u2014 B"]}')
+
+            found = build.dash_problems(root)
+
+        self.assertEqual(len(found), 1)
+        self.assertIn("devices/1234.json", found[0])

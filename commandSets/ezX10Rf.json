@@ -106,7 +106,7 @@
   "notes": [
     "An Insteon group command is sent for an X10 address whose record is in use and linked; a broadcast for one whose record is only in use. The broadcast (Status Change, cmd1 0x27) carries the record number, 0x00 through 0x13, in cmd2 bits 0 to 5, and the X10 command in bits 6 and 7: 00 Off, 01 Dim, 10 On, 11 Bright.",
     "Code records: the device keeps a record for each code it has learned, 20 in all (0x00 through 0x13), and works on one at a time in the code record buffer. Specific Code Record Write (extended, cmd1 0xF2, cmd2 the record) writes D1 through D8 to a record. A record's 8 bytes: flags (bit 7 in use, bit 6 has an Insteon link, bits 0 to 4 the timer), the X10 house and unit code, the X10 command (not used), the Insteon group (1 to 20), then cmd1 and cmd2 sent when the signal turns on and cmd1 and cmd2 sent when it turns off.",
-    "The EZX10RF Insteon Messages/Commands give the record's timer in 0.5-second steps; the Quick-Start Guide EZX10RF Wireless Sensor Receiver Insteon EZX10RF—Model #5010G adds half a minute for each tap of the SET button, for 0.5 to 15.5 minutes.",
+    "The EZX10RF Insteon Messages/Commands give the record's timer in 0.5-second steps; the Quick-Start Guide EZX10RF Wireless Sensor Receiver Insteon EZX10RF - Model #5010G adds half a minute for each tap of the SET button, for 0.5 to 15.5 minutes.",
     "Peek and Poke addresses, with Set Address MSB 0x00: 0x00 the last X10 house and unit code received (r), 0x01 the last X10 command received (r), 0x02 firmware revision (r), 0x03 EEPROM loaded (r), 0x04 to 0x23 the X10 address filter, 16 by 16 bits, 0x24 to 0x2B the code record buffer (rw). The EZX10RF Insteon Messages/Commands give these addresses without a prefix, as 04-35 and 36-43; read as decimal, they match the filter's 32 bytes and the buffer's 8.",
     "The device answers an ID Request with an acknowledgment and a SET Button Pressed broadcast, without entering linking mode.",
     "Its Poke description says to follow a Poke with Load EEPROM from RAM, which its command table doesn't list.",
@@ -115,6 +115,6 @@
   ],
   "sources": [
     "EZX10RF Insteon Messages/Commands",
-    "Quick-Start Guide EZX10RF Wireless Sensor Receiver Insteon EZX10RF—Model #5010G"
+    "Quick-Start Guide EZX10RF Wireless Sensor Receiver Insteon EZX10RF - Model #5010G"
   ]
 }

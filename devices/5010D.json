@@ -38,7 +38,7 @@
       "type": "output1",
       "verification": {
         "status": "inferred",
-        "note": "The Quick-Start Guide EZIO2X4—Model #5010D—2-Relay/4-Input Controller links input N by tapping the SET button N times; that input N sends group N is read from that. The EZIOxx Advanced Details let each input's group number be changed."
+        "note": "The Quick-Start Guide EZIO2X4 - Model #5010D - 2-Relay/4-Input Controller links input N by tapping the SET button N times; that input N sends group N is read from that. The EZIOxx Advanced Details let each input's group number be changed."
       }
     },
     {
@@ -48,7 +48,7 @@
       "type": "output2",
       "verification": {
         "status": "inferred",
-        "note": "The Quick-Start Guide EZIO2X4—Model #5010D—2-Relay/4-Input Controller links input N by tapping the SET button N times; that input N sends group N is read from that. The EZIOxx Advanced Details let each input's group number be changed."
+        "note": "The Quick-Start Guide EZIO2X4 - Model #5010D - 2-Relay/4-Input Controller links input N by tapping the SET button N times; that input N sends group N is read from that. The EZIOxx Advanced Details let each input's group number be changed."
       }
     },
     {
@@ -58,7 +58,7 @@
       "type": "input3",
       "verification": {
         "status": "inferred",
-        "note": "The Quick-Start Guide EZIO2X4—Model #5010D—2-Relay/4-Input Controller links input N, as a controller or to be triggered as a responder, by tapping the SET button N times; that input N is group N is read from that. The EZIOxx Advanced Details let each input's group number be changed."
+        "note": "The Quick-Start Guide EZIO2X4 - Model #5010D - 2-Relay/4-Input Controller links input N, as a controller or to be triggered as a responder, by tapping the SET button N times; that input N is group N is read from that. The EZIOxx Advanced Details let each input's group number be changed."
       }
     },
     {
@@ -68,7 +68,7 @@
       "type": "input4",
       "verification": {
         "status": "inferred",
-        "note": "The Quick-Start Guide EZIO2X4—Model #5010D—2-Relay/4-Input Controller links input N, as a controller or to be triggered as a responder, by tapping the SET button N times; that input N is group N is read from that. The EZIOxx Advanced Details let each input's group number be changed."
+        "note": "The Quick-Start Guide EZIO2X4 - Model #5010D - 2-Relay/4-Input Controller links input N, as a controller or to be triggered as a responder, by tapping the SET button N times; that input N is group N is read from that. The EZIOxx Advanced Details let each input's group number be changed."
       }
     }
   ],
@@ -194,7 +194,7 @@
       ],
       "notes": [
         "This links an input as a controller. Repeat the step on the device to be controlled for each further device before ending the session.",
-        "X10: relays 1 and 2 answer X10 units 1 and 2, and the device takes all 16 units of its house code. To enable X10, press and hold the SET button for about 4 seconds (the LED blinks slowly) and send an On from an X10 controller; the LED stops blinking. An Off disables it. The Quick-Start Guide EZIO2X4—Model #5010D—2-Relay/4-Input Controller sends one On; the EZIOxx Advanced Details choose the house code on the X10 controller first and send 3 On commands in succession. This note follows the Quick-Start Guide EZIO2X4—Model #5010D—2-Relay/4-Input Controller."
+        "X10: relays 1 and 2 answer X10 units 1 and 2, and the device takes all 16 units of its house code. To enable X10, press and hold the SET button for about 4 seconds (the LED blinks slowly) and send an On from an X10 controller; the LED stops blinking. An Off disables it. The Quick-Start Guide EZIO2X4 - Model #5010D - 2-Relay/4-Input Controller sends one On; the EZIOxx Advanced Details choose the house code on the X10 controller first and send 3 On commands in succession. This note follows the Quick-Start Guide EZIO2X4 - Model #5010D - 2-Relay/4-Input Controller."
       ],
       "alternatives": [
         {
@@ -238,7 +238,7 @@
             }
           ],
           "notes": [
-            "To link a snapshot of both relays as they are, for the controller to recall, skip the taps: the Quick-Start Guide EZIO2X4—Model #5010D—2-Relay/4-Input Controller gives this first, and linking one relay as the other way."
+            "To link a snapshot of both relays as they are, for the controller to recall, skip the taps: the Quick-Start Guide EZIO2X4 - Model #5010D - 2-Relay/4-Input Controller gives this first, and linking one relay as the other way."
           ]
         },
         {
@@ -501,7 +501,7 @@
         }
       ],
       "notes": [
-        "The Quick-Start Guide EZIO2X4—Model #5010D—2-Relay/4-Input Controller names the EZIO8T in this step.",
+        "The Quick-Start Guide EZIO2X4 - Model #5010D - 2-Relay/4-Input Controller names the EZIO8T in this step.",
         "Restores all settings to their factory values."
       ]
     },
@@ -582,14 +582,14 @@
     "Inputs I1 and I2 are opto-isolated and need 3 to 30 V DC between their + and - terminals; for a dry contact, wire + to the +5 V terminal and the contact between - and GND. I3 and I4 are digital by default, on at 0 to 1 V DC and off at 3 to 5 V DC, and need a voltage, not a dry contact (a pull-up resistor to +5 V will do); software can set them to measure 0 to 5 V DC as a count from 0 to 1023 and alarm at set levels. The +5 V terminal supplies at most 20 mA.",
     "Its ALL-Link database holds up to 30 links.",
     "As a responder, a record whose Data 2 is 0x01 triggers the input in Data 3 (0x00 for input 1) as if it had turned on, so the input sends its own group command. Groups 1 and 2 are also relays 1 and 2, whose responder records the catalog gives for those groups; inputs 1 and 2 can be triggered the same way, with Data 3 0x00 or 0x01.",
-    "The Quick-Start Guide EZIO2X4—Model #5010D—2-Relay/4-Input Controller applies to firmware 2.2 and above. Insteon Device Categories and Product Keys (October 2008) records that 0x07/0x03 was first assigned to an EZIO3R I/O Module.",
-    "The Product Guide EZEye Ambient Light Sensor —Model #1011A notes that the EZIO2X4 can't supply the 8 V DC an EZEye needs."
+    "The Quick-Start Guide EZIO2X4 - Model #5010D - 2-Relay/4-Input Controller applies to firmware 2.2 and above. Insteon Device Categories and Product Keys (October 2008) records that 0x07/0x03 was first assigned to an EZIO3R I/O Module.",
+    "The Product Guide EZEye Ambient Light Sensor - Model #1011A notes that the EZIO2X4 can't supply the 8 V DC an EZEye needs."
   ],
   "sources": [
-    "Quick-Start Guide EZIO2X4—Model #5010D—2-Relay/4-Input Controller",
+    "Quick-Start Guide EZIO2X4 - Model #5010D - 2-Relay/4-Input Controller",
     "EZIOxx Advanced Details",
     "Insteon Device Categories and Product Keys (October 2008)",
-    "Product Guide EZEye Ambient Light Sensor —Model #1011A",
+    "Product Guide EZEye Ambient Light Sensor - Model #1011A",
     "Insteon Developer's Guide (2009)"
   ]
 }
