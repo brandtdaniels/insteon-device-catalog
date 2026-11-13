@@ -622,7 +622,7 @@
             "scale": 0.392157,
             "verification": {
               "status": "conflicting",
-              "note": "The SwitchLinc 2-Wire Dimmer Developer Notes list Data 1 to 3 as not used; the Insteon Developer's Guide (2009) gives Data 1 as the on-level and Data 2 as the ramp rate, as examples, and the KeypadLinc Line and LED Bulb Developer Notes agree, as used here."
+              "note": "The SwitchLinc 2-Wire Dimmer Developer Notes list Data 1 to 3 of a responder ALL-Link record as not used (ALL-Link database record format, PDF page 15); the KeypadLinc Line Developer Notes (PDF page 19), the LED Bulb Developer Notes (PDF page 47) and the 2472D Developer Notes (PDF page 12) give Data 1 as the on-level, and the Insteon Developer's Guide (2009) gives Data 1 as link-specific data, for example the on-level, and Data 2 as link-specific data, for example the ramp rate (ALL-Link database record format, Chapter 7, printed page 103). The catalog uses the on-level."
             }
           },
           {
@@ -633,7 +633,7 @@
             "table": "rampRate",
             "verification": {
               "status": "conflicting",
-              "note": "The SwitchLinc 2-Wire Dimmer Developer Notes list Data 2 as not used; the KeypadLinc Line and LED Bulb Developer Notes use it for the ramp rate, as here."
+              "note": "The SwitchLinc 2-Wire Dimmer Developer Notes list Data 1 to 3 of a responder ALL-Link record as not used (ALL-Link database record format, PDF page 15); the KeypadLinc Line Developer Notes (PDF page 19), the LED Bulb Developer Notes (PDF page 47) and the 2472D Developer Notes (PDF page 12) give Data 2 as the ramp rate, and the Insteon Developer's Guide (2009) gives Data 1 as link-specific data, for example the on-level, and Data 2 as link-specific data, for example the ramp rate (ALL-Link database record format, Chapter 7, printed page 103). The catalog uses the ramp rate."
             }
           }
         ]
