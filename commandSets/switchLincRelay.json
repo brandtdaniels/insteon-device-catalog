@@ -281,7 +281,7 @@
       "off": "0x0B",
       "verification": {
         "status": "conflicting",
-        "note": "The 2477S Developer Notes list bit 5 of the 0x00 reply as load sense, set with 0x06 and 0x07; other sources make bit 5 the key beep on this code base."
+        "note": "The 2477S Developer Notes list bit 5 of the 0x00 reply as load sense, set with 0x06 and 0x07 (Read Operating Flags Table, PDF page 3; Set Operating Flags Table, PDF page 6), as the Insteon Developer's Guide (2009) does (Get Operating Flags, printed page 129; Set Operating Flags, printed page 131); the KeypadLinc Line Developer Notes give bit 5 as the key beep, set with 0x0A and 0x0B (PDF page 8). The catalog uses the key beep."
       }
     },
     {

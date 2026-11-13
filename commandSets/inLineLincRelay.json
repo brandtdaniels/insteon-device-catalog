@@ -306,7 +306,7 @@
       "off": "0x0B",
       "verification": {
         "status": "conflicting",
-        "note": "The 2475SDB Developer Notes list bit 5 of the 0x00 reply as load sense, but its Set Operating Flags table makes 0x0A and 0x0B the key beep, as other sources do."
+        "note": "The 2475SDB Developer Notes list bit 5 of the 0x00 reply as load sense (Read Operating Flags Table, PDF page 4) but their Set Operating Flags Table makes 0x0A and 0x0B the key beep (PDF page 4); the KeypadLinc Line Developer Notes give bit 5 as the key beep (Read Operating Flags Table, PDF page 8). The catalog uses the key beep."
       }
     },
     {

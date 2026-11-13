@@ -277,7 +277,7 @@
       "off": "0x06",
       "verification": {
         "status": "conflicting",
-        "note": "The 2472D and KeypadLinc Line Developer Notes give Set Operating Flags 0x06 as load sense off and 0x07 as on, used here; the Insteon Developer's Guide (2009) and the Insteon Command Tables (2007) give 0x06 as on and 0x07 as off."
+        "note": "The 2472D Developer Notes (Set Operating Flags Table, PDF page 5) and the KeypadLinc Line Developer Notes (Set Operating Flags Table, PDF page 8) give 0x06 as load sense off and 0x07 as on, as used here; the Insteon Developer's Guide (2009) (Set Operating Flags, Chapter 8, printed page 130) and the Insteon Command Tables (2007) (printed page 8) give 0x06 as load sense on and 0x07 as off. No document for this product lists bit 3 of the 0x00 reply as load sense: the Guide and the Command Tables put load sense in bit 5, and the 2472D Read Operating Flags Table lists no load sense bit (PDF page 5)."
       }
     },
     {
