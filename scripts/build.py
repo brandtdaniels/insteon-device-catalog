@@ -1402,7 +1402,8 @@ def count_noun(count, singular, plural=None):
 
 
 def command_set_facts(command_set):
-    """What a command set covers: (fact, counted phrase, labels) for each part it holds."""
+    """What a command set covers: (fact, figure, noun, labels) for each part it holds. Operating
+    flags, extended settings and readings carry their labels; the commands are only counted."""
     settings = command_set.get("extendedSettings") or {}
     parts = {
         "operatingFlags": ("operating flag", command_set.get("operatingFlags", [])),
@@ -1421,8 +1422,8 @@ def command_set_facts(command_set):
         if not entries:
             continue
 
-        phrase = count_noun(len(entries), noun) + (" set per button" if name == "extendedSettings" and settings.get("perButton") else "")
-        found.append((name, phrase, [entry["label"] for entry in entries] if name in named else []))
+        noun = count_noun(len(entries), noun).split(" ", 1)[1] + (", set per button" if name == "extendedSettings" and settings.get("perButton") else "")
+        found.append((name, len(entries), noun, [entry["label"] for entry in entries] if name in named else []))
 
     return found
 
@@ -1431,64 +1432,139 @@ def group_number(value):
     return int(value, 16)
 
 
+# The names a card gives each list of labels, for the summary that opens it.
+LIST_TITLES = {"operatingFlags": "Operating flags", "extendedSettings": "Extended settings", "readings": "Readings"}
+
+
+def identity_rows(profile, names):
+    """One row per identity: its subcategory, where it is sold, its command sets and its engine."""
+    category = profile["identities"][0]["category"]
+    rows = []
+
+    for identity in profile["identities"]:
+        key = (identity["category"], identity["subcategory"])
+        code = identity["subcategory"] if identity["category"] == category else f"{identity['category']}/{identity['subcategory']}"
+        where = [identity["region"]] if "region" in identity else []
+
+        if "firmware" in identity:
+            where.append(f"firmware {identity['firmware']['from']} to {identity['firmware']['through']}")
+
+        settings = [names[entry["commandSet"]] + (" (some firmware)" if "firmware" in entry else "") for entry in profile.get("commandSets", []) if (entry["category"], entry["subcategory"]) == key]
+        engines = [engine_note(entry)[0] for entry in profile.get("engines", []) if (entry["category"], entry["subcategory"]) == key]
+        rows.append({"Subcategory": code, "Sold in": ", ".join(where), "Command set": ", ".join(settings), "Engine": ", ".join(engines)})
+
+    return rows
+
+
 def capability_detail(profile, command_sets):
-    """The card's "What the catalog describes" list: what the profile and its command sets state,
-    and a plain line where the catalog holds nothing."""
+    """The card's "What the catalog describes" groups: hardware, ALL-Link groups and events, what
+    software can read or write, then the identities. Each fact is stated once; a column that
+    differs between identities is in the identity table, and the hardware row points to it."""
     escape = html.escape
-    items = []
+    names = {set_id: command_set["name"] for set_id, command_set in command_sets.items()}
+    rows = identity_rows(profile, names)
 
-    def fact(name, text):
-        items.append(f'<li data-fact="{name}">{escape(text)}</li>')
+    def varies(column):
+        return len({row[column] for row in rows}) > 1
 
-    fact("radio", f"Radio: {RADIO_LABELS[profile['radio']]}." if "radio" in profile else "Radio: the catalog does not state how it communicates.")
-    fact("role", f"Role: {ROLE_LABELS[profile['role']].lower()}." if "role" in profile else "Role: the catalog does not state it.")
+    def group(name, title, body):
+        return f'<section data-group="{name}"><h4>{title}</h4>{body}</section>'
 
-    if profile.get("batteryPowered"):
-        fact("battery", "Battery powered.")
+    def row(term, fact, value):
+        return f'<dt>{term}</dt><dd data-fact="{fact}">{escape(value)}</dd>'
 
-    engines = [engine_note(entry)[0] for entry in profile.get("engines", [])]
-    fact("engine", f"Engine: {', '.join(dict.fromkeys(engines))}." if engines else "Engine: the catalog does not state it.")
-
-    groups = profile.get("groups", [])
-    roles = {"controller": "controller", "responder": "responder", "both": "controller and responder"}
-    fact(
-        "groups",
-        f"{count_noun(len(groups), 'ALL-Link group')}: " + ", ".join(f"{group_number(group['number'])} {group['name']} ({roles[group['role']]})" for group in groups) + "."
-        if groups
-        else "The catalog lists no ALL-Link groups for this device.",
+    engines = list(dict.fromkeys(row_["Engine"] for row_ in rows if row_["Engine"]))
+    engine = "Varies by identity" if varies("Engine") else ", ".join(engines) if engines else "Not stated"
+    hardware = (
+        row("Radio", "radio", RADIO_LABELS[profile["radio"]] if "radio" in profile else "Not stated")
+        + row("Role", "role", ROLE_LABELS[profile["role"]] if "role" in profile else "Not stated")
+        + row("Engine", "engine", engine)
+        + (row("Battery", "battery", "Battery powered") if profile.get("batteryPowered") else "")
     )
 
+    allowed = {"controller": "controller", "responder": "responder", "both": "controller and responder"}
+    groups = profile.get("groups", [])
+    link = (
+        "<dl class=\"rows\">"
+        + (
+            '<dt>Groups</dt><dd><ul>'
+            + "".join(f'<li data-fact="group">{group_number(item["number"])} {escape(item["name"])} ({allowed[item["role"]]})</li>' for item in groups)
+            + "</ul></dd>"
+            if groups
+            else '<dt>Groups</dt><dd data-fact="noGroups">None listed</dd>'
+        )
+    )
+    events = [event for capability in profile["capabilities"] if capability["kind"] == "groupEvents" for event in capability["events"]]
+
+    if events:
+        link += (
+            '<dt>Reports</dt><dd><ul>'
+            + "".join(f'<li data-fact="event">{escape(event["event"])} (group {group_number(event["group"])}, command {escape(event["command1"])})</li>' for event in events)
+            + "</ul></dd>"
+        )
+
     for capability in profile["capabilities"]:
-        if capability["kind"] == "groupEvents":
-            events = ", ".join(f"{event['event']} (group {group_number(event['group'])}, command {event['command1']})" for event in capability["events"])
-            fact("events", f"Reports: {events}.")
-        elif capability["kind"] == "heartbeat":
+        if capability["kind"] == "heartbeat":
             interval = f" every {count_noun(capability['intervalMinutes'], 'minute')}" if "intervalMinutes" in capability else ""
-            fact("heartbeat", f"Heartbeat: group {group_number(capability['group'])}{interval}.")
+            link += row("Heartbeat", "heartbeat", f"group {group_number(capability['group'])}{interval}")
 
-    entries = list(dict.fromkeys(entry["commandSet"] for entry in profile.get("commandSets", [])))
+    link += "</dl>"
 
-    if not entries:
-        items.append('<li data-fact="noCommandSet">The catalog has no command set for this device.</li>')
+    software = []
+    set_ids = list(dict.fromkeys(entry["commandSet"] for entry in profile.get("commandSets", [])))
 
-    for set_id in entries:
+    if not set_ids:
+        software.append('<p data-fact="noCommandSet">The catalog has no command set for this device.</p>')
+
+    for set_id in set_ids:
         command_set = command_sets[set_id]
         parts = command_set_facts(command_set)
+        label = f'<p class="set-name">{escape(command_set["name"])}</p>'
 
         if not parts:
-            items.append(
-                f'<li data-command-set="{escape(set_id)}"><span data-fact="noSettings">The catalog deliberately holds no settings for this device: '
-                "there is nothing for software to read or write.</span></li>"
+            software.append(
+                f'<div class="command-set" data-command-set="{escape(set_id)}">{label}'
+                '<p data-fact="noSettings">The catalog deliberately holds no settings for this device: there is nothing for software to read or write.</p></div>'
             )
             continue
 
-        lines = "".join(
-            f'<li data-fact="{name}">{escape(phrase)}' + (f": {escape(', '.join(labels))}" if labels else "") + ".</li>"
-            for name, phrase, labels in parts
+        figures = "".join(f'<li data-fact="{name}"><strong>{count}</strong> {escape(noun)}</li>' for name, count, noun, _ in parts)
+        lists = "".join(
+            f'<details class="list" data-list="{name}"><summary>{LIST_TITLES[name]}</summary><ul class="names">'
+            + "".join(f"<li>{escape(item)}</li>" for item in labels)
+            + "</ul></details>"
+            for name, _, _, labels in parts
+            if labels
         )
-        items.append(f'<li data-command-set="{escape(set_id)}">Command set {escape(command_set["name"])}<ul>{lines}</ul></li>')
+        software.append(f'<div class="command-set" data-command-set="{escape(set_id)}">{label}<ul class="figures" style="--figures: {min(len(parts), 3) if len(parts) > 4 else len(parts)}">{figures}</ul>{lists}</div>')
 
-    return f'<ul class="describes">{"".join(items)}</ul>'
+    shared = []
+    columns = ["Subcategory"]
+
+    for column in ("Sold in", "Command set", "Engine"):
+        if varies(column):
+            columns.append(column)
+        elif rows[0][column] and column == "Sold in":
+            shared.append(row(column, "soldIn", rows[0][column]))
+
+    if len(rows) == 1:
+        identity = '<dl class="rows">' + row("Subcategory", "subcategory", rows[0]["Subcategory"]).replace("<dd ", '<dd class="mono" ') + "".join(shared) + "</dl>"
+    else:
+        table = (
+            '<table class="identity-table"><tr>' + "".join(f"<th>{column}</th>" for column in columns) + "</tr>"
+            + "".join("<tr>" + "".join(f'<td{" class=\"mono\"" if column == "Subcategory" else ""}>{escape(item[column])}</td>' for column in columns) + "</tr>" for item in rows)
+            + "</table>"
+        )
+        identity = ('<dl class="rows">' + "".join(shared) + "</dl>" if shared else "") + table
+
+    return (
+        '<div class="groups">'
+        + group("hardware", "Hardware", f'<dl class="rows">{hardware}</dl>')
+        + group("allLink", "ALL-Link groups and events", link)
+        + group("software", "What software can read or write", "".join(software))
+        + group("identity", "Identity", identity)
+        + "</div>"
+    )
 
 
 def coverage_section(summary):
@@ -1498,7 +1574,7 @@ def coverage_section(summary):
         return f'<span data-metric="{metric}">{value}</span>'
 
     rows = "".join(
-        f'<tr><th scope="row"><span class="status status-{status}">{status.capitalize()}</span></th>'
+        f'<tr><th scope="row"><span class="status pill status-{status}">{status.capitalize()}</span></th>'
         f"<td>{html.escape(STATUS_EXPLANATIONS[status])}</td>"
         f'<td class="num">{number(f"commandSet-{status}", summary["commandSetStatuses"][status])}</td>'
         f'<td class="num">{number(f"identity-{status}", summary["identityStatuses"][status])}</td></tr>'
@@ -1551,7 +1627,6 @@ def index_page(profiles, command_sets, version):
     search and filter."""
     escape = html.escape
     descriptions = capability_descriptions()
-    names = {command_set["id"]: command_set["name"] for command_set in command_sets}
     command_sets_by_id = {command_set["id"]: command_set for command_set in command_sets}
     radios = RADIO_LABELS
     roles = ROLE_LABELS
@@ -1564,63 +1639,15 @@ def index_page(profiles, command_sets, version):
         category = profile["identities"][0]["category"]
         kinds = [capability["kind"] for capability in profile["capabilities"]]
         aliases = profile.get("aliases", [])
-        rows = []
-
-        for identity in profile["identities"]:
-            key = (identity["category"], identity["subcategory"])
-            code = identity["subcategory"] if identity["category"] == category else f"{identity['category']}/{identity['subcategory']}"
-            where = [identity["region"]] if "region" in identity else []
-
-            if "firmware" in identity:
-                where.append(f"firmware {identity['firmware']['from']} to {identity['firmware']['through']}")
-
-            settings = [names[entry["commandSet"]] + (" (some firmware)" if "firmware" in entry else "") for entry in profile.get("commandSets", []) if (entry["category"], entry["subcategory"]) == key]
-            engines = [engine_note(entry)[0] for entry in profile.get("engines", []) if (entry["category"], entry["subcategory"]) == key]
-            rows.append((code, ", ".join(where), ", ".join(settings), ", ".join(engines)))
-
-        # A column every identity shares is shown once, above the table.
-        columns = ["Subcategory", "Sold in", "Settings", "Engine"]
-        shared = []
-        keep = [0]
-
-        for column in (1, 2, 3):
-            values = {row[column] for row in rows}
-
-            if values == {""}:
-                continue
-
-            if len(values) == 1 and len(rows) > 1 or len(rows) == 1:
-                shared.append(f"{columns[column]}: {escape(rows[0][column])}") if rows[0][column] else None
-            else:
-                keep.append(column)
-
-        table = ""
-
-        if len(keep) > 1 or len(rows) > 1:
-            table = "<table><tr>" + "".join(f"<th>{columns[c]}</th>" for c in keep) + "</tr>"
-            table += "".join("<tr>" + "".join(f'<td{" class=\"mono\"" if c == 0 else ""}>{escape(row[c])}</td>' for c in keep) + "</tr>" for row in rows)
-            table += "</table>"
-        else:
-            shared.insert(0, f'Subcategory: <span class="mono">{escape(rows[0][0])}</span>')
-
-        # The card shows three lines of the description; a longer one is also given in full here.
-        if len(profile.get("description", "")) > 150:
-            shared.insert(0, escape(profile["description"]))
-
         details = (
-            '<details class="describes-details"><summary>What the catalog describes</summary>'
+            '<details class="more"><summary>What the catalog describes</summary>'
             + capability_detail(profile, command_sets_by_id)
-            + "".join(f"<p>{line}</p>" for line in shared)
-            + table
             + "</details>"
         )
 
         statuses = [status for status in STATUSES if status in marked_statuses(profile)]
-        marks = "".join(f'<span class="status status-{status}" title="{escape(STATUS_EXPLANATIONS[status])}">{status.capitalize()}</span>' for status in statuses)
-        facts = [radios[profile["radio"]] for _ in [0] if "radio" in profile]
-        facts += [roles[profile["role"]]] if "role" in profile else []
-        facts += ["Battery powered"] if profile.get("batteryPowered") else []
-        chips = "".join(f'<span class="chip" title="{escape(descriptions.get(kind, ""))}">{escape(CAPABILITY_LABELS.get(kind, kind))}</span>' for kind in kinds)
+        marks = "".join(f'<span class="status pill status-{status}" title="{escape(STATUS_EXPLANATIONS[status])}">{status.capitalize()}</span>' for status in statuses)
+        chips = "".join(f'<span class="chip pill" title="{escape(descriptions.get(kind, ""))}">{escape(CAPABILITY_LABELS.get(kind, kind))}</span>' for kind in kinds)
         search = " ".join([
             profile["model"],
             profile["name"],
@@ -1647,7 +1674,6 @@ def index_page(profiles, command_sets, version):
             f'<h3>{escape(profile["name"])}</h3>'
             + (f'<p class="aliases">Also known as {escape(", ".join(aliases))}</p>' if aliases else "")
             + (f'<p class="description">{escape(profile["description"])}</p>' if "description" in profile else "")
-            + (f'<p class="facts">{" · ".join(facts)}</p>' if facts else '<p class="facts"></p>')
             + (f'<p class="marks"><span class="marks-label">Marked values</span> {marks}</p>' if marks else "")
             + details
             + "</article>"
