@@ -1133,6 +1133,37 @@ class LayoutTests(unittest.TestCase):
     def test_cards_align_to_the_top_so_an_open_card_does_not_stretch_its_row(self):
         self.assertTrue(any("align-items: start" in body for body in self.declarations(".grid")))
 
+    def test_the_coverage_table_uses_the_same_pill_as_the_cards(self):
+        table = re.search(r'<table class="statuses-table".*?</table>', self.page, flags=re.S).group(0)
+
+        for status in build.STATUSES:
+            self.assertIn(f'<span class="status pill status-{status}">', table)
+
+        for status in ("observed", "inferred", "conflicting"):
+            self.assertEqual(len(self.declarations(f".status-{status}")), 1)
+
+    def test_the_figures_grid_has_one_column_per_figure_up_to_four_and_three_beyond(self):
+        counts = [(int(columns), len(re.findall(r"<li data-fact=", row))) for columns, row in re.findall(r'<ul class="figures" style="--figures: (\d+)">(.*?)</ul>', self.page)]
+
+        self.assertTrue(counts)
+
+        for columns, figures in counts:
+            self.assertEqual(columns, figures if figures <= 4 else 3)
+
+        self.assertIn("repeat(var(--figures", " ".join(self.declarations(".figures")))
+
+    def test_a_figure_is_shown_only_for_a_part_the_command_set_holds(self):
+        for card in read_cards(self.page).values():
+            for (owner, name), items in card["lists"].items():
+                self.assertTrue(items)
+
+            for owner, name, text, _, _ in card["facts"]:
+                if name in build.COMMAND_SET_FACTS:
+                    self.assertNotRegex(text.strip(), r"^0 ")
+
+    def test_a_checkbox_is_drawn_with_the_accent_so_checked_and_unchecked_differ(self):
+        self.assertIn("accent-color: var(--accent)", " ".join(self.declarations("input[type=checkbox]")))
+
     def test_chips_and_status_marks_share_one_pill(self):
         self.assertEqual(len(self.declarations(".pill")), 1)
         self.assertRegex(self.page, r'class="chip pill"')

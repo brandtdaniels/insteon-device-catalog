@@ -1536,7 +1536,7 @@ def capability_detail(profile, command_sets):
             for name, _, _, labels in parts
             if labels
         )
-        software.append(f'<div class="command-set" data-command-set="{escape(set_id)}">{label}<ul class="figures">{figures}</ul>{lists}</div>')
+        software.append(f'<div class="command-set" data-command-set="{escape(set_id)}">{label}<ul class="figures" style="--figures: {min(len(parts), 3) if len(parts) > 4 else len(parts)}">{figures}</ul>{lists}</div>')
 
     shared = []
     columns = ["Subcategory"]

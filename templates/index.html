@@ -116,6 +116,7 @@
   .toolbar .row { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
   .toolbar input[type=search] { flex: 1 1 16rem; }
   input[type=search], select { font: inherit; font-size: var(--text-sm); color: var(--text); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-control); padding: var(--space-2) var(--space-3); }
+  input[type=checkbox] { accent-color: var(--accent); width: var(--space-4); height: var(--space-4); margin: 0; }
   .toolbar .check { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm); color: var(--muted); }
   .count { margin: var(--space-2) 0 0; color: var(--muted); font-size: var(--text-sm); }
 
@@ -147,7 +148,7 @@
   .rows dd { margin: 0; overflow-wrap: anywhere; }
   .command-set + .command-set { margin-top: var(--space-3); }
   .groups .set-name { margin: 0 0 var(--space-2); font-weight: 600; color: var(--text); }
-  .figures { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2) var(--space-4); margin-bottom: var(--space-2); font-size: var(--text-xs); color: var(--muted); }
+  .figures { display: grid; grid-template-columns: repeat(var(--figures, 3), minmax(0, 1fr)); gap: var(--space-2) var(--space-3); margin-bottom: var(--space-2); font-size: var(--text-xs); color: var(--muted); }
   .figures strong { display: block; font-size: var(--text-lg); line-height: 1.2; color: var(--text); font-variant-numeric: tabular-nums; }
   .list { margin-top: var(--space-2); }
   .list > summary { cursor: pointer; color: var(--accent); font-size: var(--text-xs); }
@@ -155,7 +156,7 @@
   .names li { break-inside: avoid; padding: var(--space-1) 0; overflow-wrap: anywhere; }
   .identity-table { width: 100%; margin-top: var(--space-2); border-collapse: collapse; overflow-wrap: anywhere; }
   .identity-table th, .identity-table td { padding: var(--space-1) var(--space-2) var(--space-1) 0; text-align: left; vertical-align: top; border-top: 1px solid var(--line); }
-  .identity-table th { font-weight: 500; color: var(--muted); }
+  .identity-table th { font-weight: 500; color: var(--muted); overflow-wrap: normal; }
 
   @media (max-width: 40rem) {
     .toolbar { position: static; margin-top: var(--space-5); }
