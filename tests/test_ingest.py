@@ -8,7 +8,9 @@ import copy
 import hashlib
 import io
 import json
+import os
 import pathlib
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -18,7 +20,7 @@ SCRIPTS = pathlib.Path(__file__).resolve().parent.parent / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
 import ingest  # noqa: E402
-from ingest_lib import drafting, observation  # noqa: E402
+from ingest_lib import applying, drafting, observation, patching  # noqa: E402
 
 ROOT = SCRIPTS.parent
 FIXTURES = pathlib.Path(__file__).resolve().parent / "fixtures" / "ingest"
@@ -199,7 +201,7 @@ class CheckTests(unittest.TestCase):
         for name, leak in LEAKS.items():
             with self.subTest(name):
                 data = bench("example-invented-product.json")
-                data["note"] = f"On the bench next to {leak} today."
+                data["note"] = f"On the bench next to {leak} here."
 
                 errors = self.errors_for(data)
 
@@ -278,7 +280,7 @@ class CheckCommandTests(unittest.TestCase):
 
     def test_an_invalid_file_exits_one_and_says_what_to_fix(self):
         data = bench("example-invented-product.json")
-        data["note"] = "At 192.168.7.20 today."
+        data["note"] = "At 192.168.7.20 here."
         path = write_json(self.directory, "bad.json", data)
 
         status, out, _ = run_cli("check", path)
@@ -797,6 +799,243 @@ class DraftCommandTests(unittest.TestCase):
         status, _, _ = run_cli("draft", *paths)
 
         self.assertIn(status, (0, 2))
+
+
+def git(directory, *arguments):
+    environment = {**os.environ, "GIT_AUTHOR_NAME": "Test", "GIT_AUTHOR_EMAIL": "test@example.test", "GIT_COMMITTER_NAME": "Test", "GIT_COMMITTER_EMAIL": "test@example.test"}
+
+    return subprocess.run(["git", "-C", str(directory), *arguments], capture_output=True, text=True, check=True, env=environment).stdout
+
+
+def committed_repository(directory, profiles):
+    """A git repository holding devices/<model>.json for each profile, written as the repository writes them."""
+    root = pathlib.Path(directory)
+    (root / "devices").mkdir()
+
+    for model, content in profiles.items():
+        (root / "devices" / f"{model}.json").write_text(patching.dump(content))
+
+    git(root, "init", "-q")
+    git(root, "add", "-A")
+    git(root, "commit", "-q", "-m", "start")
+
+    return root
+
+
+class RecordingBuild:
+    """A stand-in for the build that records its calls and passes or fails."""
+
+    def __init__(self, passes=True):
+        self.passes = passes
+        self.roots = []
+
+    def __call__(self, root):
+        self.roots.append(root)
+
+        return self.passes, "" if self.passes else "invented build failure"
+
+
+def drafted_report(catalog, data=None):
+    directory = tempfile.TemporaryDirectory()
+
+    try:
+        path = write_json(directory.name, "a.json", data or observation_with())
+        report, _ = drafting.draft_files([path], catalog, set(catalog))
+    finally:
+        directory.cleanup()
+
+    return report
+
+
+class PatchingTests(unittest.TestCase):
+    def test_every_profile_in_the_catalog_is_written_back_byte_for_byte(self):
+        for path in sorted((ROOT / "devices").glob("*.json")):
+            self.assertEqual(path.read_text(), patching.dump(json.loads(path.read_text())), path.name)
+
+
+class ApplyTests(unittest.TestCase):
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.catalog = invented_catalog({"productKey": "0x00001A", "region": "US"})
+        self.root = committed_repository(directory.name, {**self.catalog, "8888": profile("8888", [{"category": "0x01", "subcategory": "0x01"}])})
+        self.report = drafted_report(self.catalog)
+        self.build = RecordingBuild()
+
+    def apply(self, report=None, build=None, allowed=()):
+        return applying.apply_report(report or self.report, self.root, build or self.build, allowed)
+
+    def profile_text(self, model="9999"):
+        return (self.root / "devices" / f"{model}.json").read_text()
+
+    def test_the_marks_are_written_and_the_build_runs_once(self):
+        status, _ = self.apply()
+
+        written = json.loads(self.profile_text())
+
+        self.assertEqual(0, status)
+        self.assertEqual("observed", written["identities"][0]["verification"]["status"])
+        self.assertEqual("observed", written["identities"][0]["productKeyVerification"]["status"])
+        self.assertEqual("observed", written["engines"][0]["verification"]["status"])
+        self.assertEqual([self.root], self.build.roots)
+
+    def test_the_key_verification_sits_next_to_the_key_and_the_file_keeps_the_repository_formatting(self):
+        self.apply()
+
+        written = json.loads(self.profile_text())
+
+        self.assertEqual(["category", "subcategory", "productKey", "productKeyVerification", "region", "verification"], list(written["identities"][0]))
+        self.assertEqual(self.profile_text(), patching.dump(written))
+
+    def test_a_file_no_change_names_is_not_touched(self):
+        before = self.profile_text("8888")
+
+        self.apply()
+
+        self.assertEqual(before, self.profile_text("8888"))
+        self.assertEqual(["devices/9999.json"], git(self.root, "diff", "--name-only").split())
+
+    def test_nothing_but_verification_changes(self):
+        self.apply()
+
+        after = json.loads(self.profile_text())
+        before = self.catalog["9999"]
+
+        for key in ("category", "subcategory", "productKey", "region"):
+            self.assertEqual(before["identities"][0][key], after["identities"][0][key])
+
+        self.assertEqual({k: v for k, v in before["engines"][0].items()}, {k: v for k, v in after["engines"][0].items() if k != "verification"})
+
+    def test_a_working_tree_with_other_changes_is_refused_and_nothing_is_written(self):
+        (self.root / "devices" / "8888.json").write_text("{}\n")
+
+        status, messages = self.apply()
+
+        self.assertEqual(1, status)
+        self.assertIn("working tree has changes", " ".join(messages))
+        self.assertEqual([], self.build.roots)
+        self.assertEqual(patching.dump(self.catalog["9999"]), self.profile_text())
+
+    def test_an_untracked_file_is_also_other_work(self):
+        (self.root / "notes.txt").write_text("x")
+
+        self.assertEqual(1, self.apply()[0])
+
+    def test_the_report_file_itself_may_sit_untracked_in_the_tree(self):
+        (self.root / "report.json").write_text("{}")
+
+        self.assertEqual(0, self.apply(allowed=("report.json",))[0])
+
+    def test_a_catalog_that_moved_since_the_report_is_refused_and_nothing_is_written(self):
+        moved = json.loads(self.profile_text())
+        moved["identities"][0]["verification"] = observed("0x10")
+        (self.root / "devices" / "9999.json").write_text(patching.dump(moved))
+        git(self.root, "commit", "-q", "-am", "moved")
+        after = self.profile_text()
+
+        status, messages = self.apply()
+
+        self.assertEqual(1, status)
+        self.assertIn("does not hold", " ".join(messages))
+        self.assertEqual(after, self.profile_text())
+
+    def test_a_report_already_applied_and_committed_is_a_no_op(self):
+        self.apply()
+        git(self.root, "commit", "-q", "-am", "applied")
+        build = RecordingBuild()
+
+        status, messages = self.apply(build=build)
+
+        self.assertEqual(0, status)
+        self.assertIn("already applied", " ".join(messages))
+        self.assertEqual([], build.roots)
+
+    def test_a_failing_build_puts_every_file_back(self):
+        original = self.profile_text()
+
+        status, messages = self.apply(build=RecordingBuild(passes=False))
+
+        self.assertEqual(1, status)
+        self.assertIn("invented build failure", " ".join(messages))
+        self.assertEqual(original, self.profile_text())
+        self.assertEqual("", git(self.root, "status", "--porcelain"))
+
+    def test_a_report_with_nothing_drafted_applies_nothing(self):
+        report = drafted_report(self.catalog, observation_with(category="0x70"))
+
+        status, messages = self.apply(report)
+
+        self.assertEqual(0, status)
+        self.assertIn("nothing to apply", " ".join(messages))
+        self.assertEqual([], self.build.roots)
+
+    def test_a_rejected_observation_in_the_report_blocks_the_whole_apply(self):
+        report = copy.deepcopy(self.report)
+        report["observations"].append({"input": "observation 2 (00000000)", "outcome": "rejected", "errors": ["x"], "changes": []})
+
+        status, messages = self.apply(report)
+
+        self.assertEqual(1, status)
+        self.assertIn("rejected", " ".join(messages))
+
+    def test_a_report_of_another_format_is_refused(self):
+        self.assertEqual(1, self.apply({"format": "other"})[0])
+
+    def test_a_hand_edited_report_may_only_set_an_observed_verification_from_the_template(self):
+        tampers = {
+            "status": lambda change: change["after"].update(status="documented"),
+            "extra field": lambda change: change["after"].update(value="0x01"),
+            "free note": lambda change: change["after"].update(note="Anything at all."),
+            "no firmware": lambda change: change["after"].update(firmware=[]),
+            "other field": lambda change: change.update(field="productKey"),
+            "other file": lambda change: change.update(file="devices/../README.md"),
+            "other model": lambda change: change.update(file="devices/8888.json"),
+            "other entry": lambda change: change.update(entry="commandSet"),
+            "selector": lambda change: change.update(selector={"category": "0x7E", "subcategory": "0x7F", "name": "x"}),
+        }
+
+        for name, tamper in tampers.items():
+            with self.subTest(name):
+                report = copy.deepcopy(self.report)
+                tamper(report["observations"][0]["changes"][0])
+
+                status, _ = self.apply(report)
+
+                self.assertEqual(1, status)
+                self.assertEqual("", git(self.root, "status", "--porcelain"))
+                self.assertEqual([], self.build.roots)
+
+
+class ApplyCommandTests(unittest.TestCase):
+    def test_a_missing_report_is_reported_not_raised(self):
+        status, out, _ = run_cli("apply", pathlib.Path(tempfile.gettempdir()) / "absent-report.json")
+
+        self.assertEqual(1, status)
+        self.assertIn("cannot read the report", out)
+
+
+class ApplyEndToEndTests(unittest.TestCase):
+    """Drafts the bench files against a copy of this repository's catalog, applies the report and runs the real build."""
+
+    def test_the_bench_report_applies_and_the_catalog_still_builds(self):
+        with tempfile.TemporaryDirectory() as directory:
+            copy_root = pathlib.Path(directory) / "catalog"
+            shutil.copytree(ROOT, copy_root, ignore=shutil.ignore_patterns(".git", "__pycache__", "site", "tests"))
+            git(copy_root, "init", "-q")
+            git(copy_root, "add", "-A")
+            git(copy_root, "commit", "-q", "-m", "start")
+
+            report_path = pathlib.Path(directory) / "report.json"
+            files = [OBSERVATIONS / name for name in ("dimmer-plug-2457D2.json", "io-module-2450.json", "on-off-plug-2635-222.json", "silent-sensor.json")]
+            catalog = patching.load_catalog(copy_root)
+            report, _ = drafting.draft_files(files, catalog, set(catalog))
+            report_path.write_text(json.dumps(report))
+
+            status, messages = applying.apply_report(report, copy_root, applying.run_build)
+
+            self.assertEqual(0, status, messages)
+            self.assertEqual(["devices/2450.json", "devices/2635-222.json"], git(copy_root, "diff", "--name-only").split())
+            self.assertEqual("observed", json.loads((copy_root / "devices" / "2450.json").read_text())["engines"][0]["verification"]["status"])
 
 
 if __name__ == "__main__":

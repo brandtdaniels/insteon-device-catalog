@@ -99,7 +99,7 @@ def apply_change(profile, change):
         return "already"
 
     if entry.get(change["field"]) != change["before"]:
-        return "the entry no longer holds what the report was drafted from"
+        return "the entry does not hold what the report was drafted from"
 
     field = change["field"]
 

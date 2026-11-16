@@ -16,7 +16,7 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from ingest_lib import drafting, observation, patching  # noqa: E402
+from ingest_lib import applying, drafting, observation, patching  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
@@ -75,6 +75,25 @@ def draft_command(arguments):
     return 2 if any(item["disagreements"] for item in report["observations"]) else 0
 
 
+def apply_command(arguments):
+    """Applies a reviewed report to the profile files and runs the build."""
+    try:
+        report = json.loads(arguments.report.read_text())
+    except (OSError, ValueError):
+        print("cannot read the report")
+
+        return 1
+
+    resolved = arguments.report.resolve()
+    allowed = [str(resolved.relative_to(ROOT))] if resolved.is_relative_to(ROOT) else []
+    status, messages = applying.apply_report(report, ROOT, applying.run_build, allowed)
+
+    for message in messages:
+        print(message)
+
+    return status
+
+
 def build_parser():
     parser = argparse.ArgumentParser(prog="ingest.py", description=__doc__.splitlines()[0])
     commands = parser.add_subparsers(dest="command", required=True)
@@ -103,6 +122,17 @@ def build_parser():
     draft.add_argument("--report", type=pathlib.Path, metavar="PATH", help="write the machine-readable report here, for apply")
     draft.add_argument("--md", type=pathlib.Path, metavar="PATH", help="write the report as Markdown here; without --report or --md it is printed")
     draft.set_defaults(run=draft_command)
+
+    apply = commands.add_parser(
+        "apply",
+        help="write a reviewed draft into the profile files and run the build",
+        description="Applies the changes in a report written by draft, after a maintainer has read it. It sets only "
+        "verification marks, from the report's own wording, and refuses a working tree with other changes, a "
+        "report whose entries do not match the catalog, and any change that is not an observed mark. It then "
+        "runs scripts/build.py, and puts the files back if that fails. Review the diff and commit it yourself.",
+    )
+    apply.add_argument("report", type=pathlib.Path, metavar="REPORT", help="the file draft wrote with --report")
+    apply.set_defaults(run=apply_command)
 
     return parser
 
