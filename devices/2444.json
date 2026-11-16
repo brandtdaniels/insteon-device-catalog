@@ -29,7 +29,7 @@
       "subcategory": "0x01",
       "verification": {
         "status": "inferred",
-        "note": "The Open/Close Micro Module - Developer Notes (titled Micro Module Shutter Developer Notes on the document, Version 001, June 28, 2012) give their device line as a placeholder, Dev 0x01 and Sub 0xXX, so they don't confirm this identity; the catalog uses their command set for it because the module is the product they describe."
+        "note": "The Micro Module Shutter Developer Notes (Version 001, June 28, 2012) give their device line as a placeholder, Dev 0x01 and Sub 0xXX, so they don't confirm this identity; the catalog uses their command set for it because the module is the product they describe."
       }
     },
     {
@@ -38,7 +38,7 @@
       "subcategory": "0x02",
       "verification": {
         "status": "inferred",
-        "note": "The Open/Close Micro Module - Developer Notes (titled Micro Module Shutter Developer Notes on the document, Version 001, June 28, 2012) give their device line as a placeholder, Dev 0x01 and Sub 0xXX, so they don't confirm this identity; the catalog uses their command set for it because the module is the product they describe."
+        "note": "The Micro Module Shutter Developer Notes (Version 001, June 28, 2012) give their device line as a placeholder, Dev 0x01 and Sub 0xXX, so they don't confirm this identity; the catalog uses their command set for it because the module is the product they describe."
       }
     },
     {
@@ -47,7 +47,7 @@
       "subcategory": "0x03",
       "verification": {
         "status": "inferred",
-        "note": "The Open/Close Micro Module - Developer Notes (titled Micro Module Shutter Developer Notes on the document, Version 001, June 28, 2012) give their device line as a placeholder, Dev 0x01 and Sub 0xXX, so they don't confirm this identity; the catalog uses their command set for it because the module is the product they describe."
+        "note": "The Micro Module Shutter Developer Notes (Version 001, June 28, 2012) give their device line as a placeholder, Dev 0x01 and Sub 0xXX, so they don't confirm this identity; the catalog uses their command set for it because the module is the product they describe."
       }
     }
   ],
@@ -420,7 +420,7 @@
   "sources": [
     "HouseLinc Device Definitions (version 2.9.87)",
     "insteon.com product catalog",
-    "Open/Close Micro Module - Developer Notes",
+    "Micro Module Shutter Developer Notes",
     "Micro Open/Close Module 2444 Owner's Manual",
     "Insteon Developer's Guide (2009)"
   ]

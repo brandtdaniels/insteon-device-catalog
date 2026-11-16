@@ -386,6 +386,10 @@
       "kind": "quickStart"
     },
     {
+      "title": "Micro Module Shutter Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
       "title": "Micro On/Off 2443-222 Owner's Manual",
       "kind": "ownersManual"
     },
@@ -516,10 +520,6 @@
     {
       "title": "On/Off Switch 2477S Quick Start Guide",
       "kind": "quickStart"
-    },
-    {
-      "title": "Open/Close Micro Module - Developer Notes",
-      "kind": "developerNotes"
     },
     {
       "title": "Open/Close Sensor 2843 Owner's Manual",
