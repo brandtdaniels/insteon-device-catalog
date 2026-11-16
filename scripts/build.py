@@ -1203,6 +1203,86 @@ def registry_problems(registry):
     return problems
 
 
+REVIEWED_PATH = ROOT / "documents" / "reviewed-distinct-titles.json"
+# Words every title of a kind carries, which say nothing about which document it is.
+TITLE_FILLER = {"owner", "manual", "quick", "start", "guide", "developer", "notes", "insteon", "the", "and", "with", "for", "of"}
+
+
+def title_words(title):
+    """The words of a title that name its subject: lowercase, without punctuation or filler."""
+
+    return frozenset(word for word in re.findall(r"[a-z0-9]+", title.lower().replace("'", "")) if word != "s" and word not in TITLE_FILLER)
+
+
+def model_numbers(words):
+    """The words that are model numbers: four digits, then any letters or digits, and not a year; a regional suffix such as 222 is not one."""
+
+    return {word for word in words if re.fullmatch(r"\d{4}[a-z0-9]*", word) and not re.fullmatch(r"(19|20)\d\d", word)}
+
+
+def near_duplicates(registry):
+    """The pairs of titles of one kind where one title's words contain the other's, or both name a model number."""
+
+    pairs = []
+    documents = [entry for entry in registry["documents"] if isinstance(entry.get("title"), str)]
+
+    for position, first in enumerate(documents):
+        for second in documents[position + 1:]:
+            if first.get("kind") != second.get("kind"):
+                continue
+
+            one, other = title_words(first["title"]), title_words(second["title"])
+
+            if one and other and (one <= other or other <= one or model_numbers(one) & model_numbers(other)):
+                pairs.append((first["title"], second["title"]))
+
+    return pairs
+
+
+def near_duplicate_problems(registry, reviewed):
+    """Near-duplicate titles nobody has reviewed, and reviewed pairs that no longer fit the registry.
+
+    `reviewed` lists pairs of titles checked against their documents and found to be different
+    documents. A pair listed there that isn't a candidate, or names an unregistered title, is stale.
+    """
+
+    registered = {entry.get("title") for entry in registry["documents"] if isinstance(entry, dict)}
+    candidates = {frozenset(pair) for pair in near_duplicates(registry)}
+    problems = []
+    listed = set()
+
+    for pair in reviewed:
+        if not (isinstance(pair, list) and len(pair) == 2 and all(isinstance(title, str) for title in pair)):
+            problems.append(f"{REVIEWED_PATH.name}: each entry must be a list of two titles, not {pair!r}")
+            continue
+
+        for title in pair:
+            if title not in registered:
+                problems.append(f"{REVIEWED_PATH.name}: {title!r} is not in {REGISTRY_PATH.name}")
+
+        if all(title in registered for title in pair) and frozenset(pair) not in candidates:
+            problems.append(f"{REVIEWED_PATH.name}: {pair[0]!r} and {pair[1]!r} are not a near-duplicate pair; remove the entry")
+
+        listed.add(frozenset(pair))
+
+    for pair in near_duplicates(registry):
+        if frozenset(pair) not in listed:
+            problems.append(f"{REGISTRY_PATH.name}: {pair[0]!r} and {pair[1]!r} look like one document under two titles; keep one, or list the pair in {REVIEWED_PATH.name} once their documents are checked to differ")
+
+    return problems
+
+
+def load_reviewed_titles():
+    """The pairs of titles reviewed as different documents, and what is wrong with the file."""
+
+    try:
+        reviewed = json.loads(REVIEWED_PATH.read_text())["distinct"]
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        return [], [f"{REVIEWED_PATH.name}: {error!r}"]
+
+    return reviewed, []
+
+
 def load_registry():
     """The registered titles, and what is wrong with the registry file."""
 
@@ -1212,6 +1292,12 @@ def load_registry():
         return set(), [f"{REGISTRY_PATH.name}: {error}"]
 
     problems = registry_problems(registry)
+
+    if not problems:
+        reviewed, problems = load_reviewed_titles()
+
+    if not problems:
+        problems = near_duplicate_problems(registry, reviewed)
 
     if problems:
         return set(), problems

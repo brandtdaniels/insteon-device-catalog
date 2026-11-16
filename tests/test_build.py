@@ -1381,6 +1381,79 @@ class DocumentRegistryTests(unittest.TestCase):
             self.assertEqual([path for path in pathlib.Path(directory).rglob("*") if "registry" in path.name], [])
 
 
+class NearDuplicateTitleTests(unittest.TestCase):
+    def test_two_names_for_one_model_are_reported(self):
+        registry = registry_with(
+            document("USB Stick 2448A7 Quick Start Guide", "quickStart"),
+            document("Portable USB Adapter 2448A7 Quick Start Guide", "quickStart"),
+        )
+
+        found = build.near_duplicate_problems(registry, [])
+
+        self.assertEqual(len(found), 1)
+        self.assertIn("USB Stick 2448A7 Quick Start Guide", found[0])
+        self.assertIn("Portable USB Adapter 2448A7 Quick Start Guide", found[0])
+
+    def test_a_title_that_adds_a_word_to_another_is_reported(self):
+        registry = registry_with(
+            document("LED Bulb 2672 Owner's Manual", "ownersManual"),
+            document("LED Bulb A19 2672 Owner's Manual", "ownersManual"),
+        )
+
+        self.assertEqual(len(build.near_duplicate_problems(registry, [])), 1)
+
+    def test_titles_of_different_kinds_are_not_reported(self):
+        registry = registry_with(
+            document("Leak Sensor 2852 Owner's Manual", "ownersManual"),
+            document("Leak Sensor 2852 Quick Start Guide", "quickStart"),
+        )
+
+        self.assertEqual(build.near_duplicate_problems(registry, []), [])
+
+    def test_unrelated_titles_are_not_reported(self):
+        registry = registry_with(
+            document("Leak Sensor 2852 Owner's Manual", "ownersManual"),
+            document("Motion Sensor 2842 Owner's Manual", "ownersManual"),
+        )
+
+        self.assertEqual(build.near_duplicate_problems(registry, []), [])
+
+    def test_a_reviewed_pair_is_accepted_in_either_order(self):
+        registry = registry_with(
+            document("Access Point 2443 Owner's Manual", "ownersManual"),
+            document("Micro On/Off 2443 Owner's Manual", "ownersManual"),
+        )
+        pair = ["Micro On/Off 2443 Owner's Manual", "Access Point 2443 Owner's Manual"]
+
+        self.assertEqual(build.near_duplicate_problems(registry, [pair]), [])
+
+    def test_a_reviewed_pair_that_is_no_longer_a_candidate_is_reported(self):
+        registry = registry_with(
+            document("Leak Sensor 2852 Owner's Manual", "ownersManual"),
+            document("Motion Sensor 2842 Owner's Manual", "ownersManual"),
+        )
+        pair = ["Leak Sensor 2852 Owner's Manual", "Motion Sensor 2842 Owner's Manual"]
+
+        found = build.near_duplicate_problems(registry, [pair])
+
+        self.assertEqual(len(found), 1)
+        self.assertIn("not a near-duplicate", found[0])
+
+    def test_a_reviewed_pair_naming_an_unregistered_title_is_reported(self):
+        registry = registry_with(document("Leak Sensor 2852 Owner's Manual", "ownersManual"))
+
+        found = build.near_duplicate_problems(registry, [["Leak Sensor 2852 Owner's Manual", "Gone 1234 Owner's Manual"]])
+
+        self.assertEqual(len(found), 1)
+        self.assertIn("Gone 1234 Owner's Manual", found[0])
+
+    def test_the_catalogs_registry_has_no_unreviewed_near_duplicates(self):
+        registry = json.loads((build.ROOT / "documents" / "registry.json").read_text())
+        reviewed = json.loads(build.REVIEWED_PATH.read_text())["distinct"]
+
+        self.assertEqual(build.near_duplicate_problems(registry, reviewed), [])
+
+
 class NoDashTests(unittest.TestCase):
     def test_no_data_file_has_a_dash_character(self):
         self.assertEqual(build.dash_problems(), [])
