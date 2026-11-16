@@ -49,7 +49,7 @@
       ],
       "verification": {
         "status": "inferred",
-        "note": "Assumed from the LED Bulb A19 2672 profile's power-up linking; no document describes this product's."
+        "note": "Assumed from the LED Bulb 2672 profile's power-up linking; no document describes this product's."
       },
       "alternatives": [
         {
