@@ -1169,6 +1169,26 @@ class LayoutTests(unittest.TestCase):
         self.assertRegex(self.page, r'class="chip pill"')
         self.assertRegex(self.page, r'class="status pill status-')
 
+    def test_every_status_pill_has_the_same_outer_box(self):
+        root = " ".join(self.declarations(":root"))
+        for token in ("--pill-border", "--pill-ring", "--pill-ring-extra"):
+            self.assertEqual(len(re.findall(rf"{re.escape(token)}:", root)), 1, token)
+
+        pill = " ".join(self.declarations(".pill"))
+        ring = " ".join(self.declarations(".status-conflicting"))
+
+        self.assertIn("border: var(--pill-border) solid transparent", pill)
+        self.assertIn("--pill-ring-extra: calc(var(--pill-ring) - var(--pill-border))", root)
+        self.assertIn("border-width: var(--pill-ring)", ring)
+        self.assertIn("border-style: double", ring)
+        self.assertIn("padding-inline: calc(var(--space-2) - var(--pill-ring-extra))", ring)
+        self.assertIn("line-height: calc(1.5em - 2 * var(--pill-ring-extra))", ring)
+        self.assertNotRegex(ring, r"margin")
+
+    def test_the_conflicting_ring_takes_layout_space_instead_of_a_shadow(self):
+        self.assertNotIn("box-shadow", " ".join(self.declarations(".status-conflicting")))
+        self.assertNotIn("--pill-gap", self.css)
+
 
 class CapabilityWordingTests(unittest.TestCase):
     def setUp(self):
