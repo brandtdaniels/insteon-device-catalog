@@ -1,0 +1,49 @@
+{
+  "catalog" : {
+    "version" : "0.10.1"
+  },
+  "checks" : [
+    {
+      "detail" : "The device reported its engine version.",
+      "name" : "Get Insteon Engine Version",
+      "outcome" : "answered"
+    },
+    {
+      "detail" : "The device reported its identity.",
+      "name" : "ID Request",
+      "outcome" : "answered"
+    },
+    {
+      "detail" : "The device answered and reported no product key.",
+      "name" : "Product Data Request",
+      "outcome" : "answered"
+    },
+    {
+      "detail" : "The device reported its state.",
+      "name" : "Status Request",
+      "outcome" : "answered"
+    },
+    {
+      "detail" : "The device reported its operating flags.",
+      "name" : "Get Operating Flags",
+      "outcome" : "answered"
+    }
+  ],
+  "device" : {
+    "category" : "0x02",
+    "engine" : "i2CS",
+    "firmware" : "0x48",
+    "model" : "On/Off Plug 2635-222 (On/Off Module)",
+    "subcategory" : "0x37"
+  },
+  "format" : "insteon-observation/1",
+  "observedOn" : "2026-11-12",
+  "operatingFlags" : {
+    "raw" : "00 08 89 DE 0D"
+  },
+  "productKey" : "none",
+  "tool" : {
+    "name" : "insteon",
+    "version" : "0.1.0"
+  }
+}
