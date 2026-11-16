@@ -76,6 +76,32 @@ the catalog and treat downloading a newer one as optional.
    the forms it rules out.
 4. Open a pull request. CI runs the same check.
 
+### Recording what a device did
+
+`insteon observe` asks a device read-only questions (its engine, identity, product key, state and
+operating flags) and writes the answers to one JSON file. The file holds no device, modem or Hub
+address, no host and no account data. A question the device didn't answer is recorded as silent,
+which says nothing about it: a battery-powered device that is asleep answers nothing, so run it
+with the device awake.
+
+1. Run `insteon observe` for the device and read the file it writes. A `--note` is optional.
+2. Send the file to the catalog's maintainer by opening an issue and pasting its contents. Don't
+   edit the file; if it holds an address, a host or a path, `scripts/ingest.py check` says which
+   field and what kind of data, never the data, and you run the observation again.
+3. The maintainer runs `python3 -I scripts/ingest.py check FILE...` and
+   `python3 -I scripts/ingest.py draft FILE... --report report.json --md report.md`. The report lists
+   the profile each file matched, the verification marks it would add, what the catalog already
+   records, and every disagreement: an engine, a product key or a firmware the profile doesn't
+   cover, or a device with no profile. A disagreement writes nothing.
+4. After reading the report, the maintainer runs `python3 -I scripts/ingest.py apply report.json`,
+   which sets the marks, runs the build and leaves the diff to review and commit. It refuses a
+   working tree with other changes.
+
+An observation only marks a value `observed`, with the firmware it was seen on and a note written
+from a template: "Seen on a device running firmware 0x34: ...". It never changes a value, and your
+note and the device's own wording are shown to the maintainer and copied nowhere. Nothing is
+merged without a person reading it.
+
 ### Lifecycle steps
 
 Write each procedure in `lifecycle` as the product's documents give it, one action per step: a
