@@ -359,7 +359,7 @@
         }
       ],
       "notes": [
-        "The Micro On/Off 2443 Owner's Manual says to remove all of the module's responder links before uninstalling it; otherwise controllers keep retrying commands and create network delays."
+        "The Micro On/Off 2443-222 Owner's Manual says to remove all of the module's responder links before uninstalling it; otherwise controllers keep retrying commands and create network delays."
       ],
       "alternatives": [
         {
@@ -402,7 +402,7 @@
           ],
           "notes": [
             "Inferred: seen on three i2CS devices (Outdoor On/Off Plug 2634-222 firmware 0x42, On/Off Plug 2635-222 firmware 0x48, I/O Module 2450 firmware 0x41) linked to a Hub 2245, these steps should remove every link between the Hub and the device with no SET button press. First the device's group 1 link: Enter Unlinking Mode (cmd1 0x0A) is sent to the device while the modem joins as responder. Then the modem's group 0 link: the modem starts ALL-Linking with link code 0xFF while the device is sent Enter Linking Mode (cmd1 0x09).",
-            "Inferred: seen on an i2CS device (I/O Module 2450 firmware 0x41) linked to a Hub 2245: unlinking by the modem's own records left the device's records for the Hub's other groups, and an i2CS device answers a device that's in its ALL-Link database. So a device that still answers the Hub after removal may hold other records for it; a factory reset, as the Micro On/Off 2443 Owner's Manual gives it, clears them."
+            "Inferred: seen on an i2CS device (I/O Module 2450 firmware 0x41) linked to a Hub 2245: unlinking by the modem's own records left the device's records for the Hub's other groups, and an i2CS device answers a device that's in its ALL-Link database. So a device that still answers the Hub after removal may hold other records for it; a factory reset, as the Micro On/Off 2443-222 Owner's Manual gives it, clears them."
           ],
           "verification": {
             "status": "inferred",
@@ -419,8 +419,8 @@
     "HouseLinc Device Definitions (version 2.9.87)",
     "insteon.com product catalog",
     "Global Line Developer Notes",
-    "Micro On/Off 2443 Owner's Manual",
-    "Micro On/Off 2443 Quick Start Guide",
+    "Micro On/Off 2443-222 Owner's Manual",
+    "Micro On/Off 2443-222 Quick Start Guide",
     "Insteon Developer's Guide (2009)",
     "Insteon Firmware Update i2CS Developer Notes"
   ]
