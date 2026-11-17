@@ -9,6 +9,7 @@ let package = Package(
   platforms: [.macOS(.v13)],
   products: [
     .library(name: "CatalogJSON", targets: ["CatalogJSON"]),
+    .library(name: "CatalogSchema", targets: ["CatalogSchema"]),
     .executable(name: "catalog", targets: ["catalog"])
   ],
   dependencies: [
@@ -16,6 +17,7 @@ let package = Package(
   ],
   targets: [
     .target(name: "CatalogJSON", path: "Sources/CatalogJSON"),
+    .target(name: "CatalogSchema", dependencies: ["CatalogJSON"], path: "Sources/CatalogSchema"),
     .executableTarget(
       name: "catalog",
       dependencies: [.product(name: "ArgumentParser", package: "swift-argument-parser")],
@@ -25,6 +27,11 @@ let package = Package(
       name: "CatalogJSONTests",
       dependencies: ["CatalogJSON"],
       path: "SwiftTests/CatalogJSONTests"
+    ),
+    .testTarget(
+      name: "CatalogSchemaTests",
+      dependencies: ["CatalogJSON", "CatalogSchema"],
+      path: "SwiftTests/CatalogSchemaTests"
     )
   ]
 )
