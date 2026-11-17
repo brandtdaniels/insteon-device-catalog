@@ -10,6 +10,7 @@ let package = Package(
   products: [
     .library(name: "CatalogJSON", targets: ["CatalogJSON"]),
     .library(name: "CatalogSchema", targets: ["CatalogSchema"]),
+    .library(name: "CatalogBuild", targets: ["CatalogBuild"]),
     .executable(name: "catalog", targets: ["catalog"])
   ],
   dependencies: [
@@ -18,6 +19,7 @@ let package = Package(
   targets: [
     .target(name: "CatalogJSON", path: "Sources/CatalogJSON"),
     .target(name: "CatalogSchema", dependencies: ["CatalogJSON"], path: "Sources/CatalogSchema"),
+    .target(name: "CatalogBuild", dependencies: ["CatalogJSON", "CatalogSchema"], path: "Sources/CatalogBuild"),
     .executableTarget(
       name: "catalog",
       dependencies: [.product(name: "ArgumentParser", package: "swift-argument-parser")],
@@ -32,6 +34,11 @@ let package = Package(
       name: "CatalogSchemaTests",
       dependencies: ["CatalogJSON", "CatalogSchema"],
       path: "SwiftTests/CatalogSchemaTests"
+    ),
+    .testTarget(
+      name: "CatalogBuildTests",
+      dependencies: ["CatalogJSON", "CatalogSchema", "CatalogBuild"],
+      path: "SwiftTests/CatalogBuildTests"
     )
   ]
 )
