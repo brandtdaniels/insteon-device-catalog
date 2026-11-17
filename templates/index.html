@@ -37,6 +37,9 @@
     --page-width: 72rem;
     --measure: 44rem;
     --gutter: var(--space-4);
+    --pill-border: 1px;
+    --pill-ring: 3px;
+    --pill-ring-extra: calc(var(--pill-ring) - var(--pill-border));
 
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
     font-size: var(--text-base);
@@ -104,13 +107,13 @@
   .how li { margin-bottom: var(--space-2); }
 
   /* The one pill: capability chips and verification marks share its size, padding and shape. */
-  .pill { display: inline-block; padding: 0 var(--space-2); border: 1px solid transparent; border-radius: var(--radius-pill); font-size: var(--text-xs); line-height: 1.5; white-space: nowrap; }
+  .pill { display: inline-block; padding: 0 var(--space-2); border: var(--pill-border) solid transparent; border-radius: var(--radius-pill); font-size: var(--text-xs); line-height: 1.5; white-space: nowrap; }
   .chip { background: var(--chip); color: var(--text); }
   .status { border-color: var(--mark-line); font-weight: 500; color: var(--text); }
   .status-observed { background: var(--observed-bg); border-color: var(--observed-bg); color: var(--observed-text); font-weight: 700; }
   .status-inferred { border-style: dashed; }
-  .status-conflicting { box-shadow: 0 0 0 2px var(--pill-gap, var(--raised)), 0 0 0 3px var(--mark-line); }
-  .statuses-table { --pill-gap: var(--surface); }
+  /* The double ring is a border inside the pill's own box; padding and line height give back what the thicker border takes, so every pill has the same outer size. */
+  .status-conflicting { border-width: var(--pill-ring); border-style: double; padding-inline: calc(var(--space-2) - var(--pill-ring-extra)); line-height: calc(1.5em - 2 * var(--pill-ring-extra)); }
 
   .toolbar { position: sticky; top: 0; z-index: 1; margin-top: var(--space-6); padding: var(--space-3) 0; background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
   .toolbar .row { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
