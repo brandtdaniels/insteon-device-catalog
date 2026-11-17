@@ -4,8 +4,10 @@ import CatalogJSON
 public enum MutationKind: String, CaseIterable, Sendable {
   /// Removes an object member.
   case dropMember
-  /// Replaces a string with another value seen under the same key in the catalog.
+  /// Replaces a value with another value seen under the same key in the catalog.
   case crossValue
+  /// Adds a member that other objects in the catalog have, such as a guard or a unit.
+  case addMember
   /// Turns a boolean over.
   case flipBoolean
   /// Repeats an array element next to itself.
@@ -33,35 +35,61 @@ public struct AppliedMutation: Equatable, Sendable, CustomStringConvertible {
   }
 }
 
-/// The strings seen under each key in the catalog, which `crossValue` draws from.
+/// The values seen under each key in the catalog, which `crossValue` and `addMember` draw from.
 public struct ValuePool: Sendable {
-  private let byKey: [String: [String]]
+  private let byKey: [String: [JSONValue]]
+  /// How many different values of one key the pool keeps.
+  private static let limit = 24
 
   public init(files: [JSONValue]) {
-    var byKey: [String: [String]] = [:]
+    var byKey: [String: [JSONValue]] = [:]
 
     for file in files {
-      for (path, value) in file.locations() {
-        guard case .string(let text) = value, case .key(let key)? = path.last, !Mutator.proseKeys.contains(key) else { continue }
-        if !(byKey[key]?.contains(text) ?? false) {
-          byKey[key, default: []].append(text)
-        }
+      for (path, value) in file.locations() where Mutator.isChangeable(path) {
+        guard case .key(let key)? = path.last, byKey[key, default: []].count < Self.limit,
+              !byKey[key, default: []].contains(value)
+        else { continue }
+        byKey[key, default: []].append(value)
       }
     }
 
     self.byKey = byKey
   }
 
-  func values(forKey key: String) -> [String] {
+  func values(forKey key: String) -> [JSONValue] {
     byKey[key] ?? []
+  }
+
+  /// Every key with the values seen under it, in key order.
+  var members: [(key: String, values: [JSONValue])] {
+    byKey.sorted { $0.key.utf8.lexicographicallyPrecedes($1.key.utf8) }.map { ($0.key, $0.value) }
   }
 }
 
 /// Changes a file in one way, chosen by a seeded random source.
 public struct Mutator: Sendable {
-  /// Keys whose strings are prose or titles. The sweep leaves them alone, because the prose,
-  /// source and term rules are not in the rule set the sweep compares.
-  static let proseKeys: Set<String> = ["description", "note", "notes", "sources", "label", "section", "text", "expect", "title"]
+  /// Keys whose values are prose, titles or provenance. The sweep leaves them and everything
+  /// under them alone, because the prose, source and term rules are not in the rule set the sweep
+  /// compares and no rule reads them.
+  static let proseKeys: Set<String> = [
+    "description", "note", "notes", "sources", "label", "section", "text", "expect", "title", "verification", "aliases"
+  ]
+
+  /// Whether a place in a file can be changed: not prose, and not in the parts of a profile that
+  /// describe a person's steps, which no rule reads. The `fromHub` flow is the exception.
+  static func isChangeable(_ path: JSONPath) -> Bool {
+    let keys = path.compactMap { step -> String? in
+      if case .key(let key) = step { key } else { nil }
+    }
+
+    if keys.contains(where: proseKeys.contains) { return false }
+
+    if let position = keys.firstIndex(of: "lifecycle"), keys.dropFirst(position + 1).first != "fromHub", keys.count > position + 1 {
+      return false
+    }
+
+    return true
+  }
 
   let pool: ValuePool
 
@@ -74,7 +102,7 @@ public struct Mutator: Sendable {
     _ file: JSONValue, name: String, using random: inout some RandomNumberGenerator
   ) -> (value: JSONValue, applied: AppliedMutation)? {
     let kind = MutationKind.allCases.randomElement(using: &random)!
-    let places = file.locations()
+    let places = file.locations().filter { Self.isChangeable($0.path) }
 
     switch kind {
     case .dropMember:
@@ -83,14 +111,28 @@ public struct Mutator: Sendable {
       }
     case .crossValue:
       let candidates = places.filter { place in
-        guard case .string = place.value, case .key(let key)? = place.path.last else { return false }
-        return pool.values(forKey: key).count > 1
+        guard case .key(let key)? = place.path.last else { return false }
+        return pool.values(forKey: key).contains { $0 != place.value }
       }
       guard let place = candidates.randomElement(using: &random), case .key(let key)? = place.path.last,
-            case .string(let current) = place.value,
-            let other = pool.values(forKey: key).filter({ $0 != current }).randomElement(using: &random)
+            let other = pool.values(forKey: key).filter({ $0 != place.value }).randomElement(using: &random)
       else { return nil }
-      return result(file.replacing(at: place.path) { _ in .string(other) }, name, kind, place.path)
+      return result(file.replacing(at: place.path) { _ in other }, name, kind, place.path)
+    case .addMember:
+      let objects = places.filter { place in
+        if case .object = place.value { true } else { false }
+      }
+      guard let place = objects.randomElement(using: &random) else { return nil }
+      let present = Set(place.value.members.map(\.key))
+      let additions = pool.members.filter { !present.contains($0.key) }
+      guard let addition = additions.randomElement(using: &random),
+            let value = addition.values.randomElement(using: &random)
+      else { return nil }
+      return result(file.replacing(at: place.path) { object in
+        guard case .object(var members) = object else { return object }
+        members.append(JSONMember(key: addition.key, value: value))
+        return .object(members)
+      }, name, kind, place.path + [.key(addition.key)])
     case .flipBoolean:
       return pick(places, where: { if case .bool = $0.value { true } else { false } }, &random).map { place in
         result(file.replacing(at: place.path) { value in
@@ -166,6 +208,11 @@ public struct Mutator: Sendable {
 }
 
 extension JSONValue {
+  var members: [JSONMember] {
+    guard case .object(let members) = self else { return [] }
+    return members
+  }
+
   var elementsOrEmpty: [JSONValue] {
     guard case .array(let elements) = self else { return [] }
     return elements

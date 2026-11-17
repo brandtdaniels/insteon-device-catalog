@@ -75,13 +75,16 @@ public struct Sweep: Sendable {
       }
     }
 
+    let commandSetIndexes = files.indices.filter { files[$0].path.hasPrefix("commandSets/") }
     var applied: [AppliedMutation] = []
     var chosen = Set<Int>()
     var attempts = 0
 
     while chosen.count < min(mutationsPerRound, files.count), attempts < mutationsPerRound * 20 {
       attempts += 1
-      let index = Int.random(in: 0..<files.count, using: &random)
+      // Half the changes go to command sets, which most rules read.
+      let pickCommandSet = Bool.random(using: &random) && !commandSetIndexes.isEmpty
+      let index = pickCommandSet ? commandSetIndexes.randomElement(using: &random)! : Int.random(in: 0..<files.count, using: &random)
       guard !chosen.contains(index),
             let (value, mutation) = mutator.mutate(files[index].value, name: files[index].path, using: &random)
       else { continue }
