@@ -338,11 +338,7 @@
       "kind": "ownersManual"
     },
     {
-      "title": "LED Bulb A19 2672 Owner's Manual",
-      "kind": "ownersManual"
-    },
-    {
-      "title": "LED Bulb A19 2672 Quick Start Guide",
+      "title": "LED Bulb 2672 Quick Start Guide",
       "kind": "quickStart"
     },
     {
@@ -390,11 +386,15 @@
       "kind": "quickStart"
     },
     {
-      "title": "Micro On/Off 2443 Owner's Manual",
+      "title": "Micro Module Shutter Developer Notes",
+      "kind": "developerNotes"
+    },
+    {
+      "title": "Micro On/Off 2443-222 Owner's Manual",
       "kind": "ownersManual"
     },
     {
-      "title": "Micro On/Off 2443 Quick Start Guide",
+      "title": "Micro On/Off 2443-222 Quick Start Guide",
       "kind": "quickStart"
     },
     {
@@ -520,10 +520,6 @@
     {
       "title": "On/Off Switch 2477S Quick Start Guide",
       "kind": "quickStart"
-    },
-    {
-      "title": "Open/Close Micro Module - Developer Notes",
-      "kind": "developerNotes"
     },
     {
       "title": "Open/Close Sensor 2843 Owner's Manual",

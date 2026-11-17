@@ -158,13 +158,13 @@
       ],
       "notes": [
         "The bulb has no SET button and links only as a responder: it goes into linking mode each time it is powered up. Put the controller in linking mode first (press and hold its SET button until it beeps; on a multi-button controller, tap the button first).",
-        "The bulb stays in linking mode for 5 seconds after power-up; the 5 seconds come from the LED Bulb Developer Notes, and the LED Bulb A19 2672 Owner's Manual gives no timeout.",
+        "The bulb stays in linking mode for 5 seconds after power-up; the 5 seconds come from the LED Bulb Developer Notes, and the LED Bulb 2672 Owner's Manual gives no timeout.",
         "Linking on power-up can be turned off with software (Disable Linking on Power-up); it is on by default.",
         "For a scene, put the controller in multi-linking mode (hold its SET button until it beeps, then tap it), screw in each bulb one at a time, then tap the controller's SET button to finish."
       ],
       "verification": {
         "status": "conflicting",
-        "note": "The LED Bulb A19 2672 Owner's Manual says the bulb double-beeps when it is linked or unlinked; the LED Bulb Developer Notes say the bulb has no SET button, status LED or beeper. The catalog follows the LED Bulb Developer Notes and gives no confirmation from the bulb. The 5-second linking window after power-up is from the LED Bulb Developer Notes; the LED Bulb A19 2672 Owner's Manual gives no timeout."
+        "note": "The LED Bulb 2672 Owner's Manual says the bulb double-beeps when it is linked or unlinked; the LED Bulb Developer Notes say the bulb has no SET button, status LED or beeper. The catalog follows the LED Bulb Developer Notes and gives no confirmation from the bulb. The 5-second linking window after power-up is from the LED Bulb Developer Notes; the LED Bulb 2672 Owner's Manual gives no timeout."
       },
       "alternatives": [
         {
@@ -248,7 +248,7 @@
       ],
       "verification": {
         "status": "conflicting",
-        "note": "The LED Bulb A19 2672 Owner's Manual says the bulb double-beeps when it is linked or unlinked; the LED Bulb Developer Notes say the bulb has no SET button, status LED or beeper. The catalog follows the LED Bulb Developer Notes and gives no confirmation from the bulb."
+        "note": "The LED Bulb 2672 Owner's Manual says the bulb double-beeps when it is linked or unlinked; the LED Bulb Developer Notes say the bulb has no SET button, status LED or beeper. The catalog follows the LED Bulb Developer Notes and gives no confirmation from the bulb."
       }
     },
     "removal": {
@@ -310,9 +310,9 @@
   ],
   "sources": [
     "HouseLinc Device Definitions (version 2.9.87)",
-    "LED Bulb A19 2672 Owner's Manual",
+    "LED Bulb 2672 Owner's Manual",
     "LED Bulb Developer Notes",
-    "LED Bulb A19 2672 Quick Start Guide",
+    "LED Bulb 2672 Quick Start Guide",
     "Insteon Developer's Guide (2009)",
     "Insteon Firmware Update i2CS Developer Notes"
   ]

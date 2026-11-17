@@ -59,7 +59,10 @@ the catalog and treat downloading a newer one as optional.
    document in `sources`. Each string in `sources` is a document's exact title as registered in
    [`documents/registry.json`](documents/registry.json); to cite a document the catalog hasn't
    cited yet, add an entry there first (`title` and `kind`, plus `edition` and a public `url`
-   where you know them). The registry is for the repository's checks and isn't published.
+   where you know them). The registry is for the repository's checks and isn't published. The build also fails on two
+   titles of one kind that look like one document, such as one model under two names; keep one
+   title, or, once you have read both documents and found them different, list the pair in
+   [`documents/reviewed-distinct-titles.json`](documents/reviewed-distinct-titles.json).
 2. Run `pip install -r requirements.txt` and `python3 -I scripts/build.py` to validate. It checks
    each profile against the schema, that the file is named for its model, that no capability
    appears twice, that no two profiles claim the same identity for the same firmware, that every `sources` string is a registered document, and that
