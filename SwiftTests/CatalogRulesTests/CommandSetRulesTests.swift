@@ -143,3 +143,27 @@ struct CommandSetRulesTests {
     #expect(try Fixtures.problems(commandSet) == ["linkingChanges names a flag twice"])
   }
 }
+
+/// A value's range, which a standard command gives as numbers.
+struct RangeRuleTests {
+  @Test func aNumericRangeThatRunsBackwardIsReported() throws {
+    let base = try Fixtures.commandSet("i3Dial")
+    let index = try #require(base["standardCommands"]?.elements.firstIndex { $0["parameter"]?["range"] != nil })
+    let steps: [Step] = ["standardCommands", .index(index), "parameter", "range"]
+    let backward = try base.setting(steps, #"{"from": 200, "through": 100}"#)
+    let owner = try #require(base["standardCommands"]?.elements[index]["name"])
+
+    guard case .string(let name) = owner else { return }
+    #expect(try Fixtures.problems(backward).contains("the \(name) command: the \(try parameterName(base, index)) value's range runs backward"))
+    #expect(try Fixtures.problems(base) == [])
+  }
+
+  private func parameterName(_ commandSet: JSONValue, _ index: Int) throws -> String {
+    guard case .string(let name)? = commandSet["standardCommands"]?.elements[index]["parameter"]?["name"] else {
+      throw ParameterNameMissing()
+    }
+    return name
+  }
+
+  struct ParameterNameMissing: Error {}
+}

@@ -58,6 +58,23 @@ extension JSONValue {
     self[key]?.isTruthy ?? false
   }
 
+  /// Whether the value is less than `other` as Python's `<` reads two numbers or two strings: by
+  /// value, or by code point. Values of other kinds are not ordered.
+  func isLess(than other: JSONValue) -> Bool {
+    switch (self, other) {
+    case (.string(let left), .string(let right)): codePointPrecedes(left, right)
+    default: if let left = numericValue, let right = other.numericValue { left < right } else { false }
+    }
+  }
+
+  private var numericValue: Double? {
+    switch self {
+    case .int(let value): Double(value)
+    case .double(let value): value
+    default: nil
+    }
+  }
+
   /// Python's truth value: empty strings, lists and objects, zero, `false` and `null` are false.
   var isTruthy: Bool {
     switch self {

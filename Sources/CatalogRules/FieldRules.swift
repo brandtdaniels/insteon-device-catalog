@@ -39,7 +39,7 @@ struct FieldRules {
       found.append("\(owner): the \(name) value has a scale, unit or sign, which only a number can have")
     }
 
-    if let range = field["range"], let from = range.text("from"), let through = range.text("through"), codePointPrecedes(through, from) {
+    if let range = field["range"], let from = range["from"], let through = range["through"], through.isLess(than: from) {
       found.append("\(owner): the \(name) value's range runs backward")
     }
 
