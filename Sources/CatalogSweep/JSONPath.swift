@@ -1,14 +1,25 @@
 import CatalogJSON
 
 /// One step down a JSON document.
-public enum PathStep: Equatable, Sendable, CustomStringConvertible {
+public enum PathStep: Equatable, Sendable, CustomStringConvertible, ExpressibleByStringLiteral, ExpressibleByIntegerLiteral {
   case key(String)
   case index(Int)
+  /// The element of an array whose `name` is this.
+  case named(String)
+
+  public init(stringLiteral value: String) {
+    self = .key(value)
+  }
+
+  public init(integerLiteral value: Int) {
+    self = .index(value)
+  }
 
   public var description: String {
     switch self {
     case .key(let key): ".\(key)"
     case .index(let index): "[\(index)]"
+    case .named(let name): "[name=\(name)]"
     }
   }
 }
@@ -27,6 +38,8 @@ extension JSONValue {
       return members.first { $0.key == key }?.value.value(at: rest)
     case (.array(let elements), .index(let index)) where elements.indices.contains(index):
       return elements[index].value(at: rest)
+    case (.array(let elements), .named(let name)):
+      return elements.first { $0.value(at: ["name"]) == .string(name) }?.value(at: rest)
     default:
       return nil
     }
@@ -62,6 +75,9 @@ extension JSONValue {
         elements[index] = elements[index].replacing(at: rest, change)
       }
       return .array(elements)
+    case (.array(let elements), .named(let name)):
+      guard let index = elements.firstIndex(where: { $0.value(at: ["name"]) == .string(name) }) else { return self }
+      return replacing(at: [.index(index)] + path.dropFirst(), change)
     default:
       return self
     }

@@ -29,6 +29,19 @@ public struct RoundResult: Sendable {
   }
 }
 
+/// One scenario: whether both builds agree, and which expected messages neither printed.
+public struct ScenarioResult: Sendable {
+  public let scenario: Scenario
+  public let swiftOutcome: Comparison.Outcome
+  public let pythonOutcome: Comparison.Outcome
+  /// The fragments of `scenario.expecting` that are missing from the messages of either build.
+  public let missing: [String]
+
+  public var agrees: Bool {
+    Comparison.agree(swift: swiftOutcome, python: pythonOutcome) && missing.isEmpty
+  }
+}
+
 /// Runs mutated copies of the catalog through the Swift rules and the Python build and compares them.
 ///
 /// Transitional: `scripts/build.py` is the oracle while the Python build exists. Nothing here
@@ -61,11 +74,51 @@ public struct Sweep: Sendable {
     }
   }
 
-  private func runRound(_ round: Int, files: [(path: String, value: JSONValue)], mutator: Mutator) throws -> RoundResult {
-    var random = SplitMix64(seed: seed &+ UInt64(round) &* 0x1_0000_0001)
-    let copy = FileManager.default.temporaryDirectory.appendingPathComponent("catalog-sweep-" + UUID().uuidString)
+  /// Runs every scenario on its own copy of the data. `expectedMissing` lists, for each, the
+  /// messages that neither build printed.
+  public func runScenarios(_ scenarios: [Scenario], report: (ScenarioResult) -> Void) throws {
+    let root = RepositoryRoot(url: repository)
+    let files = try root.deviceFiles() + root.commandSetFiles()
+
+    for scenario in scenarios {
+      let copy = try makeCopy(applying: scenario, to: files)
+      defer { try? FileManager.default.removeItem(at: copy) }
+
+      let swift = Comparison.outcome(of: try RepositoryRoot(url: copy).problems())
+      let python = Comparison.outcome(of: try runPython(in: copy).lines)
+      let missing = scenario.expecting.filter { fragment in
+        !python.ruleMessages.contains { $0.contains(fragment) } || !swift.ruleMessages.contains { $0.contains(fragment) }
+      }
+
+      report(ScenarioResult(scenario: scenario, swiftOutcome: swift, pythonOutcome: python, missing: missing))
+    }
+  }
+
+  /// The problems the Swift rules report for a scenario, without running the Python build.
+  public func swiftProblems(for scenario: Scenario) throws -> [String] {
+    let root = RepositoryRoot(url: repository)
+    let copy = try makeCopy(applying: scenario, to: try root.deviceFiles() + root.commandSetFiles())
     defer { try? FileManager.default.removeItem(at: copy) }
 
+    return try RepositoryRoot(url: copy).problems()
+  }
+
+  private func makeCopy(applying scenario: Scenario, to files: [CatalogFile]) throws -> URL {
+    guard let file = files.first(where: { $0.path == scenario.file }) else {
+      throw SweepError.copyFailed("\(scenario.name): \(scenario.file) is not a data file")
+    }
+    var value = file.value
+    for change in scenario.changes {
+      value = try change.applied(to: value)
+    }
+
+    let copy = try makeCopy()
+    try Data((try JSONWriter.write(value) + "\n").utf8).write(to: copy.appendingPathComponent(scenario.file))
+    return copy
+  }
+
+  private func makeCopy() throws -> URL {
+    let copy = FileManager.default.temporaryDirectory.appendingPathComponent("catalog-sweep-" + UUID().uuidString)
     try FileManager.default.createDirectory(at: copy, withIntermediateDirectories: true)
     for name in Self.copied {
       do {
@@ -74,6 +127,13 @@ public struct Sweep: Sendable {
         throw SweepError.copyFailed("\(name): \(error.localizedDescription)")
       }
     }
+    return copy
+  }
+
+  private func runRound(_ round: Int, files: [(path: String, value: JSONValue)], mutator: Mutator) throws -> RoundResult {
+    var random = SplitMix64(seed: seed &+ UInt64(round) &* 0x1_0000_0001)
+    let copy = try makeCopy()
+    defer { try? FileManager.default.removeItem(at: copy) }
 
     let commandSetIndexes = files.indices.filter { files[$0].path.hasPrefix("commandSets/") }
     var applied: [AppliedMutation] = []

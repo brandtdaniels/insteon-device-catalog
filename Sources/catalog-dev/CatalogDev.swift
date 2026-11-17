@@ -8,7 +8,7 @@ struct CatalogDev: ParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "catalog-dev",
     abstract: "Developer tooling for the Insteon device catalog.",
-    subcommands: [SweepCommand.self]
+    subcommands: [SweepCommand.self, ScenariosCommand.self]
   )
 }
 
@@ -79,6 +79,46 @@ struct SweepCommand: ParsableCommand {
     print("compared \(ruleMessages) rule messages (\(distinctMessages.count) distinct) and \(schemaErrors) schema errors")
 
     if divergences > 0 {
+      throw ExitCode.failure
+    }
+  }
+}
+
+/// Runs the hand-picked scenarios on the Swift rules and the Python build and compares them.
+///
+/// Transitional: `scripts/build.py` is the oracle while the Python build exists.
+struct ScenariosCommand: ParsableCommand {
+  static let configuration = CommandConfiguration(
+    commandName: "scenarios",
+    abstract: "Run the hand-picked scenarios on the Swift rules and the Python build and compare them."
+  )
+
+  @Option(help: "The repository to change and check.")
+  var root: String = "."
+
+  @Option(help: "The Python interpreter that runs scripts/build.py.")
+  var python: String = "python3"
+
+  func run() throws {
+    let sweep = Sweep(repository: URL(fileURLWithPath: root, isDirectory: true), interpreter: python)
+    var failures = 0
+    var checked = 0
+
+    try sweep.runScenarios(Scenarios.all) { result in
+      checked += 1
+      guard !result.agrees else { return }
+      failures += 1
+      print("scenario: \(result.scenario.name)")
+      print("  expected messages missing: \(result.missing)")
+      print("  rule messages only in Swift: \(Comparison.lines(result.swiftOutcome.ruleMessages, notIn: result.pythonOutcome.ruleMessages))")
+      print("  rule messages only in Python: \(Comparison.lines(result.pythonOutcome.ruleMessages, notIn: result.swiftOutcome.ruleMessages))")
+      print("  schema errors match: \(Comparison.schemaErrorsMatch(swift: result.swiftOutcome.schemaErrors, python: result.pythonOutcome.schemaErrors))")
+      result.pythonOutcome.schemaLines.forEach { print("    Python: \($0)") }
+    }
+
+    print("\(checked) scenarios, \(failures) failures")
+
+    if failures > 0 {
       throw ExitCode.failure
     }
   }
