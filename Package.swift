@@ -24,7 +24,10 @@ let package = Package(
     .target(name: "CatalogBuild", dependencies: ["CatalogJSON", "CatalogSchema", "CatalogRules"], path: "Sources/CatalogBuild"),
     .executableTarget(
       name: "catalog",
-      dependencies: [.product(name: "ArgumentParser", package: "swift-argument-parser")],
+      dependencies: [
+        "CatalogBuild",
+        .product(name: "ArgumentParser", package: "swift-argument-parser")
+      ],
       path: "Sources/catalog"
     ),
     .testTarget(

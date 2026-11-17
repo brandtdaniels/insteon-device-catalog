@@ -5,6 +5,7 @@ import ArgumentParser
 struct Catalog: ParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "catalog",
-    abstract: "Tooling for the Insteon device catalog."
+    abstract: "Tooling for the Insteon device catalog.",
+    subcommands: [Check.self]
   )
 }
