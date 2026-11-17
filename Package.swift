@@ -21,7 +21,7 @@ let package = Package(
     .target(name: "CatalogJSON", path: "Sources/CatalogJSON"),
     .target(name: "CatalogSchema", dependencies: ["CatalogJSON"], path: "Sources/CatalogSchema"),
     .target(name: "CatalogRules", dependencies: ["CatalogJSON"], path: "Sources/CatalogRules"),
-    .target(name: "CatalogBuild", dependencies: ["CatalogJSON", "CatalogSchema"], path: "Sources/CatalogBuild"),
+    .target(name: "CatalogBuild", dependencies: ["CatalogJSON", "CatalogSchema", "CatalogRules"], path: "Sources/CatalogBuild"),
     .executableTarget(
       name: "catalog",
       dependencies: [.product(name: "ArgumentParser", package: "swift-argument-parser")],
