@@ -12,7 +12,8 @@ let package = Package(
     .library(name: "CatalogSchema", targets: ["CatalogSchema"]),
     .library(name: "CatalogRules", targets: ["CatalogRules"]),
     .library(name: "CatalogBuild", targets: ["CatalogBuild"]),
-    .executable(name: "catalog", targets: ["catalog"])
+    .executable(name: "catalog", targets: ["catalog"]),
+    .executable(name: "catalog-dev", targets: ["catalog-dev"])
   ],
   dependencies: [
     .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMinor(from: "1.8.2"))
@@ -30,6 +31,15 @@ let package = Package(
       ],
       path: "Sources/catalog"
     ),
+    .target(name: "CatalogSweep", dependencies: ["CatalogJSON", "CatalogBuild"], path: "Sources/CatalogSweep"),
+    .executableTarget(
+      name: "catalog-dev",
+      dependencies: [
+        "CatalogSweep",
+        .product(name: "ArgumentParser", package: "swift-argument-parser")
+      ],
+      path: "Sources/catalog-dev"
+    ),
     .testTarget(
       name: "CatalogJSONTests",
       dependencies: ["CatalogJSON"],
@@ -44,6 +54,11 @@ let package = Package(
       name: "CatalogBuildTests",
       dependencies: ["CatalogJSON", "CatalogSchema", "CatalogBuild"],
       path: "SwiftTests/CatalogBuildTests"
+    ),
+    .testTarget(
+      name: "CatalogSweepTests",
+      dependencies: ["CatalogJSON", "CatalogBuild", "CatalogSweep"],
+      path: "SwiftTests/CatalogSweepTests"
     ),
     .testTarget(
       name: "CatalogRulesTests",
