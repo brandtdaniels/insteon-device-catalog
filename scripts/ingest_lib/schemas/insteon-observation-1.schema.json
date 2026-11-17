@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "insteon-observation-1.schema.json",
+  "title": "Insteon observation",
+  "description": "What a device did when `insteon observe` asked it read-only questions. The file holds no device, modem or Hub address, no host and no account data. A check with the outcome silent means the device sent nothing back, which a device that is asleep also does; it states nothing about the device.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "tool", "catalog", "device", "checks", "observedOn"],
+  "properties": {
+    "format": {
+      "const": "insteon-observation/1"
+    },
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string", "description": "A plain string, not necessarily a semantic version." }
+      }
+    },
+    "catalog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version"],
+      "properties": {
+        "version": { "type": "string", "description": "The version of the Insteon device catalog that named the device." }
+      }
+    },
+    "device": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["category", "subcategory", "firmware", "engine", "model"],
+      "properties": {
+        "category": { "type": ["string", "null"], "description": "The category the device reported, such as 0x01." },
+        "subcategory": { "type": ["string", "null"], "description": "The subcategory the device reported, such as 0x2D." },
+        "firmware": { "type": ["string", "null"], "description": "The firmware version the device reported, such as 0x41." },
+        "engine": { "type": ["string", "null"], "description": "The Insteon engine the device reported: i1, i2 or i2CS." },
+        "model": { "type": ["string", "null"], "description": "The product the Insteon device catalog names for the device, or null if it names none." }
+      }
+    },
+    "checks": {
+      "type": "array",
+      "description": "The requests made, in the order they were made.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "outcome", "detail"],
+        "properties": {
+          "name": { "type": "string", "description": "What was asked, such as ID Request." },
+          "outcome": { "enum": ["answered", "silent", "refused"] },
+          "detail": { "type": "string", "description": "A short plain sentence. A silent check says the device may need to be awake." }
+        }
+      }
+    },
+    "productKey": {
+      "type": "string",
+      "description": "The product key the device reported, as 0x followed by six hexadecimal digits; none only when the device answered Product Data Request and reported no key. Absent when the request got no answer, was refused or was not made, which says nothing about the device.",
+      "pattern": "^(0x[0-9A-F]{6}|none)$"
+    },
+    "operatingFlags": {
+      "type": "object",
+      "description": "The bytes the device gave for its operating flags. Absent when it gave none.",
+      "additionalProperties": false,
+      "required": ["raw"],
+      "properties": {
+        "raw": { "type": "string", "description": "Space-separated hexadecimal bytes, such as 2A 00.", "pattern": "^[0-9A-F]{2}( [0-9A-F]{2})*$" }
+      }
+    },
+    "note": {
+      "type": "string",
+      "description": "The text the person gave with --note. Absent when none was given."
+    },
+    "observedOn": {
+      "type": "string",
+      "description": "The local date of the observation.",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    }
+  }
+}

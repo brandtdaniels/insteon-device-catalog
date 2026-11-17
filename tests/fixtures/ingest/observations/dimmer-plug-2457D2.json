@@ -1,0 +1,48 @@
+{
+  "catalog" : {
+    "version" : "0.10.1"
+  },
+  "checks" : [
+    {
+      "detail" : "The device reported its engine version.",
+      "name" : "Get Insteon Engine Version",
+      "outcome" : "answered"
+    },
+    {
+      "detail" : "The device reported its identity.",
+      "name" : "ID Request",
+      "outcome" : "answered"
+    },
+    {
+      "detail" : "No answer. It may need to be awake.",
+      "name" : "Product Data Request",
+      "outcome" : "silent"
+    },
+    {
+      "detail" : "The device reported its state.",
+      "name" : "Status Request",
+      "outcome" : "answered"
+    },
+    {
+      "detail" : "The device reported its operating flags.",
+      "name" : "Get Operating Flags",
+      "outcome" : "answered"
+    }
+  ],
+  "device" : {
+    "category" : "0x01",
+    "engine" : "i2",
+    "firmware" : "0x3B",
+    "model" : "Dimmer Plug 2457D2 (LampLinc Dimmer)",
+    "subcategory" : "0x0E"
+  },
+  "format" : "insteon-observation/1",
+  "observedOn" : "2026-11-12",
+  "operatingFlags" : {
+    "raw" : "20 03 03"
+  },
+  "tool" : {
+    "name" : "insteon",
+    "version" : "0.1.0"
+  }
+}
