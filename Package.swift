@@ -13,6 +13,7 @@ let package = Package(
     .library(name: "CatalogRules", targets: ["CatalogRules"]),
     .library(name: "CatalogBuild", targets: ["CatalogBuild"]),
     .library(name: "CatalogSite", targets: ["CatalogSite"]),
+    .library(name: "CatalogIngest", targets: ["CatalogIngest"]),
     .executable(name: "catalog", targets: ["catalog"]),
     .executable(name: "catalog-dev", targets: ["catalog-dev"])
   ],
@@ -30,11 +31,17 @@ let package = Package(
       path: "Sources/CatalogBuild"
     ),
     .target(name: "CatalogSite", dependencies: ["CatalogJSON", "CatalogBuild"], path: "Sources/CatalogSite"),
+    .target(
+      name: "CatalogIngest",
+      dependencies: ["CatalogJSON", "CatalogSchema", "CatalogRules", "CatalogBuild"],
+      path: "Sources/CatalogIngest"
+    ),
     .executableTarget(
       name: "catalog",
       dependencies: [
         "CatalogBuild",
         "CatalogSite",
+        "CatalogIngest",
         .product(name: "ArgumentParser", package: "swift-argument-parser")
       ],
       path: "Sources/catalog"
@@ -75,6 +82,12 @@ let package = Package(
       dependencies: ["CatalogJSON", "CatalogBuild", "CatalogSite"],
       path: "SwiftTests/CatalogSiteTests",
       exclude: ["Fixtures"]
+    ),
+    .testTarget(
+      name: "CatalogIngestTests",
+      dependencies: ["CatalogJSON", "CatalogBuild", "CatalogIngest", "CatalogSweep"],
+      path: "SwiftTests/CatalogIngestTests",
+      exclude: ["Golden"]
     ),
     .testTarget(
       name: "CatalogRulesTests",
