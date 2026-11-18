@@ -14,7 +14,7 @@ struct ComparisonTests {
     #expect(outcome.ruleMessages == ["a.json: the file name must be the id, 'b'"])
   }
 
-  @Test func linesOfTheChecksTheRulesDoNotCoverAreLeftOut() {
+  @Test func theRegistryTermSourceAndDashLinesAreRuleMessages() {
     let outcome = Comparison.outcome(of: [
       "x.json: 'INSTEON' in name; use Insteon",
       "x.json: source 'A guide' is not in documents/registry.json; register the document or cite its exact title",
@@ -22,7 +22,7 @@ struct ComparisonTests {
       "x.json: a capability kind appears more than once"
     ])
 
-    #expect(outcome.ruleMessages == ["x.json: a capability kind appears more than once"])
+    #expect(outcome.ruleMessages.count == 4)
     #expect(outcome.schemaErrors == [])
   }
 

@@ -33,6 +33,9 @@ struct SweepCommand: ParsableCommand {
   @Option(help: "How many data files each round changes.")
   var mutationsPerRound: Int = 30
 
+  @Option(help: "How many changes to the registry, sources, terms and dashes each round makes after its data changes.")
+  var ruleMutationsPerRound: Int = 3
+
   @Option(help: "The Python interpreter that runs scripts/build.py.")
   var python: String = "python3"
 
@@ -41,7 +44,8 @@ struct SweepCommand: ParsableCommand {
 
   func run() throws {
     let sweep = Sweep(
-      repository: URL(fileURLWithPath: root, isDirectory: true), interpreter: python, seed: seed, mutationsPerRound: mutationsPerRound
+      repository: URL(fileURLWithPath: root, isDirectory: true), interpreter: python, seed: seed, mutationsPerRound: mutationsPerRound,
+      ruleMutationsPerRound: ruleMutationsPerRound
     )
     var divergences = 0
     var crashes = 0
@@ -61,6 +65,7 @@ struct SweepCommand: ParsableCommand {
       divergences += result.agrees ? 0 : 1
       print("round \(result.round)\(result.pythonCrashed ? " (the Python build crashed)" : "")")
       result.mutations.forEach { print("  mutation: \($0)") }
+      result.ruleMutations.forEach { print("  rule mutation: \($0)") }
       let swift = result.swiftOutcome, python = result.pythonOutcome
       print("  rule messages only in Swift: \(Comparison.lines(swift.ruleMessages, notIn: python.ruleMessages))")
       print("  rule messages only in Python: \(Comparison.lines(python.ruleMessages, notIn: swift.ruleMessages))")

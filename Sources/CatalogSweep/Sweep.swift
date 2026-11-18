@@ -19,6 +19,7 @@ public enum SweepError: Error, CustomStringConvertible {
 public struct RoundResult: Sendable {
   public let round: Int
   public let mutations: [AppliedMutation]
+  public let ruleMutations: [AppliedRuleMutation]
   public let pythonCrashed: Bool
   public let swiftOutcome: Comparison.Outcome
   public let pythonOutcome: Comparison.Outcome
@@ -51,13 +52,21 @@ public struct Sweep: Sendable {
   public let interpreter: String
   public let seed: UInt64
   public let mutationsPerRound: Int
+  /// How many changes to the registry, citations, terms and dashes each round makes after its data changes.
+  public let ruleMutationsPerRound: Int
 
-  public init(repository: URL, interpreter: String = "python3", seed: UInt64 = 1, mutationsPerRound: Int = 30) {
+  public init(
+    repository: URL, interpreter: String = "python3", seed: UInt64 = 1, mutationsPerRound: Int = 30, ruleMutationsPerRound: Int = 3
+  ) {
     self.repository = repository
     self.interpreter = interpreter
     self.seed = seed
     self.mutationsPerRound = mutationsPerRound
+    self.ruleMutationsPerRound = ruleMutationsPerRound
   }
+
+  /// The documents the registry rules read.
+  static let documentPaths = [RuleMutator.registryPath, RuleMutator.reviewedPath]
 
   /// The data directories and files `scripts/build.py` reads.
   static let copied = ["scripts", "schema", "devices", "commandSets", "documents", "templates", "VERSION"]
@@ -68,17 +77,17 @@ public struct Sweep: Sendable {
     let files = try root.deviceFiles().map { (path: $0.path, value: $0.value) }
       + root.commandSetFiles().map { (path: $0.path, value: $0.value) }
     let mutator = Mutator(pool: ValuePool(files: files.map(\.value)))
+    let documents = try allFiles().filter { Self.documentPaths.contains($0.path) }
 
     for round in 1...rounds {
-      report(try runRound(round, files: files, mutator: mutator))
+      report(try runRound(round, files: files, documents: documents, mutator: mutator))
     }
   }
 
   /// Runs every scenario on its own copy of the data. `expectedMissing` lists, for each, the
   /// messages that neither build printed.
   public func runScenarios(_ scenarios: [Scenario], report: (ScenarioResult) -> Void) throws {
-    let root = RepositoryRoot(url: repository)
-    let files = try root.deviceFiles() + root.commandSetFiles()
+    let files = try allFiles()
 
     for scenario in scenarios {
       let copy = try makeCopy(applying: scenario, to: files)
@@ -96,14 +105,26 @@ public struct Sweep: Sendable {
 
   /// The problems the Swift rules report for a scenario, without running the Python build.
   public func swiftProblems(for scenario: Scenario) throws -> [String] {
-    let root = RepositoryRoot(url: repository)
-    let copy = try makeCopy(applying: scenario, to: try root.deviceFiles() + root.commandSetFiles())
+    let copy = try makeCopy(applying: scenario, to: try allFiles())
     defer { try? FileManager.default.removeItem(at: copy) }
 
     return try RepositoryRoot(url: copy).problems()
   }
 
-  private func makeCopy(applying scenario: Scenario, to files: [CatalogFile]) throws -> URL {
+  /// Every profile and command set, then the registry and the reviewed pairs, by path from the repository root.
+  private func allFiles() throws -> [(path: String, value: JSONValue)] {
+    let root = RepositoryRoot(url: repository)
+    var files = try root.deviceFiles().map { (path: $0.path, value: $0.value) } + root.commandSetFiles().map { (path: $0.path, value: $0.value) }
+
+    for path in Self.documentPaths {
+      let bytes = try [UInt8](Data(contentsOf: repository.appendingPathComponent(path)))
+      files.append((path: path, value: try JSONParser.parse(bytes)))
+    }
+
+    return files
+  }
+
+  private func makeCopy(applying scenario: Scenario, to files: [(path: String, value: JSONValue)]) throws -> URL {
     guard let file = files.first(where: { $0.path == scenario.file }) else {
       throw SweepError.copyFailed("\(scenario.name): \(scenario.file) is not a data file")
     }
@@ -130,13 +151,17 @@ public struct Sweep: Sendable {
     return copy
   }
 
-  private func runRound(_ round: Int, files: [(path: String, value: JSONValue)], mutator: Mutator) throws -> RoundResult {
+  private func runRound(
+    _ round: Int, files: [(path: String, value: JSONValue)], documents: [(path: String, value: JSONValue)], mutator: Mutator
+  ) throws -> RoundResult {
     var random = SplitMix64(seed: seed &+ UInt64(round) &* 0x1_0000_0001)
     let copy = try makeCopy()
     defer { try? FileManager.default.removeItem(at: copy) }
 
     let commandSetIndexes = files.indices.filter { files[$0].path.hasPrefix("commandSets/") }
     var applied: [AppliedMutation] = []
+    var workspace = Dictionary(uniqueKeysWithValues: (files + documents).map { ($0.path, $0.value) })
+    var touched = Set<String>()
     var chosen = Set<Int>()
     var attempts = 0
 
@@ -151,15 +176,29 @@ public struct Sweep: Sendable {
 
       chosen.insert(index)
       applied.append(mutation)
-      let text = try JSONWriter.write(value) + "\n"
-      try Data(text.utf8).write(to: copy.appendingPathComponent(files[index].path))
+      workspace[files[index].path] = value
+      touched.insert(files[index].path)
+    }
+
+    var appliedRules: [AppliedRuleMutation] = []
+    let ruleMutator = RuleMutator()
+
+    for _ in 0..<ruleMutationsPerRound {
+      guard let change = ruleMutator.mutate(&workspace, using: &random) else { continue }
+      appliedRules.append(change)
+      touched.formUnion(change.files)
+    }
+
+    for path in touched.sorted() {
+      let text = try JSONWriter.write(workspace[path] ?? .null) + "\n"
+      try Data(text.utf8).write(to: copy.appendingPathComponent(path))
     }
 
     let swiftLines = try RepositoryRoot(url: copy).problems()
     let python = try runPython(in: copy)
 
     return RoundResult(
-      round: round, mutations: applied, pythonCrashed: python.crashed,
+      round: round, mutations: applied, ruleMutations: appliedRules, pythonCrashed: python.crashed,
       swiftOutcome: Comparison.outcome(of: swiftLines), pythonOutcome: Comparison.outcome(of: python.lines)
     )
   }
