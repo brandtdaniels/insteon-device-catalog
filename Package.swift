@@ -29,6 +29,7 @@ let package = Package(
       name: "catalog",
       dependencies: [
         "CatalogBuild",
+        "CatalogSite",
         .product(name: "ArgumentParser", package: "swift-argument-parser")
       ],
       path: "Sources/catalog"
