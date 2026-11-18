@@ -1,7 +1,7 @@
 # Conventions
 
 How the catalog names Insteon's products, commands and documents, so profiles and command sets
-read the same everywhere. `scripts/build.py` fails on the forms it can check.
+read the same everywhere. `swift run catalog check` fails on the forms it can check.
 
 ## Products
 

@@ -63,7 +63,7 @@ the catalog and treat downloading a newer one as optional.
    titles of one kind that look like one document, such as one model under two names; keep one
    title, or, once you have read both documents and found them different, list the pair in
    [`documents/reviewed-distinct-titles.json`](documents/reviewed-distinct-titles.json).
-2. Run `pip install -r requirements.txt` and `python3 -I scripts/build.py` to validate. It checks
+2. Run `swift run catalog check` to validate. It checks
    each profile against the schema, that the file is named for its model, that no capability
    appears twice, that no two profiles claim the same identity for the same firmware, that every `sources` string is a registered document, and that
    each engine and command set entry names one of the product's identities and no firmware
@@ -72,14 +72,10 @@ the catalog and treat downloading a newer one as optional.
    share a selector, no two commands or direct messages share a command, no message fills a
    byte's bits twice, every flag and enumeration it names exists, and each command's `effect`
    and `idempotent` fit what the protocol and the command set say about it, as
-   [API.md](API.md#what-a-command-does) describes. A change to
-   `scripts/build.py` comes with a test in `tests/`; run them with
-   `python3 -I -m unittest discover -s tests`.
-   The Swift tooling is available alongside: `swift run catalog check` runs the same checks,
-   `swift run catalog version-check BASE_SHA` the version rule, and
-   `swift run catalog build --output site --patch N --built ISO` writes the same site, byte for
-   byte, as `python3 -I scripts/build.py` with the same flags. `swift run catalog-dev compare-site`
-   builds both and compares every file. The Python build still publishes.
+   [API.md](API.md#what-a-command-does) describes.
+   A change to the tools comes with a test in `SwiftTests/`; `swift test` runs them.
+   `swift run catalog version-check BASE_SHA` checks the version rule, and
+   `swift run catalog build --output site --patch N --built ISO` writes the site CI publishes.
 3. Follow [CONVENTIONS.md](CONVENTIONS.md) for names, terms and citations; the build fails on
    the forms it rules out.
 4. Open a pull request. CI runs the same check.
@@ -94,24 +90,19 @@ with the device awake.
 
 1. Run `insteon observe` for the device and read the file it writes. A `--note` is optional.
 2. Send the file to the catalog's maintainer by opening an issue and pasting its contents. Don't
-   edit the file; if it holds an address, a host or a path, `scripts/ingest.py check` says which
+   edit the file; if it holds an address, a host or a path, `swift run catalog ingest check` says which
    field and what kind of data, never the data, and you run the observation again.
-3. The maintainer runs `python3 -I scripts/ingest.py check FILE...` and
-   `python3 -I scripts/ingest.py draft FILE... --report report.json --md report.md`. The report lists
+3. The maintainer runs `swift run catalog ingest check FILE...` and
+   `swift run catalog ingest draft FILE... --report report.json --md report.md`. The report lists
    the profile each file matched, the verification marks it would add, what the catalog already
    records, and every disagreement: an engine, a product key or a firmware the profile doesn't
    cover, or a device with no profile. A disagreement writes nothing.
-4. After reading the report, the maintainer runs `python3 -I scripts/ingest.py apply report.json`,
+4. After reading the report, the maintainer runs `swift run catalog ingest apply report.json`,
    which sets the marks, runs the build and leaves the diff to review and commit. It refuses a
    working tree with other changes.
-   The Swift tooling does the same with `swift run catalog ingest check FILE...`,
-   `swift run catalog ingest draft FILE...` (same flags) and `swift run catalog ingest apply report.json`.
-   `apply` checks the catalog with the Swift rules instead of running `scripts/build.py`. The
-   commands print the same text, exit with the same statuses and read no network. Where they differ
-   on purpose, the Swift reader is stricter: it refuses a repeated key, `NaN` and a pattern that
-   ends before a final line break, and a bad command line exits with 64, not 2.
-   `swift run catalog-dev ingest-sweep` runs both tools on observation files made from the
-   catalog and broken in many ways, and compares them.
+   `apply` checks the catalog with the same rules as `catalog check`. The commands read no network;
+   a repeated key, `NaN` and a pattern that ends before a final line break are refused, and a bad
+   command line exits with 64.
 
 An observation only marks a value `observed`, with the firmware it was seen on and a note written
 from a template: "Seen on a device running firmware 0x34: ...". It never changes a value, and your
