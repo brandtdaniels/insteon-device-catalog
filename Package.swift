@@ -34,11 +34,13 @@ let package = Package(
       ],
       path: "Sources/catalog"
     ),
-    .target(name: "CatalogSweep", dependencies: ["CatalogJSON", "CatalogBuild"], path: "Sources/CatalogSweep"),
+    .target(name: "CatalogSweep", dependencies: ["CatalogJSON", "CatalogBuild", "CatalogSite"], path: "Sources/CatalogSweep"),
     .executableTarget(
       name: "catalog-dev",
       dependencies: [
         "CatalogSweep",
+        "CatalogBuild",
+        "CatalogSite",
         .product(name: "ArgumentParser", package: "swift-argument-parser")
       ],
       path: "Sources/catalog-dev"
@@ -60,7 +62,7 @@ let package = Package(
     ),
     .testTarget(
       name: "CatalogSweepTests",
-      dependencies: ["CatalogJSON", "CatalogBuild", "CatalogSweep"],
+      dependencies: ["CatalogJSON", "CatalogBuild", "CatalogSweep", "CatalogSite"],
       path: "SwiftTests/CatalogSweepTests"
     ),
     .testTarget(
