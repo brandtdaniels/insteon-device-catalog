@@ -25,7 +25,7 @@ public struct IngestOracle: Sendable {
   /// Runs `ingest.py` with the arguments, in `root`, which holds `scripts/` and the catalog it reads.
   public func run(_ arguments: [String], in root: URL) throws -> IngestRun {
     let output = FileManager.default.temporaryDirectory.appendingPathComponent("ingest-oracle-" + UUID().uuidString)
-    FileManager.default.createFile(atPath: output.path, contents: nil)
+    _ = FileManager.default.createFile(atPath: output.path, contents: nil)
     defer { try? FileManager.default.removeItem(at: output) }
 
     let handle = try FileHandle(forWritingTo: output)
