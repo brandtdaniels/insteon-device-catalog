@@ -35,7 +35,7 @@ extension RepositoryRoot {
   }
 
   /// `MAJOR.MINOR` from the `VERSION` file.
-  private func majorMinor() throws -> String {
+  func majorMinor() throws -> String {
     guard let data = try? Data(contentsOf: url.appendingPathComponent("VERSION")) else { throw SiteError.unreadableTemplate("VERSION") }
     return String(decoding: data, as: UTF8.self).trimmingCharacters(in: .whitespacesAndNewlines)
   }
