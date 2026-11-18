@@ -2,9 +2,8 @@ import CatalogBuild
 import Foundation
 import Testing
 
-/// Transitional: the Swift rule and `scripts/check_version.py` give the same exit status and
-/// message for the same history. The comparison with the script ends when the script is removed.
-struct VersionCheckEquivalenceTests {
+/// The version check's exit status and message for scripted histories.
+struct VersionCheckHistoryTests {
   /// What a run of the check reports: its exit status and what it wrote to standard error.
   struct Outcome: Equatable, CustomStringConvertible {
     var status: Int32
@@ -12,9 +11,8 @@ struct VersionCheckEquivalenceTests {
     var description: String { "status \(status), message \(message.debugDescription)" }
   }
 
-  /// A scripted history. `expected` is what the script reports for it, used in place of the
-  /// script when no Python interpreter is installed. `comparesMessage` is false when the script
-  /// ends in a traceback whose text isn't part of the contract.
+  /// A scripted history and the outcome the check reports for it. `comparesMessage` is false when the
+  /// message isn't part of the contract.
   struct Scenario: Sendable {
     var name: String
     var expected: Outcome
@@ -106,44 +104,8 @@ struct VersionCheckEquivalenceTests {
       build: history(base: "0.10\n") { try $0.remove("VERSION") })
   ]
 
-  /// The script's outcome, or `nil` when there is no Python interpreter to run it.
-  static func script(base: String, in repository: TemporaryRepository) throws -> Outcome? {
-    guard let script = scriptURL() else { return nil }
-    let process = Process()
-    process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
-    process.arguments = ["python3", "-I", script.path, base]
-    process.currentDirectoryURL = repository.url
-    let errors = Pipe()
-    process.standardError = errors
-    process.standardOutput = FileHandle.nullDevice
-    do { try process.run() } catch { return nil }
-    let data = errors.fileHandleForReading.readDataToEndOfFile()
-    process.waitUntilExit()
-    return Outcome(status: process.terminationStatus, message: String(decoding: data, as: UTF8.self))
-  }
-
-  /// `scripts/check_version.py`, when it exists and a Python interpreter answers.
-  static func scriptURL() -> URL? {
-    let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
-      .deletingLastPathComponent()
-    let script = root.appendingPathComponent("scripts/check_version.py")
-    guard FileManager.default.fileExists(atPath: script.path), interpreterAnswers else { return nil }
-    return script
-  }
-
-  static let interpreterAnswers: Bool = {
-    let process = Process()
-    process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
-    process.arguments = ["python3", "--version"]
-    process.standardOutput = FileHandle.nullDevice
-    process.standardError = FileHandle.nullDevice
-    do { try process.run() } catch { return false }
-    process.waitUntilExit()
-    return process.terminationStatus == 0
-  }()
-
-  /// The Swift rule's outcome for the repository, in the script's terms.
-  static func swift(base: String, in repository: TemporaryRepository) -> Outcome {
+  /// The check's outcome for the repository.
+  static func outcome(base: String, in repository: TemporaryRepository) -> Outcome {
     do {
       try VersionCheck(git: ProcessGit(root: repository.url)).verify(base: base, root: repository.url)
       return ok
@@ -153,18 +115,17 @@ struct VersionCheckEquivalenceTests {
   }
 
   @Test(arguments: scenarios.map(\.name))
-  func givesTheScriptsAnswer(name: String) throws {
+  func reportsTheExpectedOutcome(name: String) throws {
     let scenario = try #require(Self.scenarios.first { $0.name == name })
     let repository = try TemporaryRepository()
     let base = try scenario.build(repository)
 
-    var actual = Self.swift(base: base, in: repository)
-    var expected = try Self.script(base: base, in: repository) ?? scenario.expected
+    var actual = Self.outcome(base: base, in: repository)
+    var expected = scenario.expected
     if !scenario.comparesMessage {
       actual.message = ""
       expected.message = ""
     }
     #expect(actual == expected)
-    if scenario.comparesMessage { #expect(actual == scenario.expected) }
   }
 }

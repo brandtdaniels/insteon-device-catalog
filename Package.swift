@@ -2,8 +2,8 @@
 
 import PackageDescription
 
-// The Swift sources and tests sit in `Sources` and `SwiftTests`. The Python tests keep `tests`,
-// which a case-insensitive file system can't tell apart from SwiftPM's default `Tests`.
+// The Swift sources and tests sit in `Sources` and `SwiftTests`. `CatalogTestSupport` holds the
+// cases and helpers the tests share; it is not a product.
 let package = Package(
   name: "insteon-device-catalog",
   platforms: [.macOS(.v13)],
@@ -14,8 +14,7 @@ let package = Package(
     .library(name: "CatalogBuild", targets: ["CatalogBuild"]),
     .library(name: "CatalogSite", targets: ["CatalogSite"]),
     .library(name: "CatalogIngest", targets: ["CatalogIngest"]),
-    .executable(name: "catalog", targets: ["catalog"]),
-    .executable(name: "catalog-dev", targets: ["catalog-dev"])
+    .executable(name: "catalog", targets: ["catalog"])
   ],
   dependencies: [
     .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMinor(from: "1.8.2")),
@@ -46,16 +45,10 @@ let package = Package(
       ],
       path: "Sources/catalog"
     ),
-    .target(name: "CatalogSweep", dependencies: ["CatalogJSON", "CatalogBuild", "CatalogSite", "CatalogIngest"], path: "Sources/CatalogSweep"),
-    .executableTarget(
-      name: "catalog-dev",
-      dependencies: [
-        "CatalogSweep",
-        "CatalogBuild",
-        "CatalogSite",
-        .product(name: "ArgumentParser", package: "swift-argument-parser")
-      ],
-      path: "Sources/catalog-dev"
+    .target(
+      name: "CatalogTestSupport",
+      dependencies: ["CatalogJSON", "CatalogBuild"],
+      path: "SwiftTests/CatalogTestSupport"
     ),
     .testTarget(
       name: "CatalogJSONTests",
@@ -69,13 +62,8 @@ let package = Package(
     ),
     .testTarget(
       name: "CatalogBuildTests",
-      dependencies: ["CatalogJSON", "CatalogSchema", "CatalogBuild"],
+      dependencies: ["CatalogJSON", "CatalogSchema", "CatalogBuild", "CatalogTestSupport"],
       path: "SwiftTests/CatalogBuildTests"
-    ),
-    .testTarget(
-      name: "CatalogSweepTests",
-      dependencies: ["CatalogJSON", "CatalogBuild", "CatalogSweep", "CatalogSite", "CatalogIngest"],
-      path: "SwiftTests/CatalogSweepTests"
     ),
     .testTarget(
       name: "CatalogSiteTests",
@@ -85,7 +73,7 @@ let package = Package(
     ),
     .testTarget(
       name: "CatalogIngestTests",
-      dependencies: ["CatalogJSON", "CatalogBuild", "CatalogIngest", "CatalogSweep"],
+      dependencies: ["CatalogJSON", "CatalogSchema", "CatalogBuild", "CatalogIngest", "CatalogTestSupport"],
       path: "SwiftTests/CatalogIngestTests",
       exclude: ["Golden"]
     ),

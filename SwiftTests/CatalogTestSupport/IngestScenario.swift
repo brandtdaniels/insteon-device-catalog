@@ -3,9 +3,6 @@ import Foundation
 
 /// A throwaway folder that holds a case's files, removed when it goes away.
 public final class IngestWorkspace: Sendable {
-  /// What the Python tool reads besides the catalog.
-  public static let pythonReads = ["scripts", "schema", "commandSets", "documents", "templates", "VERSION"]
-
   public let url: URL
 
   public init() throws {
@@ -22,23 +19,13 @@ public final class IngestWorkspace: Sendable {
 /// report goes.
 public struct PreparedIngestCase: Sendable {
   public let workspace: IngestWorkspace
-  /// The root: `devices/` with the case's catalog, and `scripts/` when the Python tool runs.
+  /// The root: `devices/` with the case's catalog.
   public let root: URL
   /// The input paths in order; a missing input's path names no file.
   public let inputs: [URL]
   public let report: URL?
   public let markdown: URL?
   public let action: IngestAction
-
-  /// The command line the tool takes, after its name.
-  public var arguments: [String] {
-    switch action {
-    case .check:
-      return ["check"] + inputs.map(\.path)
-    case .draft:
-      return ["draft"] + inputs.map(\.path) + (report.map { ["--report", $0.path] } ?? []) + (markdown.map { ["--md", $0.path] } ?? [])
-    }
-  }
 
   /// What the run left: its status and output, and the report and Markdown it wrote.
   public func golden(after run: IngestRun) -> IngestGolden {
@@ -58,21 +45,13 @@ extension IngestCase {
   /// Writes the case's files under a new folder.
   ///
   /// - Parameters:
-  ///   - catalog: The folder that holds `catalogs/real` and `catalogs/invented`.
-  ///   - repository: What the Python tool reads besides the catalog: its scripts, schemas, command sets, documents and
-  ///     VERSION, copied from here. `nil` for the catalog alone.
-  public func prepare(catalogs: URL, repository: URL? = nil) throws -> PreparedIngestCase {
+  ///   - catalogs: The folder that holds `catalogs/real` and `catalogs/invented`.
+  public func prepare(catalogs: URL) throws -> PreparedIngestCase {
     let workspace = try IngestWorkspace()
     let root = workspace.url.appendingPathComponent("root")
     let fileManager = FileManager.default
     try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
     try fileManager.copyItem(at: catalogs.appendingPathComponent("\(catalog.rawValue)/devices"), to: root.appendingPathComponent("devices"))
-
-    if let repository {
-      for name in IngestWorkspace.pythonReads {
-        try fileManager.copyItem(at: repository.appendingPathComponent(name), to: root.appendingPathComponent(name))
-      }
-    }
 
     let folder = workspace.url.appendingPathComponent("input")
     let out = workspace.url.appendingPathComponent("out")
@@ -206,21 +185,13 @@ extension ApplyCase {
   ///
   /// - Parameters:
   ///   - catalogs: The folder that holds `catalogs/real`.
-  ///   - repository: What the Python build reads from a full copy of the repository, or `nil` for the
-  ///     profiles alone.
   ///   - drafted: The report a draft case wrote, by the case's name.
-  public func prepare(catalogs: URL, repository: URL?, drafted: (String) throws -> [UInt8]) throws -> PreparedApplyCase? {
+  public func prepare(catalogs: URL, drafted: (String) throws -> [UInt8]) throws -> PreparedApplyCase? {
     let workspace = try IngestWorkspace()
     let root = workspace.url.appendingPathComponent("root")
     let fileManager = FileManager.default
     try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
     try fileManager.copyItem(at: catalogs.appendingPathComponent("real/devices"), to: root.appendingPathComponent("devices"))
-
-    if let repository {
-      for name in IngestWorkspace.pythonReads + [".gitignore"] {
-        try fileManager.copyItem(at: repository.appendingPathComponent(name), to: root.appendingPathComponent(name))
-      }
-    }
 
     for (file, edit) in catalogEdits {
       let url = root.appendingPathComponent(file)

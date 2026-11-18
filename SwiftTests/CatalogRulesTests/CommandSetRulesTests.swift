@@ -1,9 +1,8 @@
 import CatalogJSON
 import Testing
 
-/// The message, presentation and structure rules of a command set. The Python build has no test
-/// for these; the sweep compares them with it. Each expected message is the text the Python build
-/// prints.
+/// The message, presentation and structure rules of a command set. Each expected message is the text
+/// the Python build printed for the same input.
 struct CommandSetRulesTests {
   /// A copy with the first element of the array at `key` added to the end of it.
   static func repeatingFirst(_ commandSet: JSONValue, in key: String) throws -> JSONValue {

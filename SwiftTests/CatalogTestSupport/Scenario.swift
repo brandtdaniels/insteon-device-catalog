@@ -58,8 +58,8 @@ extension JSONValue {
   }
 }
 
-/// A hand-picked change to the real data that should make one rule speak. The sweep runs the Swift
-/// rules and the Python build on the changed copy, and the messages `expecting` must come out of both.
+/// A hand-picked change to the real data that should make one rule speak. The rules run on the changed
+/// copy, and the messages `expecting` must come out of them.
 public struct Scenario: Sendable {
   public let name: String
   public let file: String

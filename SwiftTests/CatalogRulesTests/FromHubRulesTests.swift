@@ -56,7 +56,7 @@ struct FromHubRulesTests {
     ])
   }
 
-  // No Python test covers the rules below; the sweep compares them with the Python build.
+  // The messages below are the ones the Python build printed for the same changes.
   @Test func aLegWhoseDeviceGroupIsNotTheProfilesNamesItAndTheMismatchedModemGroup() throws {
     let profile = try Fixtures.profile("2441ZTH").setting(["lifecycle", "fromHub", "legs", .index(0), "deviceGroup"], "\"0x09\"")
 

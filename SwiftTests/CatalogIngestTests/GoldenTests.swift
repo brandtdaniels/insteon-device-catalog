@@ -1,10 +1,10 @@
 import CatalogIngest
-import CatalogSweep
+import CatalogTestSupport
 import Foundation
 import Testing
 
-/// The Swift tool against the bytes the Python tool produced for the same cases: its exit status, what
-/// it printed, the reports it wrote and the profiles it patched.
+/// The Swift tool against the frozen goldens, the bytes the Python tool once produced for the same cases: its
+/// exit status, what it printed, the reports it wrote and the profiles it patched.
 struct GoldenTests {
   static let book = IngestCaseBook(fixtures: Fixtures.observations)
   static let cases = (try? book.cases()) ?? []
@@ -37,7 +37,7 @@ struct GoldenTests {
   }
 
   @Test(arguments: cases)
-  func checkAndDraftCasesMatchThePythonTool(ingestCase: IngestCase) throws {
+  func checkAndDraftCasesMatchTheGolden(ingestCase: IngestCase) throws {
     let prepared = try ingestCase.prepare(catalogs: Fixtures.catalogs)
     let tool = IngestTool(root: prepared.root)
     let result: IngestResult
@@ -56,9 +56,9 @@ struct GoldenTests {
   }
 
   @Test(arguments: applyCases)
-  func applyCasesMatchThePythonTool(applyCase: ApplyCase) throws {
+  func applyCasesMatchTheGolden(applyCase: ApplyCase) throws {
     let expected = try Self.expected("apply/\(applyCase.name).golden")
-    let prepared = try #require(try applyCase.prepare(catalogs: Fixtures.catalogs, repository: nil, drafted: IngestCapture.reader(Fixtures.golden)))
+    let prepared = try #require(try applyCase.prepare(catalogs: Fixtures.catalogs, drafted: GoldenReports.reader(Fixtures.golden)))
     let checker = GoldenChecker(failing: applyCase.buildFails, expectedOutput: expected["stdout"])
     let tool = IngestTool(root: prepared.root, checker: checker)
 
