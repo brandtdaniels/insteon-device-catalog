@@ -1,0 +1,42 @@
+name: Catalog Swift equivalence
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  equivalence:
+    name: Swift equals Python
+    runs-on: ubuntu-latest
+    container: swift:6.3.3@sha256:1038d54c80063f5cdfabc4560990c30af64b5de8ebf28161deb22ca4ad5db866
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+      - name: Trust the workspace for git
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - name: Install Python for the oracle only
+        run: |
+          apt-get update
+          apt-get install -y python3 python3-venv
+          python3 -m venv /opt/oracle
+          /opt/oracle/bin/pip install -r requirements.txt
+      - uses: actions/cache@v4.2.0
+        with:
+          path: .build
+          key: swift-6.3.3-${{ hashFiles('Package.swift', 'Package.resolved') }}
+          restore-keys: swift-6.3.3-
+      - name: Build the tools
+        run: swift build --build-tests -Xswiftc -warnings-as-errors
+      - name: Test the tools
+        run: swift test --skip-build
+      - name: Build both sites and compare every file
+        run: |
+          # PATCH counts the commits since VERSION last changed that changed the data.
+          patch=$(git rev-list --count "$(git log -1 --format=%H -- VERSION)..HEAD" -- devices commandSets)
+          # compare-site runs scripts/build.py with the first python3 on PATH, here the oracle's.
+          PATH="/opt/oracle/bin:$PATH" swift run catalog-dev compare-site --patch "$patch" --rounds 20
