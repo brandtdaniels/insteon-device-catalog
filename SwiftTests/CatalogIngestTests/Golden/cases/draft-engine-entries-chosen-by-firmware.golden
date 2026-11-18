@@ -1,0 +1,244 @@
+=== status 1
+0
+=== stdout 68
+observation 1 (eed4e1ac): drafted
+observation 2 (b0c504db): drafted
+
+=== report.json 5711
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "drafted",
+  "observations": [
+    {
+      "input": "observation 1 (eed4e1ac)",
+      "outcome": "drafted",
+      "matched": {
+        "model": "9915",
+        "identity": {
+          "category": "0x7E",
+          "subcategory": "0x0F"
+        }
+      },
+      "changes": [
+        {
+          "file": "devices/9915.json",
+          "model": "9915",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x0F"
+          },
+          "field": "verification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: ID Request answered with category 0x7E, subcategory 0x0F and firmware 0x41.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "effect": "marked observed on firmware 0x41",
+          "target": "identity 0x7E/0x0F"
+        },
+        {
+          "file": "devices/9915.json",
+          "model": "9915",
+          "entry": "engine",
+          "selector": {
+            "engine": "i2cs",
+            "category": "0x7E",
+            "subcategory": "0x0F",
+            "firmware": {
+              "only": [
+                "0x41"
+              ]
+            }
+          },
+          "field": "verification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: Get Insteon Engine Version answered with i2CS.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "effect": "marked observed on firmware 0x41",
+          "target": "engine i2CS 0x7E/0x0F"
+        },
+        {
+          "file": "devices/9915.json",
+          "model": "9915",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x0F"
+          },
+          "field": "productKeyVerification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: Product Data Request reported product key 0x00001A.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "effect": "marked observed on firmware 0x41",
+          "target": "product key of identity 0x7E/0x0F"
+        }
+      ],
+      "unchanged": [],
+      "disagreements": [],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [
+        "The file names a different product than the profile its identity matched."
+      ],
+      "errors": []
+    },
+    {
+      "input": "observation 2 (b0c504db)",
+      "outcome": "drafted",
+      "matched": {
+        "model": "9915",
+        "identity": {
+          "category": "0x7E",
+          "subcategory": "0x0F"
+        }
+      },
+      "changes": [
+        {
+          "file": "devices/9915.json",
+          "model": "9915",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x0F"
+          },
+          "field": "verification",
+          "before": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: ID Request answered with category 0x7E, subcategory 0x0F and firmware 0x41.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: ID Request answered with category 0x7E, subcategory 0x0F and firmware 0x41.",
+            "firmware": [
+              "0x41",
+              "0x42"
+            ]
+          },
+          "effect": "added firmware 0x42 to the observed record",
+          "target": "identity 0x7E/0x0F"
+        },
+        {
+          "file": "devices/9915.json",
+          "model": "9915",
+          "entry": "engine",
+          "selector": {
+            "engine": "i2",
+            "category": "0x7E",
+            "subcategory": "0x0F",
+            "firmware": {
+              "except": [
+                "0x41"
+              ]
+            }
+          },
+          "field": "verification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x42: Get Insteon Engine Version answered with i2.",
+            "firmware": [
+              "0x42"
+            ]
+          },
+          "effect": "marked observed on firmware 0x42",
+          "target": "engine i2 0x7E/0x0F"
+        },
+        {
+          "file": "devices/9915.json",
+          "model": "9915",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x0F"
+          },
+          "field": "productKeyVerification",
+          "before": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: Product Data Request reported product key 0x00001A.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: Product Data Request reported product key 0x00001A.",
+            "firmware": [
+              "0x41",
+              "0x42"
+            ]
+          },
+          "effect": "added firmware 0x42 to the observed record",
+          "target": "product key of identity 0x7E/0x0F"
+        }
+      ],
+      "unchanged": [],
+      "disagreements": [],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [
+        "The file names a different product than the profile its identity matched."
+      ],
+      "errors": []
+    }
+  ]
+}
+
+=== report.md 1233
+# Observation report
+
+Outcome: drafted
+
+## observation 1 (eed4e1ac): drafted
+
+Matched 9915 by category 0x7E and subcategory 0x0F.
+
+Proposed changes:
+
+- devices/9915.json: identity 0x7E/0x0F, verification: marked observed on firmware 0x41
+- devices/9915.json: engine i2CS 0x7E/0x0F, verification: marked observed on firmware 0x41
+- devices/9915.json: product key of identity 0x7E/0x0F, productKeyVerification: marked observed on firmware 0x41
+
+Warnings:
+
+- The file names a different product than the profile its identity matched.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+
+## observation 2 (b0c504db): drafted
+
+Matched 9915 by category 0x7E and subcategory 0x0F.
+
+Proposed changes:
+
+- devices/9915.json: identity 0x7E/0x0F, verification: added firmware 0x42 to the observed record
+- devices/9915.json: engine i2 0x7E/0x0F, verification: marked observed on firmware 0x42
+- devices/9915.json: product key of identity 0x7E/0x0F, productKeyVerification: added firmware 0x42 to the observed record
+
+Warnings:
+
+- The file names a different product than the profile its identity matched.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+

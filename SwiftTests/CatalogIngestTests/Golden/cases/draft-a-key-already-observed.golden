@@ -1,0 +1,70 @@
+=== status 1
+0
+=== stdout 36
+observation 1 (aff8e4e3): no-change
+
+=== report.json 987
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "no-change",
+  "observations": [
+    {
+      "input": "observation 1 (aff8e4e3)",
+      "outcome": "no-change",
+      "matched": {
+        "model": "9902",
+        "identity": {
+          "category": "0x7E",
+          "subcategory": "0x02"
+        }
+      },
+      "changes": [],
+      "unchanged": [
+        {
+          "target": "identity 0x7E/0x02",
+          "reason": "already observed on firmware 0x41"
+        },
+        {
+          "target": "engine i2CS 0x7E/0x02",
+          "reason": "already observed on firmware 0x41"
+        },
+        {
+          "target": "product key of identity 0x7E/0x02",
+          "reason": "already observed on firmware 0x41"
+        }
+      ],
+      "disagreements": [],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [
+        "The file names a different product than the profile its identity matched."
+      ],
+      "errors": []
+    }
+  ]
+}
+
+=== report.md 525
+# Observation report
+
+Outcome: no-change
+
+## observation 1 (aff8e4e3): no-change
+
+Matched 9902 by category 0x7E and subcategory 0x02.
+
+Already recorded:
+
+- identity 0x7E/0x02: already observed on firmware 0x41
+- engine i2CS 0x7E/0x02: already observed on firmware 0x41
+- product key of identity 0x7E/0x02: already observed on firmware 0x41
+
+Warnings:
+
+- The file names a different product than the profile its identity matched.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+

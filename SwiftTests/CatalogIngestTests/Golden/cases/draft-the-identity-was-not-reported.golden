@@ -1,0 +1,43 @@
+=== status 1
+0
+=== stdout 36
+observation 1 (032aa676): no-change
+
+=== report.json 475
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "no-change",
+  "observations": [
+    {
+      "input": "observation 1 (032aa676)",
+      "outcome": "no-change",
+      "matched": null,
+      "changes": [],
+      "unchanged": [],
+      "disagreements": [],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [
+        "The device's identity was not reported, so no profile was matched."
+      ],
+      "errors": []
+    }
+  ]
+}
+
+=== report.md 259
+# Observation report
+
+Outcome: no-change
+
+## observation 1 (032aa676): no-change
+
+Warnings:
+
+- The device's identity was not reported, so no profile was matched.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+

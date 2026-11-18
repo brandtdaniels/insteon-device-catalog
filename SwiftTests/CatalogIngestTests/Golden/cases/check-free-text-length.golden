@@ -1,0 +1,12 @@
+=== status 1
+1
+=== stdout 291
+observation 1 (4ac2f5cb): valid
+observation 2 (8a83e074): not valid
+  $.note: longer than 280 characters
+  $.checks[0].detail: longer than 200 characters
+observation 3 (858c2a1b): valid
+observation 4 (0a68845e): valid
+observation 5 (2e4ca08d): not valid
+  $.note: longer than 280 characters
+

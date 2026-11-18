@@ -1,0 +1,98 @@
+=== status 1
+0
+=== stdout 34
+observation 1 (1f3e0e13): drafted
+
+=== report.json 1963
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "drafted",
+  "observations": [
+    {
+      "input": "observation 1 (1f3e0e13)",
+      "outcome": "drafted",
+      "matched": {
+        "model": "9911",
+        "identity": {
+          "category": "0x7E",
+          "subcategory": "0x0B"
+        }
+      },
+      "changes": [
+        {
+          "file": "devices/9911.json",
+          "model": "9911",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x0B"
+          },
+          "field": "verification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: ID Request answered with category 0x7E, subcategory 0x0B and firmware 0x41. Product Data Request answered and reported no product key.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "effect": "marked observed on firmware 0x41",
+          "target": "identity 0x7E/0x0B"
+        },
+        {
+          "file": "devices/9911.json",
+          "model": "9911",
+          "entry": "engine",
+          "selector": {
+            "engine": "i2cs",
+            "category": "0x7E",
+            "subcategory": "0x0B"
+          },
+          "field": "verification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: Get Insteon Engine Version answered with i2CS.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "effect": "marked observed on firmware 0x41",
+          "target": "engine i2CS 0x7E/0x0B"
+        }
+      ],
+      "unchanged": [],
+      "disagreements": [],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [
+        "The file names a different product than the profile its identity matched."
+      ],
+      "errors": []
+    }
+  ]
+}
+
+=== report.md 514
+# Observation report
+
+Outcome: drafted
+
+## observation 1 (1f3e0e13): drafted
+
+Matched 9911 by category 0x7E and subcategory 0x0B.
+
+Proposed changes:
+
+- devices/9911.json: identity 0x7E/0x0B, verification: marked observed on firmware 0x41
+- devices/9911.json: engine i2CS 0x7E/0x0B, verification: marked observed on firmware 0x41
+
+Warnings:
+
+- The file names a different product than the profile its identity matched.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+

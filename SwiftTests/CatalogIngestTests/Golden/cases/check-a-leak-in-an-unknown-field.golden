@@ -1,0 +1,7 @@
+=== status 1
+1
+=== stdout 179
+observation 1 (ce6c531e): not valid
+  $: has a field the format does not have
+  $.hubAddress: contains what looks like an Insteon address; remove it and run the observation again
+

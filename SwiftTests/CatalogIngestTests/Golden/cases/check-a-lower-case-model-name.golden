@@ -1,0 +1,6 @@
+=== status 1
+1
+=== stdout 139
+observation 1 (734b3c33): not valid
+  $.device.model: contains what looks like an Insteon address; remove it and run the observation again
+

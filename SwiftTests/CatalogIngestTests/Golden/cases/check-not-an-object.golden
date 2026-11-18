@@ -1,0 +1,18 @@
+=== status 1
+1
+=== stdout 511
+observation 1 (3a316d6d): not valid
+  the file must hold one JSON object
+observation 2 (74234e98): not valid
+  the file must hold one JSON object
+observation 3 (1e1d0f25): not valid
+  the file must hold one JSON object
+observation 4 (ef2d127d): not valid
+  the file must hold one JSON object
+observation 5 (b5bea41b): not valid
+  the file must hold one JSON object
+observation 6 (4f53cda1): not valid
+  the file must hold one JSON object
+observation 7 (1cd4b329): not valid
+  the file must hold one JSON object
+

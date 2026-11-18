@@ -1,0 +1,120 @@
+=== status 1
+1
+=== stdout 6757
+observation 1 (eb888a5a): not valid
+  $.note: contains what looks like an Insteon address; remove it and run the observation again
+observation 2 (01396523): valid
+observation 3 (31c92bd6): valid
+observation 4 (11a6ce5f): not valid
+  $.note: contains what looks like an Insteon address; remove it and run the observation again
+observation 5 (382d941e): not valid
+  $.note: contains what looks like an Insteon address; remove it and run the observation again
+  $.note: contains what looks like an IP address; remove it and run the observation again
+observation 6 (4abe3ad4): valid
+observation 7 (82ab0474): not valid
+  $.note: contains what looks like an Insteon address; remove it and run the observation again
+observation 8 (8444e076): valid
+observation 9 (8983b343): valid
+observation 10 (9d04c9c7): not valid
+  $.note: contains what looks like an Insteon address; remove it and run the observation again
+observation 11 (0fb2e678): not valid
+  $.note: contains what looks like an Insteon address; remove it and run the observation again
+observation 12 (4e9a4495): valid
+observation 13 (19d7067b): not valid
+  $.note: contains what looks like an Insteon address; remove it and run the observation again
+observation 14 (200d49ba): valid
+observation 15 (9da2e49d): valid
+observation 16 (566aaf02): not valid
+  $.note: contains what looks like an Insteon address; remove it and run the observation again
+observation 17 (5009ed94): not valid
+  $.note: contains what looks like an Insteon address; remove it and run the observation again
+observation 18 (315c50bb): valid
+observation 19 (d9377b36): not valid
+  $.note: contains what looks like an IP address; remove it and run the observation again
+observation 20 (88978992): not valid
+  $.note: contains what looks like an IP address; remove it and run the observation again
+observation 21 (8e1817c7): not valid
+  $.note: contains what looks like an IP address; remove it and run the observation again
+observation 22 (b2c05c36): not valid
+  $.note: contains what looks like an IP address; remove it and run the observation again
+observation 23 (e2404f62): valid
+observation 24 (d9d37545): not valid
+  $.note: contains what looks like an IP address; remove it and run the observation again
+observation 25 (eba3e917): not valid
+  $.note: contains what looks like an IP address; remove it and run the observation again
+observation 26 (293d3eb9): valid
+observation 27 (dd52bf40): not valid
+  $.note: contains what looks like a MAC address; remove it and run the observation again
+observation 28 (6b709294): not valid
+  $.note: contains what looks like an IP address; remove it and run the observation again
+observation 29 (33c95b49): valid
+observation 30 (27ca3090): not valid
+  $.note: contains what looks like an IP address; remove it and run the observation again
+observation 31 (eaac3406): not valid
+  $.note: contains what looks like an IP address; remove it and run the observation again
+observation 32 (653d1e08): not valid
+  $.note: contains what looks like an IP address; remove it and run the observation again
+observation 33 (0b5ca53d): not valid
+  $.note: contains what looks like an IP address; remove it and run the observation again
+observation 34 (51b90854): not valid
+  $.note: contains what looks like an IP address; remove it and run the observation again
+observation 35 (2cff429b): valid
+observation 36 (6d00f1c1): not valid
+  $.note: contains what looks like a URL or host name; remove it and run the observation again
+observation 37 (18f9ddd8): not valid
+  $.note: contains what looks like a URL or host name; remove it and run the observation again
+observation 38 (243cc1a1): valid
+observation 39 (b66efbe6): not valid
+  $.note: contains what looks like a URL or host name; remove it and run the observation again
+observation 40 (eabc1e92): valid
+observation 41 (478a9cae): not valid
+  $.note: contains what looks like an email address; remove it and run the observation again
+observation 42 (6038a782): not valid
+  $.note: contains what looks like an email address; remove it and run the observation again
+observation 43 (ebba15fb): not valid
+  $.note: contains what looks like a URL or host name; remove it and run the observation again
+observation 44 (2dd304f3): valid
+observation 45 (843caa61): not valid
+  $.note: contains what looks like a file path; remove it and run the observation again
+observation 46 (7d2e0c2d): not valid
+  $.note: contains what looks like a file path; remove it and run the observation again
+observation 47 (0d79a3db): not valid
+  $.note: contains what looks like a file path; remove it and run the observation again
+observation 48 (5fd68e84): not valid
+  $.note: contains what looks like a file path; remove it and run the observation again
+observation 49 (bdfa77dd): not valid
+  $.note: contains what looks like a file path; remove it and run the observation again
+observation 50 (780f1f33): not valid
+  $.note: contains what looks like a file path; remove it and run the observation again
+observation 51 (3dc38fbb): not valid
+  $.note: contains what looks like a file path; remove it and run the observation again
+observation 52 (f65b0e9b): not valid
+  $.note: contains what looks like a file path; remove it and run the observation again
+observation 53 (be910f85): valid
+observation 54 (a0a22436): valid
+observation 55 (21b63f75): not valid
+  $.note: contains what looks like a serial number; remove it and run the observation again
+observation 56 (f18fba7f): valid
+observation 57 (1c59c69c): valid
+observation 58 (39308ae1): not valid
+  $.note: contains what looks like a serial number; remove it and run the observation again
+observation 59 (e21cbc8e): valid
+observation 60 (c0d8f0a5): not valid
+  $.note: contains what looks like an Insteon address; remove it and run the observation again
+observation 61 (640cc75c): not valid
+  $.note: contains what looks like a file path; remove it and run the observation again
+observation 62 (3b9f8de7): not valid
+  $.note: contains what looks like a file path; remove it and run the observation again
+observation 63 (fe756e7f): valid
+observation 64 (4311cc95): not valid
+  $.note: contains what looks like an IP address; remove it and run the observation again
+observation 65 (586bbd2c): not valid
+  $.note: contains what looks like an IP address; remove it and run the observation again
+observation 66 (33026b87): not valid
+  $.note: contains what looks like an Insteon address; remove it and run the observation again
+observation 67 (70cc96db): not valid
+  $.note: contains what looks like a URL or host name; remove it and run the observation again
+observation 68 (a7738e8a): valid
+observation 69 (39fda4bc): not valid
+  $.note: contains what looks like a URL or host name; remove it and run the observation again
+

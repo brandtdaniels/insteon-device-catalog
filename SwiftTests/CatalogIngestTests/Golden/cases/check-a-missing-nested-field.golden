@@ -1,0 +1,10 @@
+=== status 1
+1
+=== stdout 239
+observation 1 (00e549d8): not valid
+  $.device: 'engine' is a required property
+observation 2 (cdfae399): not valid
+  $.tool: 'name' is a required property
+observation 3 (fadc27e0): not valid
+  $.checks[0]: 'detail' is a required property
+

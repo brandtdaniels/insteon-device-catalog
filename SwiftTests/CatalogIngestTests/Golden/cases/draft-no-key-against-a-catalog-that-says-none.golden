@@ -1,0 +1,119 @@
+=== status 1
+0
+=== stdout 34
+observation 1 (bb85962c): drafted
+
+=== report.json 2559
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "drafted",
+  "observations": [
+    {
+      "input": "observation 1 (bb85962c)",
+      "outcome": "drafted",
+      "matched": {
+        "model": "9912",
+        "identity": {
+          "category": "0x7E",
+          "subcategory": "0x0C"
+        }
+      },
+      "changes": [
+        {
+          "file": "devices/9912.json",
+          "model": "9912",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x0C"
+          },
+          "field": "verification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: ID Request answered with category 0x7E, subcategory 0x0C and firmware 0x41.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "effect": "marked observed on firmware 0x41",
+          "target": "identity 0x7E/0x0C"
+        },
+        {
+          "file": "devices/9912.json",
+          "model": "9912",
+          "entry": "engine",
+          "selector": {
+            "engine": "i2cs",
+            "category": "0x7E",
+            "subcategory": "0x0C"
+          },
+          "field": "verification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: Get Insteon Engine Version answered with i2CS.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "effect": "marked observed on firmware 0x41",
+          "target": "engine i2CS 0x7E/0x0C"
+        },
+        {
+          "file": "devices/9912.json",
+          "model": "9912",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x0C"
+          },
+          "field": "productKeyVerification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: Product Data Request answered and reported no product key.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "effect": "marked observed on firmware 0x41",
+          "target": "product key of identity 0x7E/0x0C"
+        }
+      ],
+      "unchanged": [],
+      "disagreements": [],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [
+        "The file names a different product than the profile its identity matched."
+      ],
+      "errors": []
+    }
+  ]
+}
+
+=== report.md 627
+# Observation report
+
+Outcome: drafted
+
+## observation 1 (bb85962c): drafted
+
+Matched 9912 by category 0x7E and subcategory 0x0C.
+
+Proposed changes:
+
+- devices/9912.json: identity 0x7E/0x0C, verification: marked observed on firmware 0x41
+- devices/9912.json: engine i2CS 0x7E/0x0C, verification: marked observed on firmware 0x41
+- devices/9912.json: product key of identity 0x7E/0x0C, productKeyVerification: marked observed on firmware 0x41
+
+Warnings:
+
+- The file names a different product than the profile its identity matched.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+

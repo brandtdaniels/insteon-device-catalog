@@ -1,0 +1,22 @@
+=== status 1
+1
+=== stdout 656
+observation 1 (290c3f14): not valid
+  $: 'tool' is a required property
+  $: 'catalog' is a required property
+  $: 'device' is a required property
+  $: 'checks' is a required property
+  $: 'observedOn' is a required property
+observation 2 (e40f7f0a): not valid
+  not an insteon-observation/1 file
+observation 3 (1db8224b): not valid
+  not an insteon-observation/1 file
+observation 4 (395ec54c): not valid
+  not an insteon-observation/1 file
+observation 5 (3d6bf7c1): not valid
+  not an insteon-observation/1 file
+observation 6 (8de3bd0e): not valid
+  not an insteon-observation/1 file
+observation 7 (726cf2ea): not valid
+  not an insteon-observation/1 file
+

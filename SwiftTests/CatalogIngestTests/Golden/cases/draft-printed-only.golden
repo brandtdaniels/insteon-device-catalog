@@ -1,0 +1,71 @@
+=== status 1
+0
+=== stdout 1799
+# Observation report
+
+Outcome: drafted
+
+## observation 1 (43177557): no-change
+
+Matched 2457D2 by category 0x01 and subcategory 0x0E.
+
+Already recorded:
+
+- identity 0x01/0x0E: already observed on firmware 0x3B
+- engine i2 0x01/0x0E: already observed on firmware 0x3B
+
+Not used:
+
+- Product Data Request: outcome was silent; says nothing about the device
+
+Report only:
+
+- Operating flags: The device gave 20 03 03. Not compared with the catalog's flags: the file does not say which request each byte answers.
+
+## observation 2 (c74416d2): drafted
+
+Matched 2450 by category 0x07 and subcategory 0x00.
+
+Proposed changes:
+
+- devices/2450.json: engine i2CS 0x07/0x00, verification: marked observed on firmware 0x41
+
+Already recorded:
+
+- identity 0x07/0x00: already observed on firmware 0x41
+
+Not used:
+
+- Product Data Request: outcome was silent; says nothing about the device
+
+Report only:
+
+- Operating flags: The device gave 5A 4A 00. Not compared with the catalog's flags: the file does not say which request each byte answers.
+
+## observation 3 (30d99634): drafted
+
+Matched 2635-222 by category 0x02 and subcategory 0x37.
+
+Proposed changes:
+
+- devices/2635-222.json: engine i2CS 0x02/0x37, verification: marked observed on firmware 0x48
+
+Already recorded:
+
+- identity 0x02/0x37: already observed on firmware 0x48
+
+Report only:
+
+- Operating flags: The device gave 00 08 89 DE 0D. Not compared with the catalog's flags: the file does not say which request each byte answers.
+
+## observation 4 (0b7a8f8d): no-change
+
+Not used:
+
+- Get Insteon Engine Version: outcome was silent; says nothing about the device
+- ID Request: outcome was silent; says nothing about the device
+
+Warnings:
+
+- No check was answered, so this file says nothing about the device. Run `insteon observe` again with the device awake.
+

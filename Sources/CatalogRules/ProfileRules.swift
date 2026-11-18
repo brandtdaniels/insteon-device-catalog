@@ -32,7 +32,7 @@ public enum ProfileRules {
   }
 
   /// The firmware versions a selection includes, or every version for none.
-  static func selectedFirmware(_ selection: JSONValue?) -> Set<Int> {
+  public static func selectedFirmware(_ selection: JSONValue?) -> Set<Int> {
     let all = Set(0..<0x100)
 
     guard let selection else { return all }
@@ -122,7 +122,8 @@ public enum ProfileRules {
     return problems
   }
 
-  private static func firmwareRange(_ identity: JSONValue) -> (Int, Int) {
+  /// The lowest and highest firmware version an identity covers, which are 0x00 and 0xFF for none.
+  public static func firmwareRange(_ identity: JSONValue) -> (Int, Int) {
     guard let firmware = identity["firmware"] else { return (0x00, 0xFF) }
     return (hexValue(firmware.text("from") ?? ""), hexValue(firmware.text("through") ?? ""))
   }

@@ -1,0 +1,50 @@
+{
+  "catalog" : {
+    "version" : "0.9.1"
+  },
+  "checks" : [
+    {
+      "detail" : "The device reported its engine.",
+      "name" : "Get Insteon Engine Version",
+      "outcome" : "answered"
+    },
+    {
+      "detail" : "The device reported its identity.",
+      "name" : "ID Request",
+      "outcome" : "answered"
+    },
+    {
+      "detail" : "The device reported a product key.",
+      "name" : "Product Data Request",
+      "outcome" : "answered"
+    },
+    {
+      "detail" : "The device reported its state.",
+      "name" : "Status Request",
+      "outcome" : "answered"
+    },
+    {
+      "detail" : "The device reported its operating flags.",
+      "name" : "Get Operating Flags",
+      "outcome" : "answered"
+    }
+  ],
+  "device" : {
+    "category" : "0x7E",
+    "engine" : "i2CS",
+    "firmware" : "0x41",
+    "model" : "Example Invented Product",
+    "subcategory" : "0x7F"
+  },
+  "format" : "insteon-observation/1",
+  "note" : "Fresh battery, device on the bench.",
+  "operatingFlags" : {
+    "raw" : "2A 00"
+  },
+  "observedOn" : "2026-01-15",
+  "productKey" : "0x00001A",
+  "tool" : {
+    "name" : "insteon",
+    "version" : "0.1.0"
+  }
+}

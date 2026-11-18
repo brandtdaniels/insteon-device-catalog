@@ -1,0 +1,106 @@
+=== status 1
+0
+=== stdout 34
+observation 1 (fa4d6639): drafted
+
+=== report.json 2039
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "drafted",
+  "observations": [
+    {
+      "input": "observation 1 (fa4d6639)",
+      "outcome": "drafted",
+      "matched": {
+        "model": "9999",
+        "identity": {
+          "category": "0x7E",
+          "subcategory": "0x7F"
+        }
+      },
+      "changes": [
+        {
+          "file": "devices/9999.json",
+          "model": "9999",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x7F"
+          },
+          "field": "verification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: ID Request answered with category 0x7E, subcategory 0x7F and firmware 0x41.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "effect": "marked observed on firmware 0x41",
+          "target": "identity 0x7E/0x7F"
+        },
+        {
+          "file": "devices/9999.json",
+          "model": "9999",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x7F"
+          },
+          "field": "productKeyVerification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: Product Data Request reported product key 0x00001A.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "effect": "marked observed on firmware 0x41",
+          "target": "product key of identity 0x7E/0x7F"
+        }
+      ],
+      "unchanged": [],
+      "disagreements": [],
+      "skipped": [
+        {
+          "check": "Status Request",
+          "reason": "outcome was silent; says nothing about the device"
+        }
+      ],
+      "reportOnly": [],
+      "warnings": [
+        "The file names a different product than the profile its identity matched."
+      ],
+      "errors": []
+    }
+  ]
+}
+
+=== report.md 616
+# Observation report
+
+Outcome: drafted
+
+## observation 1 (fa4d6639): drafted
+
+Matched 9999 by category 0x7E and subcategory 0x7F.
+
+Proposed changes:
+
+- devices/9999.json: identity 0x7E/0x7F, verification: marked observed on firmware 0x41
+- devices/9999.json: product key of identity 0x7E/0x7F, productKeyVerification: marked observed on firmware 0x41
+
+Not used:
+
+- Status Request: outcome was silent; says nothing about the device
+
+Warnings:
+
+- The file names a different product than the profile its identity matched.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+

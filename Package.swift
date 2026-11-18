@@ -13,6 +13,7 @@ let package = Package(
     .library(name: "CatalogRules", targets: ["CatalogRules"]),
     .library(name: "CatalogBuild", targets: ["CatalogBuild"]),
     .library(name: "CatalogSite", targets: ["CatalogSite"]),
+    .library(name: "CatalogIngest", targets: ["CatalogIngest"]),
     .executable(name: "catalog", targets: ["catalog"]),
     .executable(name: "catalog-dev", targets: ["catalog-dev"])
   ],
@@ -30,16 +31,22 @@ let package = Package(
       path: "Sources/CatalogBuild"
     ),
     .target(name: "CatalogSite", dependencies: ["CatalogJSON", "CatalogBuild"], path: "Sources/CatalogSite"),
+    .target(
+      name: "CatalogIngest",
+      dependencies: ["CatalogJSON", "CatalogSchema", "CatalogRules", "CatalogBuild"],
+      path: "Sources/CatalogIngest"
+    ),
     .executableTarget(
       name: "catalog",
       dependencies: [
         "CatalogBuild",
         "CatalogSite",
+        "CatalogIngest",
         .product(name: "ArgumentParser", package: "swift-argument-parser")
       ],
       path: "Sources/catalog"
     ),
-    .target(name: "CatalogSweep", dependencies: ["CatalogJSON", "CatalogBuild", "CatalogSite"], path: "Sources/CatalogSweep"),
+    .target(name: "CatalogSweep", dependencies: ["CatalogJSON", "CatalogBuild", "CatalogSite", "CatalogIngest"], path: "Sources/CatalogSweep"),
     .executableTarget(
       name: "catalog-dev",
       dependencies: [
@@ -67,7 +74,7 @@ let package = Package(
     ),
     .testTarget(
       name: "CatalogSweepTests",
-      dependencies: ["CatalogJSON", "CatalogBuild", "CatalogSweep", "CatalogSite"],
+      dependencies: ["CatalogJSON", "CatalogBuild", "CatalogSweep", "CatalogSite", "CatalogIngest"],
       path: "SwiftTests/CatalogSweepTests"
     ),
     .testTarget(
@@ -75,6 +82,12 @@ let package = Package(
       dependencies: ["CatalogJSON", "CatalogBuild", "CatalogSite"],
       path: "SwiftTests/CatalogSiteTests",
       exclude: ["Fixtures"]
+    ),
+    .testTarget(
+      name: "CatalogIngestTests",
+      dependencies: ["CatalogJSON", "CatalogBuild", "CatalogIngest", "CatalogSweep"],
+      path: "SwiftTests/CatalogIngestTests",
+      exclude: ["Golden"]
     ),
     .testTarget(
       name: "CatalogRulesTests",

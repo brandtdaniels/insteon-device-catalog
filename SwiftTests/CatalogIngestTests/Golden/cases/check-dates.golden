@@ -1,0 +1,24 @@
+=== status 1
+1
+=== stdout 783
+observation 1 (07d34826): not valid
+  $.observedOn: not a calendar date
+observation 2 (7ed860df): not valid
+  $.observedOn: not a calendar date
+observation 3 (c90ef8be): not valid
+  $.observedOn: not a calendar date
+observation 4 (d63effdc): valid
+observation 5 (ef9c3c67): not valid
+  $.observedOn: not a calendar date
+observation 6 (6fb3a5e7): valid
+observation 7 (8d70a62f): not valid
+  $.observedOn: not a calendar date
+observation 8 (545a26df): not valid
+  $.observedOn: not a calendar date
+observation 9 (475608ab): not valid
+  $.observedOn: is not written the way the format requires
+observation 10 (8afbc795): not valid
+  $.observedOn: is not written the way the format requires
+observation 11 (35e93667): not valid
+  $.observedOn: is not written the way the format requires
+

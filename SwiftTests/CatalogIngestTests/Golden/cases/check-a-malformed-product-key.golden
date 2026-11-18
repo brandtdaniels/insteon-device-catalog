@@ -1,0 +1,16 @@
+=== status 1
+1
+=== stdout 570
+observation 1 (1705c6fb): not valid
+  $.productKey: is not written the way the format requires
+observation 2 (f4c6f8b9): not valid
+  $.productKey: is not written the way the format requires
+observation 3 (9c4c83d7): not valid
+  $.productKey: is not written the way the format requires
+observation 4 (ba00fdec): not valid
+  $.productKey: is not written the way the format requires
+observation 5 (76349b78): not valid
+  $.productKey: is not written the way the format requires
+observation 6 (2b2200ab): not valid
+  $.productKey: is not written the way the format requires
+

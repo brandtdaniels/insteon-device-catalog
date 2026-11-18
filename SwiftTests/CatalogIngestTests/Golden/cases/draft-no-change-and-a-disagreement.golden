@@ -1,0 +1,99 @@
+=== status 1
+2
+=== stdout 74
+observation 1 (aff8e4e3): no-change
+observation 2 (4a727263): needs-human
+
+=== report.json 1604
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "needs-human",
+  "observations": [
+    {
+      "input": "observation 1 (aff8e4e3)",
+      "outcome": "no-change",
+      "matched": {
+        "model": "9902",
+        "identity": {
+          "category": "0x7E",
+          "subcategory": "0x02"
+        }
+      },
+      "changes": [],
+      "unchanged": [
+        {
+          "target": "identity 0x7E/0x02",
+          "reason": "already observed on firmware 0x41"
+        },
+        {
+          "target": "engine i2CS 0x7E/0x02",
+          "reason": "already observed on firmware 0x41"
+        },
+        {
+          "target": "product key of identity 0x7E/0x02",
+          "reason": "already observed on firmware 0x41"
+        }
+      ],
+      "disagreements": [],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [
+        "The file names a different product than the profile its identity matched."
+      ],
+      "errors": []
+    },
+    {
+      "input": "observation 2 (4a727263)",
+      "outcome": "needs-human",
+      "matched": null,
+      "changes": [],
+      "unchanged": [],
+      "disagreements": [
+        {
+          "code": "unknown-device",
+          "detail": "Category 0x70, subcategory 0x7F and firmware 0x41 match no profile. A profile needs a name, aliases, an identity, capabilities, an engine and sources, each backed by a public document or an observation.",
+          "needs": "maintainer decision; nothing written"
+        }
+      ],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [],
+      "errors": []
+    }
+  ]
+}
+
+=== report.md 918
+# Observation report
+
+Outcome: needs-human
+
+## observation 1 (aff8e4e3): no-change
+
+Matched 9902 by category 0x7E and subcategory 0x02.
+
+Already recorded:
+
+- identity 0x7E/0x02: already observed on firmware 0x41
+- engine i2CS 0x7E/0x02: already observed on firmware 0x41
+- product key of identity 0x7E/0x02: already observed on firmware 0x41
+
+Warnings:
+
+- The file names a different product than the profile its identity matched.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+
+## observation 2 (4a727263): needs-human
+
+Needs a maintainer decision:
+
+- unknown-device: Category 0x70, subcategory 0x7F and firmware 0x41 match no profile. A profile needs a name, aliases, an identity, capabilities, an engine and sources, each backed by a public document or an observation.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+

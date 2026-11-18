@@ -1,0 +1,1 @@
+{"model": "9915", "name": "Invented 9915", "identities": [{"category": "0x7E", "subcategory": "0x0F", "productKey": "0x00001A"}], "engines": [{"engine": "i2", "category": "0x7E", "subcategory": "0x0F", "firmware": {"except": ["0x41"]}}, {"engine": "i2cs", "category": "0x7E", "subcategory": "0x0F", "firmware": {"only": ["0x41"]}}]}

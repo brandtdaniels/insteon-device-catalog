@@ -1,0 +1,9 @@
+=== status 1
+1
+=== stdout 232
+observation 1 (59067fa3): not valid
+  $: has a field the format does not have
+  $: 'observedOn' is a required property
+  $.checks[0].outcome: is not one of the values the format allows
+  $.device.engine: has the wrong kind of value
+

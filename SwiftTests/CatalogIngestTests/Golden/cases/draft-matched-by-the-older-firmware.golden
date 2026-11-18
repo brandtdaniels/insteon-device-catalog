@@ -1,0 +1,127 @@
+=== status 1
+0
+=== stdout 34
+observation 1 (229dca8f): drafted
+
+=== report.json 2765
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "drafted",
+  "observations": [
+    {
+      "input": "observation 1 (229dca8f)",
+      "outcome": "drafted",
+      "matched": {
+        "model": "9906a",
+        "identity": {
+          "category": "0x7E",
+          "subcategory": "0x06"
+        }
+      },
+      "changes": [
+        {
+          "file": "devices/9906a.json",
+          "model": "9906a",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x06",
+            "firmware": {
+              "from": "0x00",
+              "through": "0x40"
+            }
+          },
+          "field": "verification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x40: ID Request answered with category 0x7E, subcategory 0x06 and firmware 0x40.",
+            "firmware": [
+              "0x40"
+            ]
+          },
+          "effect": "marked observed on firmware 0x40",
+          "target": "identity 0x7E/0x06"
+        },
+        {
+          "file": "devices/9906a.json",
+          "model": "9906a",
+          "entry": "engine",
+          "selector": {
+            "engine": "i2cs",
+            "category": "0x7E",
+            "subcategory": "0x06"
+          },
+          "field": "verification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x40: Get Insteon Engine Version answered with i2CS.",
+            "firmware": [
+              "0x40"
+            ]
+          },
+          "effect": "marked observed on firmware 0x40",
+          "target": "engine i2CS 0x7E/0x06"
+        },
+        {
+          "file": "devices/9906a.json",
+          "model": "9906a",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x06",
+            "firmware": {
+              "from": "0x00",
+              "through": "0x40"
+            }
+          },
+          "field": "productKeyVerification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x40: Product Data Request reported product key 0x00001A.",
+            "firmware": [
+              "0x40"
+            ]
+          },
+          "effect": "marked observed on firmware 0x40",
+          "target": "product key of identity 0x7E/0x06"
+        }
+      ],
+      "unchanged": [],
+      "disagreements": [],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [
+        "The file names a different product than the profile its identity matched."
+      ],
+      "errors": []
+    }
+  ]
+}
+
+=== report.md 631
+# Observation report
+
+Outcome: drafted
+
+## observation 1 (229dca8f): drafted
+
+Matched 9906a by category 0x7E and subcategory 0x06.
+
+Proposed changes:
+
+- devices/9906a.json: identity 0x7E/0x06, verification: marked observed on firmware 0x40
+- devices/9906a.json: engine i2CS 0x7E/0x06, verification: marked observed on firmware 0x40
+- devices/9906a.json: product key of identity 0x7E/0x06, productKeyVerification: marked observed on firmware 0x40
+
+Warnings:
+
+- The file names a different product than the profile its identity matched.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+

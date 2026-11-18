@@ -1,0 +1,22 @@
+=== status 1
+1
+=== stdout 731
+observation 1 (25252f18): not valid
+  $.checks: has the wrong kind of value
+observation 2 (0152042d): not valid
+  $.device: has the wrong kind of value
+observation 3 (708a0dd7): not valid
+  $.checks[0].outcome: is not one of the values the format allows
+observation 4 (2bfc2b0e): not valid
+  $.checks[0].name: has the wrong kind of value
+observation 5 (5c22786b): not valid
+  $.observedOn: has the wrong kind of value
+observation 6 (a5b55e0d): not valid
+  $.note: has the wrong kind of value
+observation 7 (e96b92d3): not valid
+  $.tool: has the wrong kind of value
+observation 8 (73cbd6a2): not valid
+  $.catalog.version: has the wrong kind of value
+observation 9 (eb5d4f9d): not valid
+  $.productKey: has the wrong kind of value
+

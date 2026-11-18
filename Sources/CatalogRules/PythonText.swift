@@ -15,7 +15,7 @@ struct ExactText: Hashable, Sendable {
 extension Unicode.Scalar {
   /// Whether Python's `str.isspace` is true for the character, which is also what its `\s` matches
   /// and `str.strip` removes.
-  var isPythonWhitespace: Bool {
+  public var isPythonWhitespace: Bool {
     switch value {
     case 0x09...0x0D, 0x1C...0x20, 0x85, 0xA0, 0x1680, 0x2000...0x200A, 0x2028, 0x2029, 0x202F, 0x205F, 0x3000:
       true
@@ -38,7 +38,7 @@ extension String {
 }
 
 /// The characters Python's `\s` matches, as a character class body that ICU reads the same way.
-let pythonWhitespaceClass = #"\x{09}-\x{0D}\x{1C}-\x{20}\x{85}\x{A0}\x{1680}\x{2000}-\x{200A}\x{2028}\x{2029}\x{202F}\x{205F}\x{3000}"#
+public let pythonWhitespaceClass = #"\x{09}-\x{0D}\x{1C}-\x{20}\x{85}\x{A0}\x{1680}\x{2000}-\x{200A}\x{2028}\x{2029}\x{202F}\x{205F}\x{3000}"#
 
 /// A value as Python's `repr` writes it.
 func pythonRepr(_ value: JSONValue) -> String {
@@ -57,15 +57,15 @@ func pythonRepr(_ value: JSONValue) -> String {
 /// `\w` and `\b` spelled out as Python means them: a letter, a number or an underscore. ICU's own
 /// `\w` also takes combining marks, joiners and connector punctuation, and leaves out number
 /// characters such as superscript two. Lookbehinds and every other construct pass through.
-struct Pattern: Sendable {
+public struct Pattern: Sendable {
   private let expression: NSRegularExpression
 
   /// A pattern that matches only a text it covers from start to end.
-  static func whole(_ pattern: String) -> Pattern {
+  public static func whole(_ pattern: String) -> Pattern {
     Pattern(#"\A(?:"# + pattern + #")\z"#)
   }
 
-  init(_ pattern: String) {
+  public init(_ pattern: String) {
     guard let expression = try? NSRegularExpression(pattern: Self.translated(pattern)) else {
       preconditionFailure("not a regular expression: \(pattern)")
     }
@@ -109,7 +109,7 @@ struct Pattern: Sendable {
   }
 
   /// The text of the leftmost match, as `re.search` finds it, or `nil`.
-  func firstMatch(in text: String) -> String? {
+  public func firstMatch(in text: String) -> String? {
     guard let match = expression.firstMatch(in: text, range: NSRange(text.startIndex..., in: text)),
           match.range.location != NSNotFound
     else { return nil }
@@ -124,12 +124,19 @@ struct Pattern: Sendable {
   }
 
   /// Whether the whole text matches, as `re.fullmatch` says: the pattern was made with `whole`.
-  func matches(_ text: String) -> Bool {
+  public func matches(_ text: String) -> Bool {
     expression.firstMatch(in: text, range: NSRange(text.startIndex..., in: text)) != nil
   }
 
+  /// The text of every match, left to right without overlap, as `re.finditer` finds them.
+  public func allMatches(in text: String) -> [String] {
+    expression.matches(in: text, range: NSRange(text.startIndex..., in: text)).compactMap { match in
+      Range(match.range, in: text).map { String(text[$0]) }
+    }
+  }
+
   /// The text with every match removed, as `re.sub(pattern, "", text)` leaves it.
-  func removingMatches(from text: String) -> String {
+  public func removingMatches(from text: String) -> String {
     expression.stringByReplacingMatches(in: text, range: NSRange(text.startIndex..., in: text), withTemplate: "")
   }
 }

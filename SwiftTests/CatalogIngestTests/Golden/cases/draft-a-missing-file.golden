@@ -1,0 +1,129 @@
+=== status 1
+1
+=== stdout 71
+observation 1 (c74416d2): drafted
+observation 2 (unreadable): rejected
+
+=== report.json 2265
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "rejected",
+  "observations": [
+    {
+      "input": "observation 1 (c74416d2)",
+      "outcome": "drafted",
+      "matched": {
+        "model": "2450",
+        "identity": {
+          "category": "0x07",
+          "subcategory": "0x00"
+        }
+      },
+      "changes": [
+        {
+          "file": "devices/2450.json",
+          "model": "2450",
+          "entry": "engine",
+          "selector": {
+            "engine": "i2cs",
+            "category": "0x07",
+            "subcategory": "0x00",
+            "firmware": {
+              "only": [
+                "0x40",
+                "0x41",
+                "0xA1",
+                "0xA2",
+                "0xA3",
+                "0xA4",
+                "0xA5",
+                "0xA6",
+                "0xA7",
+                "0xA8"
+              ]
+            }
+          },
+          "field": "verification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: Get Insteon Engine Version answered with i2CS.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "effect": "marked observed on firmware 0x41",
+          "target": "engine i2CS 0x07/0x00"
+        }
+      ],
+      "unchanged": [
+        {
+          "target": "identity 0x07/0x00",
+          "reason": "already observed on firmware 0x41"
+        }
+      ],
+      "disagreements": [],
+      "skipped": [
+        {
+          "check": "Product Data Request",
+          "reason": "outcome was silent; says nothing about the device"
+        }
+      ],
+      "reportOnly": [
+        {
+          "item": "Operating flags",
+          "detail": "The device gave 5A 4A 00. Not compared with the catalog's flags: the file does not say which request each byte answers."
+        }
+      ],
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "input": "observation 2 (unreadable)",
+      "outcome": "rejected",
+      "matched": null,
+      "changes": [],
+      "unchanged": [],
+      "disagreements": [],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [],
+      "errors": [
+        "cannot read the file"
+      ]
+    }
+  ]
+}
+
+=== report.md 632
+# Observation report
+
+Outcome: rejected
+
+## observation 1 (c74416d2): drafted
+
+Matched 2450 by category 0x07 and subcategory 0x00.
+
+Proposed changes:
+
+- devices/2450.json: engine i2CS 0x07/0x00, verification: marked observed on firmware 0x41
+
+Already recorded:
+
+- identity 0x07/0x00: already observed on firmware 0x41
+
+Not used:
+
+- Product Data Request: outcome was silent; says nothing about the device
+
+Report only:
+
+- Operating flags: The device gave 5A 4A 00. Not compared with the catalog's flags: the file does not say which request each byte answers.
+
+## observation 2 (unreadable): rejected
+
+Errors:
+
+- cannot read the file
+

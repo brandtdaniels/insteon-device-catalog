@@ -1,0 +1,45 @@
+=== status 1
+1
+=== stdout 35
+observation 1 (cada9ff2): rejected
+
+=== report.json 757
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "rejected",
+  "observations": [
+    {
+      "input": "observation 1 (cada9ff2)",
+      "outcome": "rejected",
+      "matched": null,
+      "changes": [],
+      "unchanged": [],
+      "disagreements": [],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [],
+      "errors": [
+        "$: has a field the format does not have",
+        "$.note: contains what looks like an IP address; remove it and run the observation again",
+        "$.note: contains what looks like an email address; remove it and run the observation again",
+        "$.hubAddress: contains what looks like an Insteon address; remove it and run the observation again"
+      ]
+    }
+  ]
+}
+
+=== report.md 415
+# Observation report
+
+Outcome: rejected
+
+## observation 1 (cada9ff2): rejected
+
+Errors:
+
+- $: has a field the format does not have
+- $.note: contains what looks like an IP address; remove it and run the observation again
+- $.note: contains what looks like an email address; remove it and run the observation again
+- $.hubAddress: contains what looks like an Insteon address; remove it and run the observation again
+

@@ -1,0 +1,6 @@
+=== status 1
+1
+=== stdout 131
+observation 1 (9c7e5217): not valid
+  $.note: contains what looks like an Insteon address; remove it and run the observation again
+

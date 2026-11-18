@@ -1,0 +1,47 @@
+=== status 1
+2
+=== stdout 38
+observation 1 (f9ffb504): needs-human
+
+=== report.json 601
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "needs-human",
+  "observations": [
+    {
+      "input": "observation 1 (f9ffb504)",
+      "outcome": "needs-human",
+      "matched": null,
+      "changes": [],
+      "unchanged": [],
+      "disagreements": [
+        {
+          "code": "ambiguous",
+          "detail": "2 profiles claim category 0x7E, subcategory 0x07 at firmware 0x41.",
+          "needs": "maintainer decision; nothing written"
+        }
+      ],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [],
+      "errors": []
+    }
+  ]
+}
+
+=== report.md 293
+# Observation report
+
+Outcome: needs-human
+
+## observation 1 (f9ffb504): needs-human
+
+Needs a maintainer decision:
+
+- ambiguous: 2 profiles claim category 0x7E, subcategory 0x07 at firmware 0x41.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+

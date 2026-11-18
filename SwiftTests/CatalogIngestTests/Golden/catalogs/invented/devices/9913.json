@@ -1,0 +1,1 @@
+{"model": "9913", "name": "Invented 9913", "identities": [{"category": "0x7E", "subcategory": "0x0D", "productKey": "0x00001A"}], "engines": [{"engine": "i2cs", "category": "0x7E", "subcategory": "0x0D", "verification": {"status": "conflicting", "note": "Two documents disagree."}}]}

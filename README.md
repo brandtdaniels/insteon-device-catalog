@@ -104,6 +104,14 @@ with the device awake.
 4. After reading the report, the maintainer runs `python3 -I scripts/ingest.py apply report.json`,
    which sets the marks, runs the build and leaves the diff to review and commit. It refuses a
    working tree with other changes.
+   The Swift tooling does the same with `swift run catalog ingest check FILE...`,
+   `swift run catalog ingest draft FILE...` (same flags) and `swift run catalog ingest apply report.json`.
+   `apply` checks the catalog with the Swift rules instead of running `scripts/build.py`. The
+   commands print the same text, exit with the same statuses and read no network. Where they differ
+   on purpose, the Swift reader is stricter: it refuses a repeated key, `NaN` and a pattern that
+   ends before a final line break, and a bad command line exits with 64, not 2.
+   `swift run catalog-dev ingest-sweep` runs both tools on observation files made from the
+   catalog and broken in many ways, and compares them.
 
 An observation only marks a value `observed`, with the firmware it was seen on and a note written
 from a template: "Seen on a device running firmware 0x34: ...". It never changes a value, and your

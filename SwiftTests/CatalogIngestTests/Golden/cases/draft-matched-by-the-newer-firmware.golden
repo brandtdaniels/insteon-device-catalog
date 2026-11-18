@@ -1,0 +1,127 @@
+=== status 1
+0
+=== stdout 34
+observation 1 (34fd04de): drafted
+
+=== report.json 2765
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "drafted",
+  "observations": [
+    {
+      "input": "observation 1 (34fd04de)",
+      "outcome": "drafted",
+      "matched": {
+        "model": "9906b",
+        "identity": {
+          "category": "0x7E",
+          "subcategory": "0x06"
+        }
+      },
+      "changes": [
+        {
+          "file": "devices/9906b.json",
+          "model": "9906b",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x06",
+            "firmware": {
+              "from": "0x41",
+              "through": "0xFF"
+            }
+          },
+          "field": "verification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: ID Request answered with category 0x7E, subcategory 0x06 and firmware 0x41.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "effect": "marked observed on firmware 0x41",
+          "target": "identity 0x7E/0x06"
+        },
+        {
+          "file": "devices/9906b.json",
+          "model": "9906b",
+          "entry": "engine",
+          "selector": {
+            "engine": "i2cs",
+            "category": "0x7E",
+            "subcategory": "0x06"
+          },
+          "field": "verification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: Get Insteon Engine Version answered with i2CS.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "effect": "marked observed on firmware 0x41",
+          "target": "engine i2CS 0x7E/0x06"
+        },
+        {
+          "file": "devices/9906b.json",
+          "model": "9906b",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x06",
+            "firmware": {
+              "from": "0x41",
+              "through": "0xFF"
+            }
+          },
+          "field": "productKeyVerification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: Product Data Request reported product key 0x00001A.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "effect": "marked observed on firmware 0x41",
+          "target": "product key of identity 0x7E/0x06"
+        }
+      ],
+      "unchanged": [],
+      "disagreements": [],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [
+        "The file names a different product than the profile its identity matched."
+      ],
+      "errors": []
+    }
+  ]
+}
+
+=== report.md 631
+# Observation report
+
+Outcome: drafted
+
+## observation 1 (34fd04de): drafted
+
+Matched 9906b by category 0x7E and subcategory 0x06.
+
+Proposed changes:
+
+- devices/9906b.json: identity 0x7E/0x06, verification: marked observed on firmware 0x41
+- devices/9906b.json: engine i2CS 0x7E/0x06, verification: marked observed on firmware 0x41
+- devices/9906b.json: product key of identity 0x7E/0x06, productKeyVerification: marked observed on firmware 0x41
+
+Warnings:
+
+- The file names a different product than the profile its identity matched.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+

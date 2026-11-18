@@ -1,0 +1,73 @@
+=== status 1
+0
+=== stdout 36
+observation 1 (43177557): no-change
+
+=== report.json 1110
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "no-change",
+  "observations": [
+    {
+      "input": "observation 1 (43177557)",
+      "outcome": "no-change",
+      "matched": {
+        "model": "2457D2",
+        "identity": {
+          "category": "0x01",
+          "subcategory": "0x0E"
+        }
+      },
+      "changes": [],
+      "unchanged": [
+        {
+          "target": "identity 0x01/0x0E",
+          "reason": "already observed on firmware 0x3B"
+        },
+        {
+          "target": "engine i2 0x01/0x0E",
+          "reason": "already observed on firmware 0x3B"
+        }
+      ],
+      "disagreements": [],
+      "skipped": [
+        {
+          "check": "Product Data Request",
+          "reason": "outcome was silent; says nothing about the device"
+        }
+      ],
+      "reportOnly": [
+        {
+          "item": "Operating flags",
+          "detail": "The device gave 20 03 03. Not compared with the catalog's flags: the file does not say which request each byte answers."
+        }
+      ],
+      "warnings": [],
+      "errors": []
+    }
+  ]
+}
+
+=== report.md 509
+# Observation report
+
+Outcome: no-change
+
+## observation 1 (43177557): no-change
+
+Matched 2457D2 by category 0x01 and subcategory 0x0E.
+
+Already recorded:
+
+- identity 0x01/0x0E: already observed on firmware 0x3B
+- engine i2 0x01/0x0E: already observed on firmware 0x3B
+
+Not used:
+
+- Product Data Request: outcome was silent; says nothing about the device
+
+Report only:
+
+- Operating flags: The device gave 20 03 03. Not compared with the catalog's flags: the file does not say which request each byte answers.
+

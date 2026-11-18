@@ -1,0 +1,16 @@
+=== status 1
+1
+=== stdout 672
+observation 1 (9fae5fc4): not valid
+  $.device.category: is not a byte written as 0x and two upper-case digits
+observation 2 (c8652544): not valid
+  $.device.subcategory: is not a byte written as 0x and two upper-case digits
+observation 3 (998dbfe3): not valid
+  $.device.firmware: is not a byte written as 0x and two upper-case digits
+observation 4 (7c606d3a): not valid
+  $.device.category: is not a byte written as 0x and two upper-case digits
+observation 5 (2920334f): not valid
+  $.device.firmware: is not a byte written as 0x and two upper-case digits
+observation 6 (3daf6deb): not valid
+  $.device.subcategory: is not a byte written as 0x and two upper-case digits
+

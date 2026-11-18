@@ -1,0 +1,9 @@
+=== status 1
+1
+=== stdout 68
+the working tree has changes of its own; commit or stash them first
+
+=== tree 28
+?? notes.txt
+?? report.json
+

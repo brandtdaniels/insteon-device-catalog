@@ -1,0 +1,1 @@
+{"model": "9914", "name": "Invented 9914", "identities": [{"category": "0x7E", "subcategory": "0x0E", "productKey": "0x00001A", "productKeyVerification": {"status": "inferred", "note": "Read from a shared identity."}}], "engines": [{"engine": "i2cs", "category": "0x7E", "subcategory": "0x0E"}]}
