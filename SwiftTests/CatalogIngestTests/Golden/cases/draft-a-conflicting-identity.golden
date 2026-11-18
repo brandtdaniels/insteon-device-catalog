@@ -1,0 +1,92 @@
+=== status 1
+2
+=== stdout 34
+observation 1 (cffeaa4a): drafted
+
+=== report.json 1779
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "drafted",
+  "observations": [
+    {
+      "input": "observation 1 (cffeaa4a)",
+      "outcome": "drafted",
+      "matched": {
+        "model": "9904",
+        "identity": {
+          "category": "0x7E",
+          "subcategory": "0x04"
+        }
+      },
+      "changes": [
+        {
+          "file": "devices/9904.json",
+          "model": "9904",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x04"
+          },
+          "field": "productKeyVerification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: Product Data Request reported product key 0x00001A.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "effect": "marked observed on firmware 0x41",
+          "target": "product key of identity 0x7E/0x04"
+        }
+      ],
+      "unchanged": [],
+      "disagreements": [
+        {
+          "code": "conflicting-not-overwritten",
+          "detail": "The catalog marks identity 0x7E/0x04 conflicting; an observation does not settle which document is right.",
+          "needs": "maintainer decision; nothing written"
+        },
+        {
+          "code": "conflicting-not-overwritten",
+          "detail": "The catalog marks engine i2CS 0x7E/0x04 conflicting; an observation does not settle which document is right.",
+          "needs": "maintainer decision; nothing written"
+        }
+      ],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [
+        "The file names a different product than the profile its identity matched."
+      ],
+      "errors": []
+    }
+  ]
+}
+
+=== report.md 756
+# Observation report
+
+Outcome: drafted
+
+## observation 1 (cffeaa4a): drafted
+
+Matched 9904 by category 0x7E and subcategory 0x04.
+
+Proposed changes:
+
+- devices/9904.json: product key of identity 0x7E/0x04, productKeyVerification: marked observed on firmware 0x41
+
+Needs a maintainer decision:
+
+- conflicting-not-overwritten: The catalog marks identity 0x7E/0x04 conflicting; an observation does not settle which document is right.
+- conflicting-not-overwritten: The catalog marks engine i2CS 0x7E/0x04 conflicting; an observation does not settle which document is right.
+
+Warnings:
+
+- The file names a different product than the profile its identity matched.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+

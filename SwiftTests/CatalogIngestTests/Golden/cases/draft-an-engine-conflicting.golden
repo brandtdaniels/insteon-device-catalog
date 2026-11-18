@@ -1,0 +1,107 @@
+=== status 1
+2
+=== stdout 34
+observation 1 (0231a001): drafted
+
+=== report.json 2169
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "drafted",
+  "observations": [
+    {
+      "input": "observation 1 (0231a001)",
+      "outcome": "drafted",
+      "matched": {
+        "model": "9913",
+        "identity": {
+          "category": "0x7E",
+          "subcategory": "0x0D"
+        }
+      },
+      "changes": [
+        {
+          "file": "devices/9913.json",
+          "model": "9913",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x0D"
+          },
+          "field": "verification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: ID Request answered with category 0x7E, subcategory 0x0D and firmware 0x41.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "effect": "marked observed on firmware 0x41",
+          "target": "identity 0x7E/0x0D"
+        },
+        {
+          "file": "devices/9913.json",
+          "model": "9913",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x0D"
+          },
+          "field": "productKeyVerification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: Product Data Request reported product key 0x00001A.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "effect": "marked observed on firmware 0x41",
+          "target": "product key of identity 0x7E/0x0D"
+        }
+      ],
+      "unchanged": [],
+      "disagreements": [
+        {
+          "code": "conflicting-not-overwritten",
+          "detail": "The catalog marks engine i2CS 0x7E/0x0D conflicting; an observation does not settle which document is right.",
+          "needs": "maintainer decision; nothing written"
+        }
+      ],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [
+        "The file names a different product than the profile its identity matched."
+      ],
+      "errors": []
+    }
+  ]
+}
+
+=== report.md 707
+# Observation report
+
+Outcome: drafted
+
+## observation 1 (0231a001): drafted
+
+Matched 9913 by category 0x7E and subcategory 0x0D.
+
+Proposed changes:
+
+- devices/9913.json: identity 0x7E/0x0D, verification: marked observed on firmware 0x41
+- devices/9913.json: product key of identity 0x7E/0x0D, productKeyVerification: marked observed on firmware 0x41
+
+Needs a maintainer decision:
+
+- conflicting-not-overwritten: The catalog marks engine i2CS 0x7E/0x0D conflicting; an observation does not settle which document is right.
+
+Warnings:
+
+- The file names a different product than the profile its identity matched.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+

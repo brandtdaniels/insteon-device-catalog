@@ -1,0 +1,12 @@
+=== status 1
+1
+=== stdout 348
+observation 1 (dc2222ac): not valid
+  the file is not valid JSON: it is not UTF-8 text
+observation 2 (ae3f4619): not valid
+  the file is not valid JSON: it is not UTF-8 text
+observation 3 (91a681b9): not valid
+  the file is not valid JSON: it is not UTF-8 text
+observation 4 (caf573f0): not valid
+  the file is not valid JSON: it is not UTF-8 text
+

@@ -1,0 +1,85 @@
+=== status 1
+0
+=== stdout 34
+observation 1 (30d99634): drafted
+
+=== report.json 1515
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "drafted",
+  "observations": [
+    {
+      "input": "observation 1 (30d99634)",
+      "outcome": "drafted",
+      "matched": {
+        "model": "2635-222",
+        "identity": {
+          "category": "0x02",
+          "subcategory": "0x37"
+        }
+      },
+      "changes": [
+        {
+          "file": "devices/2635-222.json",
+          "model": "2635-222",
+          "entry": "engine",
+          "selector": {
+            "engine": "i2cs",
+            "category": "0x02",
+            "subcategory": "0x37"
+          },
+          "field": "verification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x48: Get Insteon Engine Version answered with i2CS.",
+            "firmware": [
+              "0x48"
+            ]
+          },
+          "effect": "marked observed on firmware 0x48",
+          "target": "engine i2CS 0x02/0x37"
+        }
+      ],
+      "unchanged": [
+        {
+          "target": "identity 0x02/0x37",
+          "reason": "already observed on firmware 0x48"
+        }
+      ],
+      "disagreements": [],
+      "skipped": [],
+      "reportOnly": [
+        {
+          "item": "Operating flags",
+          "detail": "The device gave 00 08 89 DE 0D. Not compared with the catalog's flags: the file does not say which request each byte answers."
+        }
+      ],
+      "warnings": [],
+      "errors": []
+    }
+  ]
+}
+
+=== report.md 485
+# Observation report
+
+Outcome: drafted
+
+## observation 1 (30d99634): drafted
+
+Matched 2635-222 by category 0x02 and subcategory 0x37.
+
+Proposed changes:
+
+- devices/2635-222.json: engine i2CS 0x02/0x37, verification: marked observed on firmware 0x48
+
+Already recorded:
+
+- identity 0x02/0x37: already observed on firmware 0x48
+
+Report only:
+
+- Operating flags: The device gave 00 08 89 DE 0D. Not compared with the catalog's flags: the file does not say which request each byte answers.
+

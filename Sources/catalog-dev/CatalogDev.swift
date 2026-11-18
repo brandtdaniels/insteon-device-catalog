@@ -11,7 +11,8 @@ struct CatalogDev: ParsableCommand {
     commandName: "catalog-dev",
     abstract: "Developer tooling for the Insteon device catalog.",
     subcommands: [
-      SweepCommand.self, ScenariosCommand.self, ComparePageCommand.self, PageSweepCommand.self, CompareSiteCommand.self
+      SweepCommand.self, ScenariosCommand.self, ComparePageCommand.self, PageSweepCommand.self, CompareSiteCommand.self,
+      IngestCaptureCommand.self
     ]
   )
 }
@@ -281,5 +282,33 @@ struct PageSweepCommand: ParsableCommand {
     for (kind, counts) in kinds.sorted(by: { $0.key < $1.key }) { print("  \(kind): \(counts.compared) compared, \(counts.refused) refused") }
 
     if differences > 0 || disagreements > 0 || broken > 0 { throw ExitCode.failure }
+  }
+}
+
+/// Runs the Python ingestion tool on every case and writes what it did as the goldens the Swift
+/// tool is held to.
+///
+/// Transitional: `scripts/ingest.py` is the oracle while the Python ingestion exists.
+struct IngestCaptureCommand: ParsableCommand {
+  static let configuration = CommandConfiguration(
+    commandName: "ingest-capture",
+    abstract: "Write the Python ingestion tool's outputs for every case as goldens."
+  )
+
+  @Option(help: "The repository whose scripts and build the Python tool runs.")
+  var root: String = "."
+
+  @Option(help: "The folder with observations/ and catalogs/, where cases/ and apply/ are written.")
+  var golden: String = "SwiftTests/CatalogIngestTests/Golden"
+
+  @Option(help: "The Python interpreter that runs scripts/ingest.py.")
+  var python: String = "python3"
+
+  func run() throws {
+    let goldenFolder = URL(fileURLWithPath: golden, isDirectory: true)
+    let capture = IngestCapture(oracle: IngestOracle(interpreter: python), repository: URL(fileURLWithPath: root, isDirectory: true), golden: goldenFolder)
+    let written = try capture.write(book: IngestCaseBook(fixtures: capture.observations))
+
+    print("wrote \(written) goldens")
   }
 }

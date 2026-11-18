@@ -1,0 +1,38 @@
+=== status 1
+1
+=== stdout 1440
+observation 1 (656d4f10): not valid
+  the file is not valid JSON (line 1, column 37)
+observation 2 (e3b0c442): not valid
+  the file is not valid JSON (line 1, column 1)
+observation 3 (2106c360): not valid
+  the file is not valid JSON (line 2, column 1)
+observation 4 (021fb596): not valid
+  the file is not valid JSON (line 1, column 2)
+observation 5 (d10b36aa): not valid
+  the file is not valid JSON (line 1, column 1)
+observation 6 (99e62427): not valid
+  the file is not valid JSON (line 1, column 1)
+observation 7 (4f804322): not valid
+  the file is not valid JSON (line 3, column 8)
+observation 8 (1fd5f60d): not valid
+  the file is not valid JSON (line 1, column 15)
+observation 9 (4d97ece2): not valid
+  the file is not valid JSON (line 1, column 6)
+observation 10 (61b632cb): not valid
+  the file is not valid JSON (line 1, column 10)
+observation 11 (4fcff659): not valid
+  the file is not valid JSON (line 1, column 9)
+observation 12 (240f5ff9): not valid
+  the file is not valid JSON (line 1, column 2)
+observation 13 (58d1b26d): not valid
+  the file is not valid JSON (line 1, column 8)
+observation 14 (e208d04c): not valid
+  the file is not valid JSON (line 1, column 12)
+observation 15 (bbdfc34a): not valid
+  the file is not valid JSON (line 1, column 9)
+observation 16 (aa25e978): not valid
+  the file is not valid JSON (line 1, column 1)
+observation 17 (e4fb7825): not valid
+  the file is not valid JSON (line 2, column 6)
+

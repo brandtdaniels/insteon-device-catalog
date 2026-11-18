@@ -1,0 +1,28 @@
+=== status 1
+1
+=== stdout 1633
+observation 1 (dea38475): not valid
+  $.device.model: contains what looks like an Insteon address; remove it and run the observation again
+observation 2 (81588b72): not valid
+  $.device.model: contains what looks like an Insteon address; remove it and run the observation again
+observation 3 (4c2dc7a4): not valid
+  $.device.model: contains what looks like an Insteon address; remove it and run the observation again
+observation 4 (c9bf839a): not valid
+  $.device.model: contains what looks like an IP address; remove it and run the observation again
+observation 5 (7cfd1a86): not valid
+  $.device.model: contains what looks like an IP address; remove it and run the observation again
+observation 6 (d11330fb): not valid
+  $.device.model: contains what looks like a MAC address; remove it and run the observation again
+observation 7 (932d358c): not valid
+  $.device.model: contains what looks like a URL or host name; remove it and run the observation again
+observation 8 (59b6ca09): not valid
+  $.device.model: contains what looks like a URL or host name; remove it and run the observation again
+observation 9 (1ee1fb73): not valid
+  $.device.model: contains what looks like an email address; remove it and run the observation again
+observation 10 (3cd53bf3): not valid
+  $.device.model: contains what looks like a file path; remove it and run the observation again
+observation 11 (97083e56): not valid
+  $.device.model: contains what looks like a file path; remove it and run the observation again
+observation 12 (e353403a): not valid
+  $.device.model: contains what looks like a file path; remove it and run the observation again
+

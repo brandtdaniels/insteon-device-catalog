@@ -1,0 +1,15 @@
+=== status 1
+1
+=== stdout 547
+observation 1 (797cd392): not valid
+  $.operatingFlags.raw: is not written the way the format requires
+observation 2 (24a4a1dd): not valid
+  $.operatingFlags.raw: is not written the way the format requires
+observation 3 (d52237f4): valid
+observation 4 (47e0d371): not valid
+  $.operatingFlags.raw: is not written the way the format requires
+observation 5 (7a2e5d60): not valid
+  $.operatingFlags.raw: is not written the way the format requires
+observation 6 (7f7551bd): not valid
+  $.operatingFlags.raw: is not written the way the format requires
+

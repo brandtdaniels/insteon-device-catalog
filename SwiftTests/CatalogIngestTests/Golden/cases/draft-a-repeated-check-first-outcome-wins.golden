@@ -1,0 +1,57 @@
+=== status 1
+0
+=== stdout 36
+observation 1 (ac9cae32): no-change
+
+=== report.json 749
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "no-change",
+  "observations": [
+    {
+      "input": "observation 1 (ac9cae32)",
+      "outcome": "no-change",
+      "matched": null,
+      "changes": [],
+      "unchanged": [],
+      "disagreements": [],
+      "skipped": [
+        {
+          "check": "ID Request",
+          "reason": "outcome was silent; says nothing about the device"
+        },
+        {
+          "check": "Get Insteon Engine Version",
+          "reason": "outcome was silent; says nothing about the device"
+        }
+      ],
+      "reportOnly": [],
+      "warnings": [
+        "The device's identity was not reported, so no profile was matched."
+      ],
+      "errors": []
+    }
+  ]
+}
+
+=== report.md 415
+# Observation report
+
+Outcome: no-change
+
+## observation 1 (ac9cae32): no-change
+
+Not used:
+
+- ID Request: outcome was silent; says nothing about the device
+- Get Insteon Engine Version: outcome was silent; says nothing about the device
+
+Warnings:
+
+- The device's identity was not reported, so no profile was matched.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+

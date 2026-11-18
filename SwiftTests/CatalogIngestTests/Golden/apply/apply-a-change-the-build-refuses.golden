@@ -1,0 +1,8 @@
+=== status 1
+1
+=== stdout 116
+the build failed, so every file was put back:
+devices/2450.json: has an em or en dash; use a hyphen, comma or colon
+
+=== tree 0
+

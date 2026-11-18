@@ -1,0 +1,28 @@
+=== status 1
+1
+=== stdout 995
+observation 1 (fd7d186a): not valid
+  unsupported format version; this tool reads insteon-observation/1
+observation 2 (b4c849a6): not valid
+  unsupported format version; this tool reads insteon-observation/1
+observation 3 (8e6fb7fd): not valid
+  unsupported format version; this tool reads insteon-observation/1
+observation 4 (56c29f44): not valid
+  unsupported format version; this tool reads insteon-observation/1
+observation 5 (09aee430): not valid
+  not an insteon-observation/1 file
+observation 6 (7adadc76): not valid
+  not an insteon-observation/1 file
+observation 7 (a07dcaac): not valid
+  not an insteon-observation/1 file
+observation 8 (a90baeb5): not valid
+  not an insteon-observation/1 file
+observation 9 (8edd9ae1): not valid
+  not an insteon-observation/1 file
+observation 10 (4adf6a61): not valid
+  not an insteon-observation/1 file
+observation 11 (3e8d1ea5): not valid
+  not an insteon-observation/1 file
+observation 12 (44136fa3): not valid
+  not an insteon-observation/1 file
+

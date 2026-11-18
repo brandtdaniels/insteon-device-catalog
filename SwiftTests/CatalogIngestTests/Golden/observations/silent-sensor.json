@@ -1,0 +1,30 @@
+{
+  "catalog" : {
+    "version" : "0.10.1"
+  },
+  "checks" : [
+    {
+      "detail" : "No answer to Get Insteon Engine Version, or none to ID Request after it. Nothing more was asked. It may need to be awake.",
+      "name" : "Get Insteon Engine Version",
+      "outcome" : "silent"
+    },
+    {
+      "detail" : "No answer to Get Insteon Engine Version, or none to ID Request after it. Nothing more was asked. It may need to be awake.",
+      "name" : "ID Request",
+      "outcome" : "silent"
+    }
+  ],
+  "device" : {
+    "category" : null,
+    "engine" : null,
+    "firmware" : null,
+    "model" : null,
+    "subcategory" : null
+  },
+  "format" : "insteon-observation/1",
+  "observedOn" : "2026-11-12",
+  "tool" : {
+    "name" : "insteon",
+    "version" : "0.1.0"
+  }
+}

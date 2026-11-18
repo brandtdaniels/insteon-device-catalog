@@ -1,0 +1,7 @@
+=== status 1
+1
+=== stdout 238
+observation 1 (21460421): not valid
+  $.catalog.version: contains what looks like an email address; remove it and run the observation again
+  $.tool.version: contains what looks like an IP address; remove it and run the observation again
+

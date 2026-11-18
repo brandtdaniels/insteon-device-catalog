@@ -1,0 +1,28 @@
+=== status 1
+1
+=== stdout 1537
+observation 1 (04f51386): not valid
+  $.note: contains what looks like an Insteon address; remove it and run the observation again
+observation 2 (8ee2bde4): not valid
+  $.note: contains what looks like an Insteon address; remove it and run the observation again
+observation 3 (204719f7): not valid
+  $.note: contains what looks like an Insteon address; remove it and run the observation again
+observation 4 (3b81d51c): not valid
+  $.note: contains what looks like an IP address; remove it and run the observation again
+observation 5 (a7d9f936): not valid
+  $.note: contains what looks like an IP address; remove it and run the observation again
+observation 6 (00fbb172): not valid
+  $.note: contains what looks like a MAC address; remove it and run the observation again
+observation 7 (ac4622c5): not valid
+  $.note: contains what looks like a URL or host name; remove it and run the observation again
+observation 8 (02f4a905): not valid
+  $.note: contains what looks like a URL or host name; remove it and run the observation again
+observation 9 (f8ed7cb3): not valid
+  $.note: contains what looks like an email address; remove it and run the observation again
+observation 10 (bd82895f): not valid
+  $.note: contains what looks like a file path; remove it and run the observation again
+observation 11 (57969dec): not valid
+  $.note: contains what looks like a file path; remove it and run the observation again
+observation 12 (11541db0): not valid
+  $.note: contains what looks like a file path; remove it and run the observation again
+

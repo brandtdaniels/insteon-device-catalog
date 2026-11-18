@@ -1,0 +1,17 @@
+=== status 1
+2
+=== stdout 434
+# Observation report
+
+Outcome: needs-human
+
+## observation 1 (4a727263): needs-human
+
+Needs a maintainer decision:
+
+- unknown-device: Category 0x70, subcategory 0x7F and firmware 0x41 match no profile. A profile needs a name, aliases, an identity, capabilities, an engine and sources, each backed by a public document or an observation.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+

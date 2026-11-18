@@ -1,0 +1,820 @@
+=== status 1
+0
+=== stdout 94
+applied 2 changes to 2 files and the build passed
+  devices/2450.json
+  devices/2635-222.json
+
+=== tree 61
+ M devices/2450.json
+ M devices/2635-222.json
+?? report.json
+
+=== file devices/2450.json 18615
+{
+  "model": "2450",
+  "name": "I/O Module",
+  "aliases": [
+    "I/O Linc"
+  ],
+  "description": "A plug-in module with a low-voltage sensor input and a relay output. It connects alarm sensors, door strikes, garage door openers, and other contact-closure devices to an Insteon network.",
+  "identities": [
+    {
+      "category": "0x07",
+      "subcategory": "0x00",
+      "productKey": "0x00001A",
+      "productKeyVerification": {
+        "status": "documented",
+        "note": "Insteon Device Categories and Product Keys (October 2008) gives the IOLinc [2450] 0x00001A. The identity's observation saw no key because ID Request's reply, a SET Button Pressed broadcast, carries none; Product Data Request, which carries it, wasn't recorded."
+      },
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running firmware 0x41: ID Request answered with category 0x07, subcategory 0x00 and firmware 0x41, and no product key was reported. Get Insteon Engine Version (cmd1 0x0D) answered with cmd2 0x02, i2CS, as the catalog's engine entry gives. A Hub 2245, with modem firmware 0xA5, kept 0x01 0x00 0x41 as Data 1 to 3 of its controller record for the device in group 0, as it did for other devices: Data 3 there is the firmware, and Data 1 isn't the category.",
+        "firmware": [
+          "0x41"
+        ]
+      }
+    },
+    {
+      "category": "0x07",
+      "subcategory": "0x0D"
+    }
+  ],
+  "engines": [
+    {
+      "engine": "i2cs",
+      "category": "0x07",
+      "subcategory": "0x00",
+      "firmware": {
+        "only": [
+          "0x40",
+          "0x41",
+          "0xA1",
+          "0xA2",
+          "0xA3",
+          "0xA4",
+          "0xA5",
+          "0xA6",
+          "0xA7",
+          "0xA8"
+        ]
+      },
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running firmware 0x41: Get Insteon Engine Version answered with i2CS.",
+        "firmware": [
+          "0x41"
+        ]
+      }
+    },
+    {
+      "engine": "i2cs",
+      "category": "0x07",
+      "subcategory": "0x0D"
+    }
+  ],
+  "commandSets": [
+    {
+      "commandSet": "ioLinc",
+      "category": "0x07",
+      "subcategory": "0x00"
+    },
+    {
+      "commandSet": "ioLinc",
+      "category": "0x07",
+      "subcategory": "0x0D",
+      "verification": {
+        "status": "inferred",
+        "note": "Read from the 0x07/0x00 version: 0x07/0x0D is the version that detects 50 or 60 Hz power, which Insteon Device Categories (January 2014) lists as model 2450, and no document gives it other commands."
+      }
+    }
+  ],
+  "groups": [
+    {
+      "number": "0x01",
+      "name": "Sensor and relay",
+      "role": "both",
+      "type": "relay",
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running firmware 0x41: linked to a Hub 2245, the device wrote its controller record for group 1, to the Hub, with Data 1 to 3 as 0x03 0x00 0x00. Tapping its SET button sent a group 1 broadcast, Light On (cmd1 0x11), then an ALL-Link cleanup to the Hub. The sensor input itself wasn't changed, so its messages weren't seen; neither the I/O Module 2450 Owner's Manual nor the I/O Linc command set gives the input's group number.",
+        "firmware": [
+          "0x41"
+        ]
+      }
+    }
+  ],
+  "capabilities": [
+    {
+      "kind": "onOff"
+    }
+  ],
+  "lifecycle": {
+    "installation": {
+      "steps": [
+        {
+          "text": "Plug the I/O Module into an unswitched outlet near the sensor.",
+          "action": "plugIn",
+          "expect": "White status LED turns on"
+        },
+        {
+          "text": "If using a sensor, connect one of its leads to the Ground terminal and the other to the Sense terminal, or use the 3.5 mm sensor jack.",
+          "action": "wire",
+          "control": "Ground and Sense terminals",
+          "expect": "Green sensor status LED turns on and off as the sensor closes and opens"
+        },
+        {
+          "text": "If using the output relay, set up the relay mode and links before connecting the device to the relay terminals (N/C, N/O, COM).",
+          "action": "wire",
+          "control": "relay terminals"
+        }
+      ],
+      "notes": [
+        "Sensor wire of 16 to 28 gauge fits; 20 to 22 gauge is recommended.",
+        "The 5V terminal supplies 5 V at 10 mA if needed. Applying more than 5 V can damage the sensor input.",
+        "Normally Closed and Common are connected when the relay is closed; Normally Open and Common are connected when it is open.",
+        "Don't plug it into a switched outlet, a filtered power strip or an AC filter, and don't stack Insteon devices in each other's pass-through outlets."
+      ]
+    },
+    "linking": {
+      "steps": [
+        {
+          "text": "Put the sensor in the state that should send an on command.",
+          "action": "other",
+          "expect": "Sensor status LED on if the sensor is closed, off if open"
+        },
+        {
+          "text": "Press and hold the SET button until the I/O Module beeps, about 3 seconds.",
+          "action": "hold",
+          "control": "SET button",
+          "seconds": 3,
+          "expect": "Beep; status LED blinks"
+        }
+      ],
+      "notes": [
+        "As controller (sensor input): after these steps press and hold the responder's SET button for 3 seconds; the I/O Module's status LED stops blinking and stays on. The opposite sensor state sends off. Tapping the SET button also triggers the linked responders.",
+        "As responder (output relay, latching mode): tap the SET button to set the relay to the state an on command should give (LED dim when open, bright when closed), put the controller in linking mode, then press and hold the I/O Module's SET button until it beeps (3 seconds). Momentary modes A, B and C have their own variations in the I/O Module 2450 Owner's Manual.",
+        "The linking steps for the relay assume the default latching mode; set the relay mode after linking."
+      ],
+      "alternatives": [
+        {
+          "description": "From a Hub",
+          "steps": [
+            {
+              "text": "Have the Hub start ALL-Linking as the controller, for group 0.",
+              "device": "other",
+              "action": "send",
+              "command": "Start ALL-Linking"
+            },
+            {
+              "text": "Press and hold the SET button until the I/O Module beeps, about 3 seconds.",
+              "action": "hold",
+              "control": "SET button",
+              "seconds": 3,
+              "expect": "Beep; status LED blinks"
+            },
+            {
+              "text": "Wait for the Hub to report the new link.",
+              "device": "other",
+              "action": "wait",
+              "expect": "The Hub reports ALL-Linking Completed with the device's Insteon ID"
+            },
+            {
+              "text": "Have the Hub send ID Request.",
+              "action": "send",
+              "command": "ID Request",
+              "expect": "The device answers with its category, subcategory and firmware version"
+            },
+            {
+              "text": "Have the Hub start ALL-Linking as the responder.",
+              "device": "other",
+              "action": "send",
+              "command": "Start ALL-Linking"
+            },
+            {
+              "text": "Have the Hub send Enter Linking Mode (cmd1 0x09) with cmd2 0x01, for group 1: as an extended message if Get Insteon Engine Version (cmd1 0x0D) says the device is i2CS, and as a standard message otherwise.",
+              "action": "send",
+              "command": "Enter Linking Mode",
+              "expect": "The Hub reports ALL-Linking Completed with the device's Insteon ID"
+            },
+            {
+              "text": "Have the Hub send Ping to confirm the link.",
+              "action": "send",
+              "command": "Ping",
+              "expect": "The device acknowledges the Ping"
+            }
+          ],
+          "notes": [
+            "To link the relay to a group of the Hub's own, set the relay first to the state the Hub's On should give (On, cmd1 0x11, or Off, cmd1 0x13): a link to the relay records its state when it's made.",
+            "Seen on a device running firmware 0x41: with a Hub 2245's modem already in Start ALL-Linking as controller, holding the SET button for about 3 seconds linked the Hub as its controller. The modem had to be in linking mode before the hold; a hold made before the modem started linking wasn't seen.",
+            "Seen on a device running firmware 0x41: once the device had been linked so, linking it again by its Insteon ID worked for both links with no SET button press: the extended Enter Linking Mode with the modem in Start ALL-Linking as controller of group 0, then Enter Linking Mode for group 1 with the modem in Start ALL-Linking as responder.",
+            "Seen on a device running firmware 0x41: the device wrote its responder record for the Hub's group 0 with Data 1 to 3 as 0x00 0x00 0x00, and its controller record for group 1 as the profile's group gives. Linked again after both links had been removed, it wrote the two records again at other free ALL-Link database addresses."
+          ],
+          "verification": {
+            "status": "inferred",
+            "note": "Assembled from this profile's linking steps and the standard Insteon commands Start ALL-Linking, ID Request, Enter Linking Mode and Ping; no document describes adding this product to a Hub. Neither the I/O Module 2450 Owner's Manual nor the I/O Linc command set gives the sensor input's group number; group 1 is the one a device used, as the profile's group records."
+          }
+        }
+      ]
+    },
+    "linkingTimeoutSeconds": 240,
+    "fromHub": {
+      "legs": [
+        {
+          "modem": "controller",
+          "modemGroup": "0x00",
+          "deviceGroup": "0x01",
+          "verification": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: with a Hub 2245's modem in Start ALL-Linking as the controller of group 0, the device linked as its responder both from its SET button and from the extended Enter Linking Mode with cmd2 0x01.",
+            "firmware": [
+              "0x41"
+            ]
+          }
+        },
+        {
+          "modem": "responder",
+          "modemGroup": "0x01",
+          "deviceGroup": "0x01",
+          "verification": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: with a Hub 2245's modem in Start ALL-Linking as the responder, Enter Linking Mode with cmd2 0x01 linked the device as the controller of group 1, and it wrote its controller record for group 1.",
+            "firmware": [
+              "0x41"
+            ]
+          }
+        }
+      ],
+      "deviceFirst": false,
+      "remoteEnterLinkingMode": {
+        "works": "unknown",
+        "verification": {
+          "status": "inferred",
+          "note": "The Insteon Developer's Guide (2009) says i1 devices don't support Enter Linking Mode (cmd1 0x09), and the catalog doesn't know the engine of every version of this product. An i2 or i2CS version takes it; ask the device with Get Insteon Engine Version (cmd1 0x0D) first. Seen on a device running firmware 0x41, an i2CS version: the extended Enter Linking Mode put it in linking mode for both legs."
+        }
+      },
+      "verification": {
+        "status": "inferred",
+        "note": "Read from the From a Hub alternative to this profile's linking, whose steps are assembled from its own linking steps and standard Insteon commands; no document describes adding this product to a Hub."
+      }
+    },
+    "unlinking": {
+      "steps": [
+        {
+          "text": "Press and hold the SET button until the I/O Module beeps, about 3 seconds.",
+          "action": "hold",
+          "control": "SET button",
+          "seconds": 3,
+          "expect": "Beep; status LED blinks"
+        },
+        {
+          "text": "Press and hold the SET button again until it beeps, about 3 seconds.",
+          "action": "hold",
+          "control": "SET button",
+          "seconds": 3,
+          "expect": "Beep; status LED keeps blinking"
+        }
+      ],
+      "notes": [
+        "Then press and hold the responder's SET button for 3 seconds within 4 minutes; the status LED stops blinking and stays on.",
+        "To unlink the I/O Module from a controller, put the controller in unlinking mode and press and hold the I/O Module's SET button until it beeps (3 seconds); the status LED turns off for about 1 second and back on."
+      ]
+    },
+    "reset": {
+      "steps": [
+        {
+          "text": "Unlink the I/O Module from any controllers.",
+          "action": "other"
+        },
+        {
+          "text": "Unplug the I/O Module.",
+          "action": "unplug"
+        },
+        {
+          "text": "Wait about 10 seconds.",
+          "action": "wait",
+          "seconds": 10
+        },
+        {
+          "text": "While holding down the SET button, plug it back in.",
+          "action": "plugIn",
+          "control": "SET button"
+        },
+        {
+          "text": "Keep holding the SET button for 3 seconds.",
+          "action": "hold",
+          "control": "SET button",
+          "seconds": 3,
+          "expect": "Status LED flashes once and turns off for a few seconds, then beeps as the LED turns back on"
+        }
+      ],
+      "notes": [
+        "Clears all Insteon links and X10 addresses, disables sensor control of the relay, returns the relay to latching mode and sets the momentary duration back to 2 seconds."
+      ]
+    },
+    "resetErases": [
+      "links",
+      "settings"
+    ],
+    "removal": {
+      "steps": [
+        {
+          "text": "Unlink the I/O Module from every controller it is linked to.",
+          "action": "other"
+        }
+      ],
+      "notes": [
+        "Otherwise controllers keep retrying commands and slow the system."
+      ],
+      "alternatives": [
+        {
+          "description": "From a Hub",
+          "steps": [
+            {
+              "text": "Remove the device from its scenes first, so no other device keeps links to it.",
+              "device": "other",
+              "action": "other"
+            },
+            {
+              "text": "If the Hub also controls the I/O Linc's relay from a group of its own, have the Hub start unlinking for that group (Start ALL-Linking with link code 0xFF).",
+              "device": "other",
+              "action": "send",
+              "command": "Start ALL-Linking"
+            },
+            {
+              "text": "If so, have the Hub send Enter Linking Mode (cmd1 0x09) with cmd2 0x01, for group 1, as an extended message if the device is i2CS.",
+              "action": "send",
+              "command": "Enter Linking Mode"
+            },
+            {
+              "text": "If so, wait for the Hub to report that the link is gone.",
+              "device": "other",
+              "action": "wait",
+              "expect": "The Hub reports the device's Insteon ID"
+            },
+            {
+              "text": "Have the Hub send Enter Unlinking Mode (cmd1 0x0A) with cmd2 0x01, for group 1, as an extended message if the device is i2CS.",
+              "action": "send",
+              "command": "Enter Unlinking Mode"
+            },
+            {
+              "text": "Have the Hub start ALL-Linking with link code 0xFF (delete), so the device deletes its group 1 link to the Hub.",
+              "device": "other",
+              "action": "send",
+              "command": "Start ALL-Linking",
+              "expect": "The device deletes its group 1 link to the Hub, and the Hub reports the device's Insteon ID"
+            },
+            {
+              "text": "Have the Hub start unlinking for group 0 (Start ALL-Linking with link code 0xFF).",
+              "device": "other",
+              "action": "send",
+              "command": "Start ALL-Linking"
+            },
+            {
+              "text": "Have the Hub send Enter Linking Mode (cmd1 0x09) with cmd2 0x01, for group 1, as an extended message if the device is i2CS.",
+              "action": "send",
+              "command": "Enter Linking Mode"
+            },
+            {
+              "text": "Wait for the Hub to report that the link is gone.",
+              "device": "other",
+              "action": "wait",
+              "expect": "The Hub reports the device's Insteon ID"
+            }
+          ],
+          "notes": [
+            "Seen on a device running firmware 0x41: with a Hub 2245's modem, these steps removed both links with no SET button press: Enter Unlinking Mode (cmd1 0x0A) for group 1, with the modem joining as responder, then Start ALL-Linking with link code 0xFF and Enter Linking Mode (cmd1 0x09) for the modem's group 0.",
+            "Seen on a device running firmware 0x41: after these steps the device still answered ID Request and Get Insteon Engine Version, because it still held responder records for the same Hub in groups other than 0 and 1, and an i2CS device answers a device that's in its ALL-Link database. Unlinking by the modem's own records leaves the device's records for groups the modem has no record of."
+          ],
+          "verification": {
+            "status": "inferred",
+            "note": "Assembled from the standard Insteon commands Start ALL-Linking, Enter Linking Mode and Enter Unlinking Mode; no document describes removing this product from a Hub. Neither the I/O Module 2450 Owner's Manual nor the I/O Linc command set gives the sensor input's group number; group 1 is the one a device used, as the profile's group records."
+          }
+        }
+      ]
+    }
+  },
+  "notes": [
+    "0x07/0x0D is the version that detects 50 or 60 Hz power; Insteon Device Categories (January 2014) lists it as model 2450, and HouseLinc as 2450-50-60.",
+    "Inferred: group 1 is both the sensor, which controls it, and the output relay, which responds to it. The I/O Module 2450 Owner's Manual says the output relay responds to Insteon ON and OFF commands, and the ioLinc command set's relay commands, Light ON (cmd1 0x11) and Light OFF (cmd1 0x13) sent to the device directly, are read from that and the Insteon Developer's Guide (2009); no document gives the I/O Linc's direct commands."
+  ],
+  "sources": [
+    "HouseLinc Device Definitions (version 2.9.87)",
+    "insteon.com product catalog",
+    "Insteon Device Categories (January 2014)",
+    "I/O Module 2450 Owner's Manual",
+    "Insteon Device Categories and Product Keys (October 2008)",
+    "Insteon Developer's Guide (2009)"
+  ]
+}
+
+=== file devices/2635-222.json 18113
+{
+  "model": "2635-222",
+  "name": "On/Off Plug",
+  "aliases": [
+    "On/Off Module"
+  ],
+  "description": "A plug-in relay module that switches lamps, fans, space heaters, and other small appliances on and off remotely. It handles loads of up to 15 amps or 1,800 W.",
+  "identities": [
+    {
+      "category": "0x02",
+      "subcategory": "0x37",
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running firmware 0x48: ID Request answered with category 0x02, subcategory 0x37 and firmware 0x48, and Get Insteon Engine Version (cmd1 0x0D) with cmd2 0x02, i2CS, as the catalog's engine entry gives. Product Data Request (cmd1 0x03) was acknowledged and answered with a direct extended message holding product key 0x00 0x00 0x00 in D2 to D4, category 0x02 in D5, subcategory 0x37 in D6 and firmware 0x48 in D7. A Hub 2245 kept 0x01 0x37 0x48 as Data 1 to 3 of its controller record for the device.",
+        "firmware": [
+          "0x48"
+        ]
+      }
+    }
+  ],
+  "engines": [
+    {
+      "engine": "i2cs",
+      "category": "0x02",
+      "subcategory": "0x37",
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running firmware 0x48: Get Insteon Engine Version answered with i2CS.",
+        "firmware": [
+          "0x48"
+        ]
+      }
+    }
+  ],
+  "commandSets": [
+    {
+      "commandSet": "applianceLincDualBand",
+      "category": "0x02",
+      "subcategory": "0x37",
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running firmware 0x48: the operating flags, the ALL-Link database delta, the extended Get reply's X10 address and LED brightness, Beep and the load's on and off levels behaved as this command set gives; the command set's notes list where Get Operating Flags and the extended Get reply differed.",
+        "firmware": [
+          "0x48"
+        ]
+      }
+    }
+  ],
+  "radio": "dual",
+  "role": "both",
+  "groups": [
+    {
+      "number": "0x01",
+      "name": "Load",
+      "role": "both",
+      "type": "load",
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running firmware 0x48: once the modem was a responder of the device's group 1, each tap of the load button (on, on again while on, and off) sent a group 1 broadcast, Light On (cmd1 0x11) or Light Off (cmd1 0x13), then an ALL-Link cleanup to the Hub, then a cleanup status report broadcast (cmd1 0x06). Its controller record for group 1, to the Hub, held Data 1 to 3 as 0x03 0x1C 0x01.",
+        "firmware": [
+          "0x48"
+        ]
+      }
+    }
+  ],
+  "capabilities": [
+    {
+      "kind": "onOff"
+    }
+  ],
+  "lifecycle": {
+    "installation": {
+      "steps": [
+        {
+          "text": "Turn on the lamp or appliance.",
+          "action": "other"
+        },
+        {
+          "text": "Plug the appliance into the bottom of the module.",
+          "action": "plugIn"
+        },
+        {
+          "text": "Plug the module into an unswitched wall outlet.",
+          "action": "plugIn"
+        }
+      ],
+      "notes": [
+        "Leave the appliance's own switch on; if it is off, the module cannot turn the appliance on."
+      ]
+    },
+    "linking": {
+      "steps": [
+        {
+          "text": "Press and hold the SET button for 3 seconds, until the module beeps.",
+          "action": "hold",
+          "control": "SET button",
+          "seconds": 3,
+          "expect": "Status LED blinks green; the module stays in linking mode until a link is made or four minutes pass"
+        }
+      ],
+      "notes": [
+        "The first device put into linking mode becomes the controller and the second becomes the responder.",
+        "As a responder: put the controller in linking mode (press and hold its SET button until it beeps; on a multi-button controller, tap the desired button first), make sure the module is on, then press and hold the module's SET button until it double-beeps.",
+        "With the Hub, select Plug-In Module in the app and, when prompted, press and hold the SET button until the module double-beeps.",
+        "The 3-second hold time comes from the On/Off Module, Dual-Band Developer Notes; software can use the Enter Linking Mode command.",
+        "Seen on a device running firmware 0x48: holding the SET button sent SET Button Pressed (cmd1 0x01) and put the module in linking mode; the first tap afterward took it out of linking mode and also sent a group 1 Light On."
+      ],
+      "verification": {
+        "status": "conflicting",
+        "note": "When adding the module to the Hub, the On/Off Plug 2635-222 Owner's Manual says to hold the SET button until the module double-beeps; the On/Off Plug 2635-222 Quick Start Guide says until it beeps. The catalog uses the On/Off Plug 2635-222 Owner's Manual's double-beep for adding it to the Hub; entering linking mode on its own ends at a single beep."
+      },
+      "alternatives": [
+        {
+          "description": "From a Hub",
+          "steps": [
+            {
+              "text": "Have the Hub start ALL-Linking as the controller, for group 0.",
+              "device": "other",
+              "action": "send",
+              "command": "Start ALL-Linking"
+            },
+            {
+              "text": "Press and hold the SET button until the module double-beeps.",
+              "action": "hold",
+              "control": "SET button",
+              "expect": "Module double-beeps"
+            },
+            {
+              "text": "Wait for the Hub to report the new link.",
+              "device": "other",
+              "action": "wait",
+              "expect": "The Hub reports ALL-Linking Completed with the device's Insteon ID"
+            },
+            {
+              "text": "Have the Hub send ID Request.",
+              "action": "send",
+              "command": "ID Request",
+              "expect": "The device answers with its category, subcategory and firmware version"
+            },
+            {
+              "text": "Have the Hub start ALL-Linking as the responder.",
+              "device": "other",
+              "action": "send",
+              "command": "Start ALL-Linking"
+            },
+            {
+              "text": "Have the Hub send Enter Linking Mode (cmd1 0x09) with cmd2 0x01, for group 1: as an extended message if Get Insteon Engine Version (cmd1 0x0D) says the device is i2CS, and as a standard message otherwise.",
+              "action": "send",
+              "command": "Enter Linking Mode",
+              "expect": "The Hub reports ALL-Linking Completed with the device's Insteon ID"
+            },
+            {
+              "text": "Have the Hub send Ping to confirm the link.",
+              "action": "send",
+              "command": "Ping",
+              "expect": "The device acknowledges the Ping"
+            }
+          ],
+          "verification": {
+            "status": "inferred",
+            "note": "Assembled from this profile's linking steps and the standard Insteon commands Start ALL-Linking, ID Request, Enter Linking Mode and Ping; no document describes adding this product to a Hub. The SET button's double-beep for adding it to a Hub is read from the On/Off Plug 2635-222 Owner's Manual."
+          }
+        }
+      ]
+    },
+    "linkingTimeoutSeconds": 240,
+    "fromHub": {
+      "legs": [
+        {
+          "modem": "controller",
+          "modemGroup": "0x00",
+          "deviceGroup": "0x01"
+        },
+        {
+          "modem": "responder",
+          "modemGroup": "0x01",
+          "deviceGroup": "0x01"
+        }
+      ],
+      "deviceFirst": false,
+      "remoteEnterLinkingMode": {
+        "works": "yes",
+        "verification": {
+          "status": "inferred",
+          "note": "The Insteon Developer's Guide (2009) lists Enter Linking Mode (cmd1 0x09, cmd2 the group) as required of every device but i1 ones, and the Insteon Firmware Update i2CS Developer Notes give it to an i2CS device as an extended message with a checksum, from a sender that isn't in its ALL-Link database too. This profile's engine entries make every version of the product i2CS; no document names this product."
+        }
+      },
+      "verification": {
+        "status": "inferred",
+        "note": "Read from the From a Hub alternative to this profile's linking, whose steps are assembled from its own linking steps and standard Insteon commands; no document describes adding this product to a Hub."
+      }
+    },
+    "multiLinking": {
+      "steps": [
+        {
+          "text": "Press and hold the SET button until the module beeps.",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "Status LED blinks green"
+        },
+        {
+          "text": "Tap the SET button.",
+          "action": "tap",
+          "control": "SET button",
+          "expect": "Status LED double-blinks green; multi-linking mode lasts four minutes or until the SET button is tapped"
+        },
+        {
+          "text": "Adjust each responder to its desired state.",
+          "device": "other",
+          "action": "other"
+        },
+        {
+          "text": "One at a time, press and hold each responder's SET button until it double-beeps.",
+          "device": "other",
+          "action": "hold",
+          "control": "SET button"
+        },
+        {
+          "text": "Tap the SET button to finish.",
+          "action": "tap",
+          "control": "SET button"
+        }
+      ]
+    },
+    "unlinking": {
+      "steps": [
+        {
+          "text": "Press and hold the SET button until the module beeps.",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "Status LED blinks green"
+        },
+        {
+          "text": "Press and hold the SET button again until the module beeps.",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "Status LED blinks red; the module stays in unlinking mode until a link is removed or four minutes pass"
+        }
+      ],
+      "notes": [
+        "To remove the module from a controller, put the controller in unlinking mode first (on a multi-button controller, tap the desired button first), then press and hold the module's SET button until it double-beeps.",
+        "For multi-unlinking, tap the SET button after entering unlinking mode (Status LED double-blinks red), press and hold each scene member's SET button until it double-beeps, then tap the SET button to exit."
+      ]
+    },
+    "reset": {
+      "steps": [
+        {
+          "text": "Press and hold the SET button until it beeps.",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "Status LED blinks green"
+        },
+        {
+          "text": "Press and hold the SET button until it beeps a second time.",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "Status LED blinks red"
+        },
+        {
+          "text": "Press and hold the SET button until it beeps a third time.",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "Status LED blinks green"
+        },
+        {
+          "text": "Slowly tap the SET button three times.",
+          "action": "tap",
+          "control": "SET button",
+          "count": 3,
+          "expect": "Status LED double-blinks green"
+        },
+        {
+          "text": "Press and hold the SET button. Do not let go.",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "Module emits a long beep"
+        },
+        {
+          "text": "After the beep stops, release the SET button.",
+          "action": "release",
+          "control": "SET button",
+          "expect": "After a few seconds the module double-beeps"
+        }
+      ],
+      "notes": [
+        "The On/Off Plug 2635-222 Owner's Manual shows that tapping the SET button instead of holding it at Factory Reset cancels."
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "The On/Off Plug 2635-222 Owner's Manual gives the factory reset only as a programming wheel flow chart. The steps are read from the On/Off Module 2633 Owner's Manual, which gives the same path through the SET button menu in words (hold three times, tap three times, then hold until the long beep stops) and matches the 2635-222 flow chart."
+      },
+      "alternatives": [
+        {
+          "description": "Power-up reset",
+          "steps": [
+            {
+              "text": "Unplug the module from the outlet.",
+              "action": "unplug"
+            },
+            {
+              "text": "Press and hold the SET button while plugging the module back in.",
+              "action": "plugIn",
+              "control": "SET button"
+            },
+            {
+              "text": "Keep holding the SET button until the beep stops.",
+              "action": "hold",
+              "control": "SET button"
+            },
+            {
+              "text": "Release the SET button.",
+              "action": "release",
+              "control": "SET button",
+              "expect": "Module beeps twice to confirm the reset"
+            }
+          ],
+          "verification": {
+            "status": "inferred",
+            "note": "The Factory Resetting Insteon Devices (Insteon support article) gives this procedure for plug-in devices in general; it does not name the 2635-222."
+          }
+        }
+      ]
+    },
+    "resetErases": [
+      "links",
+      "settings"
+    ],
+    "removal": {
+      "steps": [
+        {
+          "text": "Remove the module's links from every controller that controls it, using the unlinking steps or software.",
+          "action": "other"
+        }
+      ],
+      "notes": [
+        "The On/Off Plug 2635-222 Owner's Manual's troubleshooting says that links to devices removed from the network must be removed from their controllers; otherwise the controllers keep repeating commands and slow the network."
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "Taken from the On/Off Plug 2635-222 Owner's Manual's troubleshooting section, not a removal procedure."
+      },
+      "alternatives": [
+        {
+          "description": "From a Hub",
+          "steps": [
+            {
+              "text": "Remove the device from its scenes first, so no other device keeps links to it.",
+              "device": "other",
+              "action": "other"
+            },
+            {
+              "text": "Have the Hub send Enter Unlinking Mode (cmd1 0x0A) with cmd2 0x01, for group 1, as an extended message if the device is i2CS.",
+              "action": "send",
+              "command": "Enter Unlinking Mode"
+            },
+            {
+              "text": "Have the Hub start ALL-Linking with link code 0xFF (delete), so the device deletes its group 1 link to the Hub.",
+              "device": "other",
+              "action": "send",
+              "command": "Start ALL-Linking",
+              "expect": "The device deletes its group 1 link to the Hub, and the Hub reports the device's Insteon ID"
+            },
+            {
+              "text": "Have the Hub start unlinking for group 0 (Start ALL-Linking with link code 0xFF).",
+              "device": "other",
+              "action": "send",
+              "command": "Start ALL-Linking"
+            },
+            {
+              "text": "Have the Hub send Enter Linking Mode (cmd1 0x09) with cmd2 0x01, for group 1, as an extended message if the device is i2CS.",
+              "action": "send",
+              "command": "Enter Linking Mode"
+            },
+            {
+              "text": "Wait for the Hub to report that the link is gone.",
+              "device": "other",
+              "action": "wait",
+              "expect": "The Hub reports the device's Insteon ID"
+            }
+          ],
+          "notes": [
+            "Seen on a device running firmware 0x48: with a Hub 2245's modem, on modem firmware 0xA5, these steps removed every link between the Hub and the module with no SET button press. First the module's group 1 link: Enter Unlinking Mode (cmd1 0x0A) was sent to the module while the modem joined as responder. Then the modem's group 0 link: the modem started ALL-Linking with link code 0xFF while the module was sent Enter Linking Mode (cmd1 0x09)."
+          ],
+          "verification": {
+            "status": "inferred",
+            "note": "Assembled from the standard Insteon commands Enter Unlinking Mode, Start ALL-Linking and Enter Linking Mode; no document describes removing this product from a Hub."
+          }
+        }
+      ]
+    }
+  },
+  "notes": [
+    "Seen on a device running firmware 0x48: when a modem sent Light On or Light Off to group 0 (the modem's Send ALL-Link Command, 0x61), the device neither acted on the cleanup nor acknowledged it, although its responder record for the modem's group 0 held on-level 0xFF. The Outdoor On/Off Plug 2634-222 on firmware 0x42 followed the same group 0 commands. Direct commands, such as Light On and Light Off, controlled it normally.",
+    "Seen on a device running firmware 0x48: after 10 seconds without power, the load, which had been on, came back on, and no message from the device reached the modem in the 15 seconds after it was plugged back in.",
+    "Seen on a device running firmware 0x48: with both of its links to the modem removed, the device didn't answer ID Request; it rejected Ping and Beep; it rejected Light On (cmd1 0x11) with a NAK carrying cmd2 0xFF; it answered Get Insteon Engine Version (cmd1 0x0D) and Get Operating Flags (cmd1 0x1F, cmd2 0x00) with a NAK carrying cmd2 0xFF; and it still answered Light Status Request."
+  ],
+  "sources": [
+    "HouseLinc Device Definitions (version 2.9.87)",
+    "insteon.com product catalog",
+    "On/Off Module, Dual-Band Developer Notes",
+    "On/Off Plug 2635-222 Owner's Manual",
+    "On/Off Plug 2635-222 Quick Start Guide",
+    "On/Off Module 2633 Owner's Manual",
+    "Factory Resetting Insteon Devices (Insteon support article)",
+    "Insteon Developer's Guide (2009)",
+    "Insteon Firmware Update i2CS Developer Notes"
+  ]
+}
+

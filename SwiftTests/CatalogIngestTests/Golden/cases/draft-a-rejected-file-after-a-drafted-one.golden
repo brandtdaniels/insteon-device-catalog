@@ -1,0 +1,140 @@
+=== status 1
+1
+=== stdout 69
+observation 1 (acd1f0dc): drafted
+observation 2 (a419fafb): rejected
+
+=== report.json 2869
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "rejected",
+  "observations": [
+    {
+      "input": "observation 1 (acd1f0dc)",
+      "outcome": "drafted",
+      "matched": {
+        "model": "9999",
+        "identity": {
+          "category": "0x7E",
+          "subcategory": "0x7F"
+        }
+      },
+      "changes": [
+        {
+          "file": "devices/9999.json",
+          "model": "9999",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x7F"
+          },
+          "field": "verification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: ID Request answered with category 0x7E, subcategory 0x7F and firmware 0x41.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "effect": "marked observed on firmware 0x41",
+          "target": "identity 0x7E/0x7F"
+        },
+        {
+          "file": "devices/9999.json",
+          "model": "9999",
+          "entry": "engine",
+          "selector": {
+            "engine": "i2cs",
+            "category": "0x7E",
+            "subcategory": "0x7F"
+          },
+          "field": "verification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: Get Insteon Engine Version answered with i2CS.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "effect": "marked observed on firmware 0x41",
+          "target": "engine i2CS 0x7E/0x7F"
+        },
+        {
+          "file": "devices/9999.json",
+          "model": "9999",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x7F"
+          },
+          "field": "productKeyVerification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: Product Data Request reported product key 0x00001A.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "effect": "marked observed on firmware 0x41",
+          "target": "product key of identity 0x7E/0x7F"
+        }
+      ],
+      "unchanged": [],
+      "disagreements": [],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [
+        "The file names a different product than the profile its identity matched."
+      ],
+      "errors": []
+    },
+    {
+      "input": "observation 2 (a419fafb)",
+      "outcome": "rejected",
+      "matched": null,
+      "changes": [],
+      "unchanged": [],
+      "disagreements": [],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [],
+      "errors": [
+        "not an insteon-observation/1 file"
+      ]
+    }
+  ]
+}
+
+=== report.md 713
+# Observation report
+
+Outcome: rejected
+
+## observation 1 (acd1f0dc): drafted
+
+Matched 9999 by category 0x7E and subcategory 0x7F.
+
+Proposed changes:
+
+- devices/9999.json: identity 0x7E/0x7F, verification: marked observed on firmware 0x41
+- devices/9999.json: engine i2CS 0x7E/0x7F, verification: marked observed on firmware 0x41
+- devices/9999.json: product key of identity 0x7E/0x7F, productKeyVerification: marked observed on firmware 0x41
+
+Warnings:
+
+- The file names a different product than the profile its identity matched.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+
+## observation 2 (a419fafb): rejected
+
+Errors:
+
+- not an insteon-observation/1 file
+

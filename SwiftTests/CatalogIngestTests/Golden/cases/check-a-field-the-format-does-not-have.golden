@@ -1,0 +1,8 @@
+=== status 1
+1
+=== stdout 163
+observation 1 (8e7cadd1): not valid
+  $: has a field the format does not have
+observation 2 (d1d85d51): not valid
+  $.device: has a field the format does not have
+

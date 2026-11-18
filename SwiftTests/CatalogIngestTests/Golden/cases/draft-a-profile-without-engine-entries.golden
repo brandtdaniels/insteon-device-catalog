@@ -1,0 +1,107 @@
+=== status 1
+2
+=== stdout 34
+observation 1 (cd0afecc): drafted
+
+=== report.json 2152
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "drafted",
+  "observations": [
+    {
+      "input": "observation 1 (cd0afecc)",
+      "outcome": "drafted",
+      "matched": {
+        "model": "9909",
+        "identity": {
+          "category": "0x7E",
+          "subcategory": "0x09"
+        }
+      },
+      "changes": [
+        {
+          "file": "devices/9909.json",
+          "model": "9909",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x09"
+          },
+          "field": "verification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: ID Request answered with category 0x7E, subcategory 0x09 and firmware 0x41.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "effect": "marked observed on firmware 0x41",
+          "target": "identity 0x7E/0x09"
+        },
+        {
+          "file": "devices/9909.json",
+          "model": "9909",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x09"
+          },
+          "field": "productKeyVerification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: Product Data Request reported product key 0x00001A.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "effect": "marked observed on firmware 0x41",
+          "target": "product key of identity 0x7E/0x09"
+        }
+      ],
+      "unchanged": [],
+      "disagreements": [
+        {
+          "code": "firmware-not-covered",
+          "detail": "No engine entry covers category 0x7E, subcategory 0x09 at firmware 0x41; the device reported i2CS.",
+          "needs": "maintainer decision; nothing written"
+        }
+      ],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [
+        "The file names a different product than the profile its identity matched."
+      ],
+      "errors": []
+    }
+  ]
+}
+
+=== report.md 690
+# Observation report
+
+Outcome: drafted
+
+## observation 1 (cd0afecc): drafted
+
+Matched 9909 by category 0x7E and subcategory 0x09.
+
+Proposed changes:
+
+- devices/9909.json: identity 0x7E/0x09, verification: marked observed on firmware 0x41
+- devices/9909.json: product key of identity 0x7E/0x09, productKeyVerification: marked observed on firmware 0x41
+
+Needs a maintainer decision:
+
+- firmware-not-covered: No engine entry covers category 0x7E, subcategory 0x09 at firmware 0x41; the device reported i2CS.
+
+Warnings:
+
+- The file names a different product than the profile its identity matched.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+

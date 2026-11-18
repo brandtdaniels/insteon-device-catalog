@@ -1,0 +1,8 @@
+=== status 1
+1
+=== stdout 136
+observation 1 (17205bf7): not valid
+  $.observedOn: not a calendar date
+observation 2 (5b6f810e): valid
+observation 3 (9d1ab9ac): valid
+

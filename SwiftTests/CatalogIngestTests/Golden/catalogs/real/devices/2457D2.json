@@ -1,0 +1,359 @@
+{
+  "model": "2457D2",
+  "name": "Dimmer Plug",
+  "aliases": [
+    "LampLinc Dimmer",
+    "Dimmer Module"
+  ],
+  "description": "A plug-in module that lets a dimmable lamp be turned on and off and dimmed remotely. The lamp plugs into the module, which plugs into a wall outlet.",
+  "identities": [
+    {
+      "category": "0x01",
+      "subcategory": "0x0E",
+      "productKey": "0x00004B",
+      "productKeyVerification": {
+        "status": "inferred",
+        "note": "Insteon Device Categories and Product Keys (October 2008) gives this category and subcategory's key to the LampLinc Dimmer, Dual-Band [2457D3], not to this model; that this product reports the same key is read from its sharing the identity."
+      },
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running firmware 0x3B: a Hub 2245's ALL-Link record for the device and the device's ID Request broadcast gave category 0x01, subcategory 0x0E and firmware 0x3B, and Get Insteon Engine Version (cmd1 0x0D) was acknowledged with cmd2 0x01, i2.",
+        "firmware": [
+          "0x3B"
+        ]
+      }
+    }
+  ],
+  "engines": [
+    {
+      "engine": "i2cs",
+      "category": "0x01",
+      "subcategory": "0x0E",
+      "firmware": {
+        "only": [
+          "0x41",
+          "0x42",
+          "0x43",
+          "0xCB",
+          "0xCC",
+          "0xCD",
+          "0xCF",
+          "0xD0",
+          "0xD1",
+          "0xD2",
+          "0xD3",
+          "0xD4",
+          "0xD5",
+          "0xD6"
+        ]
+      }
+    },
+    {
+      "engine": "i2",
+      "category": "0x01",
+      "subcategory": "0x0E",
+      "firmware": {
+        "only": [
+          "0x3B"
+        ]
+      },
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running firmware 0x3B: a Hub 2245's ALL-Link record for the device and the device's ID Request broadcast gave category 0x01, subcategory 0x0E and firmware 0x3B, and Get Insteon Engine Version (cmd1 0x0D) was acknowledged with cmd2 0x01, i2.",
+        "firmware": [
+          "0x3B"
+        ]
+      }
+    }
+  ],
+  "commandSets": [
+    {
+      "commandSet": "lampLinc",
+      "category": "0x01",
+      "subcategory": "0x0E"
+    }
+  ],
+  "radio": "dual",
+  "role": "both",
+  "groups": [
+    {
+      "number": "0x01",
+      "name": "Load",
+      "role": "both",
+      "type": "light"
+    }
+  ],
+  "capabilities": [
+    {
+      "kind": "dimmable"
+    }
+  ],
+  "lifecycle": {
+    "installation": {
+      "steps": [
+        {
+          "text": "Turn on your lamp and plug its power cord into the bottom of the dimmer module.",
+          "action": "plugIn"
+        },
+        {
+          "text": "Plug the dimmer module into an unswitched wall outlet.",
+          "action": "plugIn"
+        }
+      ],
+      "notes": [
+        "Leave the lamp's own switch on; if it is off, the module can't control the lamp.",
+        "Only connect lamps with dimmable bulbs."
+      ]
+    },
+    "linking": {
+      "steps": [
+        {
+          "text": "Press and hold the SET button to enter linking mode.",
+          "action": "hold",
+          "control": "SET button"
+        }
+      ],
+      "notes": [
+        "Linking is directional: the first device put into linking mode becomes the controller and the second the responder. The module leaves linking mode once a link is made or after four minutes without one.",
+        "As a responder: on the controller, press and hold the SET button (on a multi-button controller, tap the button first) until it beeps; make sure the module is on, then press and hold its SET button until it double-beeps.",
+        "To have two devices control each other, cross-link them: link once in each direction.",
+        "When using the Hub or another central controller, let it manage links instead of linking manually."
+      ],
+      "verification": {
+        "status": "conflicting",
+        "note": "When adding the module to the Hub, the Dimmer Plug 2457D2 Owner's Manual says to hold the SET button until the module double-beeps; the Dimmer Plug 2457D2 Quick Start Guide says until it beeps. The catalog's linking step gives no beep count."
+      },
+      "alternatives": [
+        {
+          "description": "From a Hub",
+          "steps": [
+            {
+              "text": "Have the Hub start ALL-Linking as the controller, for group 0.",
+              "device": "other",
+              "action": "send",
+              "command": "Start ALL-Linking"
+            },
+            {
+              "text": "Press and hold the SET button to enter linking mode.",
+              "action": "hold",
+              "control": "SET button"
+            },
+            {
+              "text": "Wait for the Hub to report the new link.",
+              "device": "other",
+              "action": "wait",
+              "expect": "The Hub reports ALL-Linking Completed with the device's Insteon ID"
+            },
+            {
+              "text": "Have the Hub send ID Request.",
+              "action": "send",
+              "command": "ID Request",
+              "expect": "The device answers with its category, subcategory and firmware version"
+            },
+            {
+              "text": "Have the Hub start ALL-Linking as the responder.",
+              "device": "other",
+              "action": "send",
+              "command": "Start ALL-Linking"
+            },
+            {
+              "text": "Have the Hub send Enter Linking Mode (cmd1 0x09) with cmd2 0x01, for group 1: as an extended message if Get Insteon Engine Version (cmd1 0x0D) says the device is i2CS, and as a standard message otherwise.",
+              "action": "send",
+              "command": "Enter Linking Mode",
+              "expect": "The Hub reports ALL-Linking Completed with the device's Insteon ID"
+            },
+            {
+              "text": "Have the Hub send Ping to confirm the link.",
+              "action": "send",
+              "command": "Ping",
+              "expect": "The device acknowledges the Ping"
+            }
+          ],
+          "verification": {
+            "status": "inferred",
+            "note": "Assembled from this profile's linking steps and the standard Insteon commands Start ALL-Linking, ID Request, Enter Linking Mode and Ping; no document describes adding this product to a Hub."
+          }
+        }
+      ]
+    },
+    "linkingTimeoutSeconds": 240,
+    "fromHub": {
+      "legs": [
+        {
+          "modem": "controller",
+          "modemGroup": "0x00",
+          "deviceGroup": "0x01"
+        },
+        {
+          "modem": "responder",
+          "modemGroup": "0x01",
+          "deviceGroup": "0x01"
+        }
+      ],
+      "deviceFirst": false,
+      "remoteEnterLinkingMode": {
+        "works": "unknown",
+        "verification": {
+          "status": "inferred",
+          "note": "The Insteon Developer's Guide (2009) says i1 devices don't support Enter Linking Mode (cmd1 0x09), and the catalog doesn't know the engine of every version of this product. An i2 or i2CS version takes it; ask the device with Get Insteon Engine Version (cmd1 0x0D) first."
+        }
+      },
+      "verification": {
+        "status": "inferred",
+        "note": "Read from the From a Hub alternative to this profile's linking, whose steps are assembled from its own linking steps and standard Insteon commands; no document describes adding this product to a Hub."
+      }
+    },
+    "multiLinking": {
+      "steps": [
+        {
+          "text": "Press and hold the SET button to enter linking mode.",
+          "action": "hold",
+          "control": "SET button"
+        },
+        {
+          "text": "Tap the SET button to move to multi-linking mode.",
+          "action": "tap",
+          "control": "SET button"
+        },
+        {
+          "text": "Press and hold the SET button on each responder until it double-beeps.",
+          "device": "other",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "Double beep"
+        },
+        {
+          "text": "Tap the SET button to finish.",
+          "action": "tap",
+          "control": "SET button"
+        }
+      ],
+      "notes": [
+        "The module stays in multi-linking mode for 4 minutes or until its SET button is tapped."
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "Read from the Dimmer Plug 2457D2 Owner's Manual's local programming flowchart (press and hold to move right, tap to move down) and the multi-linking description; it has no step-by-step multi-linking procedure for the module itself."
+      }
+    },
+    "unlinking": {
+      "steps": [
+        {
+          "text": "With the controller in unlinking mode, press and hold the SET button until the module double-beeps.",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "Double beep"
+        }
+      ],
+      "notes": [
+        "Put the controller in unlinking mode first: press and hold its SET button until it beeps (on a multi-button controller, tap the button first), then press and hold it again until it beeps.",
+        "In its own unlinking mode the module leaves the mode once a link is removed or after four minutes."
+      ]
+    },
+    "reset": {
+      "steps": [
+        {
+          "text": "Unplug the dimmer module from its outlet.",
+          "action": "unplug"
+        },
+        {
+          "text": "Press and hold the SET button while plugging the module back in.",
+          "action": "plugIn",
+          "control": "SET button"
+        },
+        {
+          "text": "Keep holding the SET button until the module stops beeping.",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "Beeping stops"
+        },
+        {
+          "text": "Release the SET button.",
+          "action": "release",
+          "control": "SET button",
+          "expect": "Double beep when the reset is complete"
+        }
+      ]
+    },
+    "resetErases": [
+      "links",
+      "settings"
+    ],
+    "removal": {
+      "steps": [
+        {
+          "text": "Remove the device from every scene, as a controller and as a responder.",
+          "action": "other"
+        }
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "Read from how Insteon links work: a device left in a scene keeps links to it in other devices' ALL-Link databases. No document describes removing this product."
+      },
+      "alternatives": [
+        {
+          "description": "From a Hub",
+          "steps": [
+            {
+              "text": "Remove the device from its scenes first, so no other device keeps links to it.",
+              "device": "other",
+              "action": "other"
+            },
+            {
+              "text": "Have the Hub send Enter Unlinking Mode (cmd1 0x0A) with cmd2 0x01, for group 1, as an extended message if the device is i2CS.",
+              "action": "send",
+              "command": "Enter Unlinking Mode"
+            },
+            {
+              "text": "Have the Hub start ALL-Linking with link code 0xFF (delete), so the device deletes its group 1 link to the Hub.",
+              "device": "other",
+              "action": "send",
+              "command": "Start ALL-Linking",
+              "expect": "The device deletes its group 1 link to the Hub, and the Hub reports the device's Insteon ID"
+            },
+            {
+              "text": "Have the Hub start unlinking for group 0 (Start ALL-Linking with link code 0xFF).",
+              "device": "other",
+              "action": "send",
+              "command": "Start ALL-Linking"
+            },
+            {
+              "text": "Have the Hub send Enter Linking Mode (cmd1 0x09) with cmd2 0x01, for group 1, as an extended message if the device is i2CS.",
+              "action": "send",
+              "command": "Enter Linking Mode"
+            },
+            {
+              "text": "Wait for the Hub to report that the link is gone.",
+              "device": "other",
+              "action": "wait",
+              "expect": "The Hub reports the device's Insteon ID"
+            }
+          ],
+          "notes": [
+            "Inferred: seen on three i2CS devices (Outdoor On/Off Plug 2634-222 firmware 0x42, On/Off Plug 2635-222 firmware 0x48, I/O Module 2450 firmware 0x41) linked to a Hub 2245, these steps should remove every link between the Hub and the device with no SET button press. First the device's group 1 link: Enter Unlinking Mode (cmd1 0x0A) is sent to the device while the modem joins as responder. Then the modem's group 0 link: the modem starts ALL-Linking with link code 0xFF while the device is sent Enter Linking Mode (cmd1 0x09). This applies to the firmware versions this profile's engines give as i2CS.",
+            "Inferred: seen on an i2CS device (I/O Module 2450 firmware 0x41) linked to a Hub 2245: unlinking by the modem's own records left the device's records for the Hub's other groups, and an i2CS device answers a device that's in its ALL-Link database. So a device that still answers the Hub after removal may hold other records for it; a factory reset, as the Dimmer Plug 2457D2 Owner's Manual gives it, clears them. This applies to the firmware versions this profile's engines give as i2CS."
+          ],
+          "verification": {
+            "status": "inferred",
+            "note": "Assembled from the standard Insteon commands Enter Unlinking Mode, Start ALL-Linking and Enter Linking Mode; no document describes removing this product from a Hub."
+          }
+        }
+      ]
+    }
+  },
+  "notes": [
+    "Linking and unlinking modes time out after 4 minutes.",
+    "Setting the on-level to 0 turns on resume dim.",
+    "Versions before 3.6 support X10; load sense is supported from version 3.6.",
+    "The 2014 to 2016 owner's manuals print subcategory 0x37, which the DIN Rail Dimmer 2452 reports in Australia and New Zealand; Insteon Device Categories (January 2014) gives the 2457D2 only 0x01/0x0E. A later hardware revision may report 0x37."
+  ],
+  "sources": [
+    "HouseLinc Device Definitions (version 2.9.87)",
+    "insteon.com product catalog",
+    "Dimmer Plug 2457D2 Owner's Manual",
+    "Dimmer Plug 2457D2 Quick Start Guide",
+    "Insteon Device Categories and Product Keys (October 2008)",
+    "Insteon Device Categories (January 2014)",
+    "Insteon Developer's Guide (2009)"
+  ]
+}

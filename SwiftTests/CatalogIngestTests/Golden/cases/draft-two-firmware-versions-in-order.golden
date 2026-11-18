@@ -1,0 +1,340 @@
+=== status 1
+0
+=== stdout 102
+observation 1 (536f17e6): drafted
+observation 2 (c66a89ca): drafted
+observation 3 (c9eaa363): drafted
+
+=== report.json 7681
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "drafted",
+  "observations": [
+    {
+      "input": "observation 1 (536f17e6)",
+      "outcome": "drafted",
+      "matched": {
+        "model": "9903",
+        "identity": {
+          "category": "0x7E",
+          "subcategory": "0x03"
+        }
+      },
+      "changes": [
+        {
+          "file": "devices/9903.json",
+          "model": "9903",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x03"
+          },
+          "field": "verification",
+          "before": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x3B: kept as written.",
+            "firmware": [
+              "0x3B"
+            ]
+          },
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x3B: kept as written.",
+            "firmware": [
+              "0x3B",
+              "0x41"
+            ]
+          },
+          "effect": "added firmware 0x41 to the observed record",
+          "target": "identity 0x7E/0x03"
+        },
+        {
+          "file": "devices/9903.json",
+          "model": "9903",
+          "entry": "engine",
+          "selector": {
+            "engine": "i2cs",
+            "category": "0x7E",
+            "subcategory": "0x03"
+          },
+          "field": "verification",
+          "before": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x3B: kept as written.",
+            "firmware": [
+              "0x3B"
+            ]
+          },
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x3B: kept as written.",
+            "firmware": [
+              "0x3B",
+              "0x41"
+            ]
+          },
+          "effect": "added firmware 0x41 to the observed record",
+          "target": "engine i2CS 0x7E/0x03"
+        },
+        {
+          "file": "devices/9903.json",
+          "model": "9903",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x03"
+          },
+          "field": "productKeyVerification",
+          "before": null,
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: Product Data Request reported product key 0x00001A.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "effect": "marked observed on firmware 0x41",
+          "target": "product key of identity 0x7E/0x03"
+        }
+      ],
+      "unchanged": [],
+      "disagreements": [],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [
+        "The file names a different product than the profile its identity matched."
+      ],
+      "errors": []
+    },
+    {
+      "input": "observation 2 (c66a89ca)",
+      "outcome": "drafted",
+      "matched": {
+        "model": "9903",
+        "identity": {
+          "category": "0x7E",
+          "subcategory": "0x03"
+        }
+      },
+      "changes": [
+        {
+          "file": "devices/9903.json",
+          "model": "9903",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x03"
+          },
+          "field": "verification",
+          "before": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x3B: kept as written.",
+            "firmware": [
+              "0x3B",
+              "0x41"
+            ]
+          },
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x3B: kept as written.",
+            "firmware": [
+              "0x3B",
+              "0x41",
+              "0x42"
+            ]
+          },
+          "effect": "added firmware 0x42 to the observed record",
+          "target": "identity 0x7E/0x03"
+        },
+        {
+          "file": "devices/9903.json",
+          "model": "9903",
+          "entry": "engine",
+          "selector": {
+            "engine": "i2cs",
+            "category": "0x7E",
+            "subcategory": "0x03"
+          },
+          "field": "verification",
+          "before": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x3B: kept as written.",
+            "firmware": [
+              "0x3B",
+              "0x41"
+            ]
+          },
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x3B: kept as written.",
+            "firmware": [
+              "0x3B",
+              "0x41",
+              "0x42"
+            ]
+          },
+          "effect": "added firmware 0x42 to the observed record",
+          "target": "engine i2CS 0x7E/0x03"
+        },
+        {
+          "file": "devices/9903.json",
+          "model": "9903",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x03"
+          },
+          "field": "productKeyVerification",
+          "before": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: Product Data Request reported product key 0x00001A.",
+            "firmware": [
+              "0x41"
+            ]
+          },
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: Product Data Request reported product key 0x00001A.",
+            "firmware": [
+              "0x41",
+              "0x42"
+            ]
+          },
+          "effect": "added firmware 0x42 to the observed record",
+          "target": "product key of identity 0x7E/0x03"
+        }
+      ],
+      "unchanged": [],
+      "disagreements": [],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [
+        "The file names a different product than the profile its identity matched."
+      ],
+      "errors": []
+    },
+    {
+      "input": "observation 3 (c9eaa363)",
+      "outcome": "drafted",
+      "matched": {
+        "model": "9903",
+        "identity": {
+          "category": "0x7E",
+          "subcategory": "0x03"
+        }
+      },
+      "changes": [
+        {
+          "file": "devices/9903.json",
+          "model": "9903",
+          "entry": "identity",
+          "selector": {
+            "category": "0x7E",
+            "subcategory": "0x03"
+          },
+          "field": "productKeyVerification",
+          "before": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: Product Data Request reported product key 0x00001A.",
+            "firmware": [
+              "0x41",
+              "0x42"
+            ]
+          },
+          "after": {
+            "status": "observed",
+            "note": "Seen on a device running firmware 0x41: Product Data Request reported product key 0x00001A.",
+            "firmware": [
+              "0x3B",
+              "0x41",
+              "0x42"
+            ]
+          },
+          "effect": "added firmware 0x3B to the observed record",
+          "target": "product key of identity 0x7E/0x03"
+        }
+      ],
+      "unchanged": [
+        {
+          "target": "identity 0x7E/0x03",
+          "reason": "already observed on firmware 0x3B"
+        },
+        {
+          "target": "engine i2CS 0x7E/0x03",
+          "reason": "already observed on firmware 0x3B"
+        }
+      ],
+      "disagreements": [],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [
+        "The file names a different product than the profile its identity matched."
+      ],
+      "errors": []
+    }
+  ]
+}
+
+=== report.md 1819
+# Observation report
+
+Outcome: drafted
+
+## observation 1 (536f17e6): drafted
+
+Matched 9903 by category 0x7E and subcategory 0x03.
+
+Proposed changes:
+
+- devices/9903.json: identity 0x7E/0x03, verification: added firmware 0x41 to the observed record
+- devices/9903.json: engine i2CS 0x7E/0x03, verification: added firmware 0x41 to the observed record
+- devices/9903.json: product key of identity 0x7E/0x03, productKeyVerification: marked observed on firmware 0x41
+
+Warnings:
+
+- The file names a different product than the profile its identity matched.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+
+## observation 2 (c66a89ca): drafted
+
+Matched 9903 by category 0x7E and subcategory 0x03.
+
+Proposed changes:
+
+- devices/9903.json: identity 0x7E/0x03, verification: added firmware 0x42 to the observed record
+- devices/9903.json: engine i2CS 0x7E/0x03, verification: added firmware 0x42 to the observed record
+- devices/9903.json: product key of identity 0x7E/0x03, productKeyVerification: added firmware 0x42 to the observed record
+
+Warnings:
+
+- The file names a different product than the profile its identity matched.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+
+## observation 3 (c9eaa363): drafted
+
+Matched 9903 by category 0x7E and subcategory 0x03.
+
+Proposed changes:
+
+- devices/9903.json: product key of identity 0x7E/0x03, productKeyVerification: added firmware 0x3B to the observed record
+
+Already recorded:
+
+- identity 0x7E/0x03: already observed on firmware 0x3B
+- engine i2CS 0x7E/0x03: already observed on firmware 0x3B
+
+Warnings:
+
+- The file names a different product than the profile its identity matched.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+

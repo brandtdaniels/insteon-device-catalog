@@ -1,0 +1,6 @@
+=== status 1
+1
+=== stdout 128
+observation 1 (e0c24408): not valid
+  $.note: contains what looks like a serial number; remove it and run the observation again
+

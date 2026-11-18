@@ -1,0 +1,6 @@
+=== status 1
+1
+=== stdout 143
+observation 1 (21c09321): not valid
+  $.checks[2].detail: contains what looks like an Insteon address; remove it and run the observation again
+

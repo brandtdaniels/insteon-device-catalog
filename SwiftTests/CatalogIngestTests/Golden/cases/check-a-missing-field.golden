@@ -1,0 +1,6 @@
+=== status 1
+1
+=== stdout 77
+observation 1 (6ea30a13): not valid
+  $: 'observedOn' is a required property
+

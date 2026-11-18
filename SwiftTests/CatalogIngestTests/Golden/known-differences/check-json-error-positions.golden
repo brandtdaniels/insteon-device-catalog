@@ -1,0 +1,10 @@
+=== status 1
+1
+=== stdout 253
+observation 1 (6e961bb3): not valid
+  the file is not valid JSON (line 1, column 8)
+observation 2 (536a12a5): not valid
+  the file is not valid JSON (line 1, column 8)
+observation 3 (ef602461): not valid
+  the file is not valid JSON (line 1, column 12)
+

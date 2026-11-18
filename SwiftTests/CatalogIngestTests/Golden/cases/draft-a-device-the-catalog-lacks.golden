@@ -1,0 +1,47 @@
+=== status 1
+2
+=== stdout 38
+observation 1 (4a727263): needs-human
+
+=== report.json 742
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "needs-human",
+  "observations": [
+    {
+      "input": "observation 1 (4a727263)",
+      "outcome": "needs-human",
+      "matched": null,
+      "changes": [],
+      "unchanged": [],
+      "disagreements": [
+        {
+          "code": "unknown-device",
+          "detail": "Category 0x70, subcategory 0x7F and firmware 0x41 match no profile. A profile needs a name, aliases, an identity, capabilities, an engine and sources, each backed by a public document or an observation.",
+          "needs": "maintainer decision; nothing written"
+        }
+      ],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [],
+      "errors": []
+    }
+  ]
+}
+
+=== report.md 434
+# Observation report
+
+Outcome: needs-human
+
+## observation 1 (4a727263): needs-human
+
+Needs a maintainer decision:
+
+- unknown-device: Category 0x70, subcategory 0x7F and firmware 0x41 match no profile. A profile needs a name, aliases, an identity, capabilities, an engine and sources, each backed by a public document or an observation.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+

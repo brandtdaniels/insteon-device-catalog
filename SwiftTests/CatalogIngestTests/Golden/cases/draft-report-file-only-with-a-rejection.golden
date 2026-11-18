@@ -1,0 +1,28 @@
+=== status 1
+1
+=== stdout 35
+observation 1 (853cecb5): rejected
+
+=== report.json 499
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "rejected",
+  "observations": [
+    {
+      "input": "observation 1 (853cecb5)",
+      "outcome": "rejected",
+      "matched": null,
+      "changes": [],
+      "unchanged": [],
+      "disagreements": [],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [],
+      "errors": [
+        "$.note: contains what looks like an Insteon address; remove it and run the observation again"
+      ]
+    }
+  ]
+}
+

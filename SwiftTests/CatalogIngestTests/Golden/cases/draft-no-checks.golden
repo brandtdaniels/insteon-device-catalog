@@ -1,0 +1,43 @@
+=== status 1
+0
+=== stdout 36
+observation 1 (10275eae): no-change
+
+=== report.json 526
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "no-change",
+  "observations": [
+    {
+      "input": "observation 1 (10275eae)",
+      "outcome": "no-change",
+      "matched": null,
+      "changes": [],
+      "unchanged": [],
+      "disagreements": [],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [
+        "No check was answered, so this file says nothing about the device. Run `insteon observe` again with the device awake."
+      ],
+      "errors": []
+    }
+  ]
+}
+
+=== report.md 310
+# Observation report
+
+Outcome: no-change
+
+## observation 1 (10275eae): no-change
+
+Warnings:
+
+- No check was answered, so this file says nothing about the device. Run `insteon observe` again with the device awake.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+

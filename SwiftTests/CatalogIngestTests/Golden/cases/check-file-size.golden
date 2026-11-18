@@ -1,0 +1,9 @@
+=== status 1
+1
+=== stdout 168
+observation 1 (0d87a8c8): valid
+observation 2 (01a3b96d): not valid
+  the file is larger than 64 KB
+observation 3 (bf6f4319): not valid
+  the file is larger than 64 KB
+

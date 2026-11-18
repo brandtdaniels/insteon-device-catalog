@@ -1,0 +1,1 @@
+{"model": "9906b", "name": "Invented 9906b", "identities": [{"category": "0x7E", "subcategory": "0x06", "productKey": "0x00001A", "firmware": {"from": "0x41", "through": "0xFF"}}], "engines": [{"engine": "i2cs", "category": "0x7E", "subcategory": "0x06"}]}

@@ -1,0 +1,1 @@
+{"model": "9904", "name": "Invented 9904", "identities": [{"category": "0x7E", "subcategory": "0x04", "productKey": "0x00001A", "verification": {"status": "conflicting", "note": "Two documents disagree."}}], "engines": [{"engine": "i2cs", "category": "0x7E", "subcategory": "0x04", "verification": {"status": "conflicting", "note": "Two documents disagree."}}]}

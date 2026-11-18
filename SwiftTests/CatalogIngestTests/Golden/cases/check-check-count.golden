@@ -1,0 +1,10 @@
+=== status 1
+1
+=== stdout 200
+observation 1 (cb35b3b9): valid
+observation 2 (3dcea4c3): valid
+observation 3 (ef7aa6d1): not valid
+  $.checks: more than 16 checks
+observation 4 (4c807ab4): not valid
+  $.checks: more than 16 checks
+

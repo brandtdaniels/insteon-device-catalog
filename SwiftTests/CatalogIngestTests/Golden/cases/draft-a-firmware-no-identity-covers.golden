@@ -1,0 +1,47 @@
+=== status 1
+2
+=== stdout 38
+observation 1 (0bbe8d36): needs-human
+
+=== report.json 677
+{
+  "format": "insteon-catalog-ingest-report/1",
+  "lane": "observation",
+  "outcome": "needs-human",
+  "observations": [
+    {
+      "input": "observation 1 (0bbe8d36)",
+      "outcome": "needs-human",
+      "matched": null,
+      "changes": [],
+      "unchanged": [],
+      "disagreements": [
+        {
+          "code": "firmware-not-covered",
+          "detail": "Category 0x7E, subcategory 0x05 is in the catalog, but no identity covers firmware 0x41. A maintainer decides whether to widen one.",
+          "needs": "maintainer decision; nothing written"
+        }
+      ],
+      "skipped": [],
+      "reportOnly": [],
+      "warnings": [],
+      "errors": []
+    }
+  ]
+}
+
+=== report.md 369
+# Observation report
+
+Outcome: needs-human
+
+## observation 1 (0bbe8d36): needs-human
+
+Needs a maintainer decision:
+
+- firmware-not-covered: Category 0x7E, subcategory 0x05 is in the catalog, but no identity covers firmware 0x41. A maintainer decides whether to widen one.
+
+Contributor's note (for the maintainer; copied nowhere):
+
+> Fresh battery, device on the bench.
+

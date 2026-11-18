@@ -1,0 +1,1 @@
+{"model": "9901", "name": "Invented 9901", "identities": [{"category": "0x7E", "subcategory": "0x01", "productKey": "0x00001A", "verification": {"status": "inferred", "note": "Read from a similar product."}}], "engines": [{"engine": "i2cs", "category": "0x7E", "subcategory": "0x01", "verification": {"status": "inferred", "note": "Read from the engine table."}}]}
