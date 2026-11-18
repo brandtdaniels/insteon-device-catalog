@@ -19,7 +19,8 @@ struct RuleProblemsTests {
   /// A repository on disk with the catalog's real files and these changes: profiles and command
   /// sets by file name.
   static func withRepository(
-    devices: [String: JSONValue], commandSets: [String: JSONValue], _ body: (RepositoryRoot) throws -> Void
+    devices: [String: JSONValue], commandSets: [String: JSONValue], documents: [String: String]? = nil,
+    _ body: (RepositoryRoot) throws -> Void
   ) throws {
     let base = FileManager.default.temporaryDirectory.appendingPathComponent("catalog-rules-" + UUID().uuidString)
     defer { try? FileManager.default.removeItem(at: base) }
@@ -31,7 +32,20 @@ struct RuleProblemsTests {
       }
     }
 
+    try FileManager.default.createDirectory(at: base.appendingPathComponent("documents"), withIntermediateDirectories: true)
+    for (name, text) in try documents ?? realDocuments() {
+      try Data(text.utf8).write(to: base.appendingPathComponent("documents").appendingPathComponent(name))
+    }
+
     try body(RepositoryRoot(url: base))
+  }
+
+  /// The text of the catalog's own files in `documents`, by file name.
+  static func realDocuments() throws -> [String: String] {
+    let folder = CatalogRepository.url.appendingPathComponent("documents")
+    let names = try FileManager.default.contentsOfDirectory(atPath: folder.path).filter { $0.hasSuffix(".json") }
+
+    return try Dictionary(uniqueKeysWithValues: names.map { ($0, try String(contentsOf: folder.appendingPathComponent($0), encoding: .utf8)) })
   }
 
   @Test func problemsComeInTheOrderTheBuildFindsThem() throws {
