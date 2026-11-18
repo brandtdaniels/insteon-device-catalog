@@ -15,9 +15,9 @@ struct PythonFloatTests {
     (1e15, "1000000000000000.0"), (9999999999999998.0, "9999999999999998.0"),
     (123456789.123, "123456789.123"),
     // Exponent notation has a sign and at least two digits.
-    (0.00001, "1e-05"), (1e-07, "1e-07"), (1.5e-10, "1.5e-10"), (5e-324, "5e-324"),
+    (0.00001, "1e-05"), (1e-07, "1e-07"), (1.5e-10, "1.5e-10"), (Double.leastNonzeroMagnitude, "5e-324"),
     (1e16, "1e+16"), (1.2345e20, "1.2345e+20"), (1e100, "1e+100"),
-    (1.7976931348623157e308, "1.7976931348623157e+308"), (-1e-07, "-1e-07")
+    (Double.greatestFiniteMagnitude, "1.7976931348623157e+308"), (-1e-07, "-1e-07")
   ])
   func formatsLikePythonRepr(value: Double, expected: String) {
     #expect(PythonFloat.format(value) == expected)
