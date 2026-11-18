@@ -61,28 +61,32 @@ public struct RepositoryRoot: Sendable {
     try read("schema/\(kind.rawValue).schema.json")
   }
 
-  /// Every `.json` file directly inside the directory, sorted by file name in code point order.
+  /// The names of the `.json` files directly inside the directory, sorted by file name in code point
+  /// order.
   ///
   /// The order is by file name and not by model, so `2442-222.json` comes before `2442.json`
   /// because `-` sorts before `.`. A directory that does not exist holds no files.
-  private func files(in directory: String) throws(RepositoryError) -> [CatalogFile] {
+  func jsonFileNames(in directory: String) -> [String] {
     let folder = url.appendingPathComponent(directory)
     guard let entries = try? FileManager.default.contentsOfDirectory(
       at: folder, includingPropertiesForKeys: [.isDirectoryKey], options: []
     ) else { return [] }
 
-    let names = entries
+    return entries
       .filter { $0.pathExtension == "json" && (try? $0.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) != true }
       .map(\.lastPathComponent)
       .sorted { $0.utf8.lexicographicallyPrecedes($1.utf8) }
+  }
 
-    return try names.map { name throws(RepositoryError) in
+  /// Every `.json` file directly inside the directory, in file name order.
+  private func files(in directory: String) throws(RepositoryError) -> [CatalogFile] {
+    try jsonFileNames(in: directory).map { name throws(RepositoryError) in
       let path = "\(directory)/\(name)"
       return CatalogFile(name: name, stem: String(name.dropLast(".json".count)), path: path, value: try read(path))
     }
   }
 
-  private func read(_ path: String) throws(RepositoryError) -> JSONValue {
+  func read(_ path: String) throws(RepositoryError) -> JSONValue {
     let bytes: [UInt8]
     do {
       bytes = try [UInt8](Data(contentsOf: url.appendingPathComponent(path)))

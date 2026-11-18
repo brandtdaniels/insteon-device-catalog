@@ -35,12 +35,11 @@ public enum Comparison {
     return next == "." || next == "["
   }
 
-  /// Splits problem lines into rule messages and schema errors. Lines from checks the Swift rules
-  /// don't cover (registry, terms, sources and dashes) are left out.
+  /// Splits problem lines into rule messages and schema errors.
   public static func outcome(of lines: [String]) -> Outcome {
     var outcome = Outcome(ruleMessages: [], schemaErrors: [])
 
-    for line in lines where !isOutsideTheRules(line) {
+    for line in lines {
       if let key = schemaKey(of: line) {
         outcome.schemaErrors.append(key)
         outcome.schemaLines.append(line)
@@ -74,10 +73,4 @@ public enum Comparison {
     return "\(file): \(path)"
   }
 
-  /// Lines that belong to the registry, term, source, near-duplicate title and dash checks.
-  static func isOutsideTheRules(_ line: String) -> Bool {
-    line.contains("; use ")
-      || (line.contains(": source '") || line.contains(": source \"")) && line.contains("is not in documents/registry.json")
-      || line.contains("has an em or en dash")
-  }
 }

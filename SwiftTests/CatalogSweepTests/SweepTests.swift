@@ -25,6 +25,22 @@ struct SweepTests {
     #expect(try mutations(seed: 12) != first)
   }
 
+  @Test func eachRoundReportsItsRuleChangesAndRepeatsWithTheSameSeed() throws {
+    func changes(seed: UInt64) throws -> [[String]] {
+      var rounds: [[String]] = []
+      try Sweep(repository: Self.repository, interpreter: "true", seed: seed, mutationsPerRound: 0, ruleMutationsPerRound: 3)
+        .run(rounds: 2) { rounds.append($0.ruleMutations.map(\.description)) }
+      return rounds
+    }
+
+    let first = try changes(seed: 21)
+
+    #expect(first.count == 2)
+    #expect(first.allSatisfy { !$0.isEmpty && $0.count <= 3 })
+    #expect(try changes(seed: 21) == first)
+    #expect(try changes(seed: 22) != first)
+  }
+
   @Test func aSweepLeavesTheRepositoryAsItWas() throws {
     let before = try RepositoryRoot(url: Self.repository).problems()
 
