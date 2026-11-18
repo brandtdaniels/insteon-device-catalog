@@ -12,6 +12,7 @@ let package = Package(
     .library(name: "CatalogSchema", targets: ["CatalogSchema"]),
     .library(name: "CatalogRules", targets: ["CatalogRules"]),
     .library(name: "CatalogBuild", targets: ["CatalogBuild"]),
+    .library(name: "CatalogSite", targets: ["CatalogSite"]),
     .executable(name: "catalog", targets: ["catalog"]),
     .executable(name: "catalog-dev", targets: ["catalog-dev"])
   ],
@@ -23,6 +24,7 @@ let package = Package(
     .target(name: "CatalogSchema", dependencies: ["CatalogJSON"], path: "Sources/CatalogSchema"),
     .target(name: "CatalogRules", dependencies: ["CatalogJSON"], path: "Sources/CatalogRules"),
     .target(name: "CatalogBuild", dependencies: ["CatalogJSON", "CatalogSchema", "CatalogRules"], path: "Sources/CatalogBuild"),
+    .target(name: "CatalogSite", dependencies: ["CatalogJSON", "CatalogBuild"], path: "Sources/CatalogSite"),
     .executableTarget(
       name: "catalog",
       dependencies: [
@@ -59,6 +61,11 @@ let package = Package(
       name: "CatalogSweepTests",
       dependencies: ["CatalogJSON", "CatalogBuild", "CatalogSweep"],
       path: "SwiftTests/CatalogSweepTests"
+    ),
+    .testTarget(
+      name: "CatalogSiteTests",
+      dependencies: ["CatalogJSON", "CatalogBuild", "CatalogSite"],
+      path: "SwiftTests/CatalogSiteTests"
     ),
     .testTarget(
       name: "CatalogRulesTests",
