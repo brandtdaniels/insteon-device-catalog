@@ -42,7 +42,7 @@ public struct ProposedChange: Equatable, Sendable {
   /// The entry's `engine`, `category`, `subcategory` and `firmware`, as far as it has them.
   public let selector: JSONValue
   public let field: VerificationField
-  /// What the field holds now, or `nil` when it holds nothing.
+  /// What the field holds, or `nil` when it holds nothing.
   public let before: JSONValue?
   public let after: JSONValue
   public let effect: String

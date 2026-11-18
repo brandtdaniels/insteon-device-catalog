@@ -46,7 +46,7 @@ let package = Package(
       ],
       path: "Sources/catalog"
     ),
-    .target(name: "CatalogSweep", dependencies: ["CatalogJSON", "CatalogBuild", "CatalogSite"], path: "Sources/CatalogSweep"),
+    .target(name: "CatalogSweep", dependencies: ["CatalogJSON", "CatalogBuild", "CatalogSite", "CatalogIngest"], path: "Sources/CatalogSweep"),
     .executableTarget(
       name: "catalog-dev",
       dependencies: [
@@ -74,7 +74,7 @@ let package = Package(
     ),
     .testTarget(
       name: "CatalogSweepTests",
-      dependencies: ["CatalogJSON", "CatalogBuild", "CatalogSweep", "CatalogSite"],
+      dependencies: ["CatalogJSON", "CatalogBuild", "CatalogSweep", "CatalogSite", "CatalogIngest"],
       path: "SwiftTests/CatalogSweepTests"
     ),
     .testTarget(

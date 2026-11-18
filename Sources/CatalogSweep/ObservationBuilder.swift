@@ -93,3 +93,21 @@ extension JSONValue {
     }
   }
 }
+
+extension JSONValue {
+  /// The member of an object with this name.
+  subscript(key: String) -> JSONValue? {
+    guard case .object(let members) = self else { return nil }
+    return members.first { $0.key == key }?.value
+  }
+
+  var elements: [JSONValue] {
+    guard case .array(let elements) = self else { return [] }
+    return elements
+  }
+
+  var string: String? {
+    guard case .string(let text) = self else { return nil }
+    return text
+  }
+}

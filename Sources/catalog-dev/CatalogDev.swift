@@ -12,7 +12,7 @@ struct CatalogDev: ParsableCommand {
     abstract: "Developer tooling for the Insteon device catalog.",
     subcommands: [
       SweepCommand.self, ScenariosCommand.self, ComparePageCommand.self, PageSweepCommand.self, CompareSiteCommand.self,
-      IngestCaptureCommand.self
+      IngestCaptureCommand.self, IngestSweepCommand.self
     ]
   )
 }
@@ -310,5 +310,69 @@ struct IngestCaptureCommand: ParsableCommand {
     let written = try capture.write(book: IngestCaseBook(fixtures: capture.observations))
 
     print("wrote \(written) goldens")
+  }
+}
+
+/// Runs the Python and the Swift ingestion tools on the fixtures, the apply cases and observation files
+/// made from the catalog and broken in many ways, and compares their exit status, output and reports.
+///
+/// Transitional: `scripts/ingest.py` is the oracle while the Python ingestion exists.
+struct IngestSweepCommand: ParsableCommand {
+  static let configuration = CommandConfiguration(
+    commandName: "ingest-sweep",
+    abstract: "Compare the Swift and the Python ingestion tools on the fixtures and on mutated observation files."
+  )
+
+  @Option(help: "The repository whose catalog the tools read and whose apply they run on a copy of.")
+  var root: String = "."
+
+  @Option(help: "The folder with observations/ and catalogs/ the cases read.")
+  var golden: String = "SwiftTests/CatalogIngestTests/Golden"
+
+  @Option(help: "How many rounds of mutated files to compare, after the fixtures.")
+  var rounds: Int = 20
+
+  @Option(help: "The seed of the first round. The same seed makes the same files.")
+  var seed: UInt64 = 1
+
+  @Option(help: "How many observation files each round makes.")
+  var filesPerRound: Int = 12
+
+  @Option(help: "Compare apply on every Nth round that drafted something; 0 for never.")
+  var applyEvery: Int = 3
+
+  @Flag(help: "Skip the apply cases that round 0 compares.")
+  var skipApplyCases = false
+
+  @Option(help: "The Python interpreter that runs scripts/ingest.py.")
+  var python: String = "python3"
+
+  func run() throws {
+    let sweep = IngestSweep(
+      repository: URL(fileURLWithPath: root, isDirectory: true), golden: URL(fileURLWithPath: golden, isDirectory: true),
+      oracle: IngestOracle(interpreter: python), seed: seed, filesPerRound: filesPerRound, applyEvery: applyEvery, applyCases: !skipApplyCases
+    )
+    var compared = 0
+    var differences = 0
+    var positionOnly = 0
+    var files = 0
+
+    try sweep.run(rounds: rounds) { result in
+      compared += result.compared
+      positionOnly += result.positionOnly
+      files += result.files.count
+
+      guard !result.differences.isEmpty else { return }
+      differences += result.differences.count
+      print("round \(result.round): DIFFERENT")
+      result.files.enumerated().forEach { print("  file \($0.offset + 1): \($0.element)") }
+      result.differences.forEach { print("  \($0)") }
+    }
+
+    print("\(rounds) mutated rounds and the fixtures: \(files) files made, \(compared) runs compared, \(differences) different, \(positionOnly) differing only in a JSON error position")
+
+    if differences > 0 {
+      throw ExitCode.failure
+    }
   }
 }

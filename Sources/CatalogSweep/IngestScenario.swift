@@ -178,6 +178,11 @@ public struct PreparedApplyCase: Sendable {
 
   /// What `apply` left: its status and output, the tree's state and every changed file.
   public func golden(after run: IngestRun) throws -> IngestGolden {
+    try Self.golden(after: run, in: root)
+  }
+
+  /// What `apply` left in the repository at `root`.
+  public static func golden(after run: IngestRun, in root: URL) throws -> IngestGolden {
     var golden = IngestGolden()
     golden.add("status", String(run.status))
     golden.add("stdout", run.standardOutput)
