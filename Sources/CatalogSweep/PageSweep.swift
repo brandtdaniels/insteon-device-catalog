@@ -89,42 +89,17 @@ public struct PageSweep: Sendable {
 
   /// Runs round 0 on the repository's own data, then rounds `1...rounds` on mutated copies.
   public func run(rounds: Int, report: (PageRoundResult) -> Void) throws {
-    let root = RepositoryRoot(url: repository)
-    let files = try root.deviceFiles().map { (path: $0.path, value: $0.value) } + root.commandSetFiles().map { (path: $0.path, value: $0.value) }
-    let mutator = Mutator(pool: ValuePool(files: files.map(\.value)))
+    let plan = MutationPlan(
+      repository: repository, seed: seed, contentMutationsPerRound: contentMutationsPerRound, dataMutationsPerRound: dataMutationsPerRound
+    )
 
-    report(try compare(round: 0, mutations: [], workspace: nil))
-
-    for round in 1...max(rounds, 1) where rounds > 0 {
-      var random = SplitMix64(seed: seed &+ UInt64(round) &* 0x1_0000_0001)
-      var workspace = Dictionary(uniqueKeysWithValues: files.map { ($0.path, $0.value) })
-      var applied: [String] = []
-      let before = workspace
-
-      for _ in 0..<dataMutationsPerRound {
-        let paths = workspace.keys.sorted()
-        guard let path = paths.randomElement(using: &random), let value = workspace[path],
-              let (changed, mutation) = mutator.mutate(value, name: path, using: &random)
-        else { continue }
-        workspace[path] = changed
-        applied.append(mutation.description)
-      }
-
-      let content = PageMutator()
-      var attempts = 0
-
-      while applied.count < dataMutationsPerRound + contentMutationsPerRound, attempts < contentMutationsPerRound * 10 {
-        attempts += 1
-        let kind = PageMutationKind.allCases.randomElement(using: &random)!
-        if let change = content.mutate(&workspace, kind: kind, using: &random) { applied.append(change.description) }
-      }
-
-      report(try compare(round: round, mutations: applied, workspace: (before, workspace)))
+    try plan.run(rounds: rounds) { round, mutations, workspace in
+      report(try compare(round: round, mutations: mutations, workspace: workspace))
     }
   }
 
   /// Renders and compares one copy. A `nil` workspace is the repository's own data.
-  func compare(round: Int, mutations: [String], workspace: (before: [String: JSONValue], after: [String: JSONValue])?) throws -> PageRoundResult {
+  func compare(round: Int, mutations: [String], workspace: MutationPlan.Workspace?) throws -> PageRoundResult {
     let copy = try makeCopy(applying: workspace)
     defer { try? FileManager.default.removeItem(at: copy) }
 
@@ -176,19 +151,7 @@ public struct PageSweep: Sendable {
   }
 
   /// A copy of what the Python build reads, with the workspace's changes written into it.
-  private func makeCopy(applying workspace: (before: [String: JSONValue], after: [String: JSONValue])?) throws -> URL {
-    let copy = try Self.temporaryCopy(of: repository)
-
-    guard let (before, after) = workspace else { return copy }
-
-    for path in before.keys where after[path] == nil {
-      try FileManager.default.removeItem(at: copy.appendingPathComponent(path))
-    }
-
-    for (path, value) in after where before[path] != value {
-      try Data((try JSONWriter.write(value) + "\n").utf8).write(to: copy.appendingPathComponent(path))
-    }
-
-    return copy
+  private func makeCopy(applying workspace: MutationPlan.Workspace?) throws -> URL {
+    try MutationPlan.temporaryCopy(of: repository, applying: workspace)
   }
 }

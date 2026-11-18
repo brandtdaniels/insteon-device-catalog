@@ -10,7 +10,9 @@ struct CatalogDev: ParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "catalog-dev",
     abstract: "Developer tooling for the Insteon device catalog.",
-    subcommands: [SweepCommand.self, ScenariosCommand.self, ComparePageCommand.self, PageSweepCommand.self]
+    subcommands: [
+      SweepCommand.self, ScenariosCommand.self, ComparePageCommand.self, PageSweepCommand.self, CompareSiteCommand.self
+    ]
   )
 }
 

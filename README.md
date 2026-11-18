@@ -75,6 +75,11 @@ the catalog and treat downloading a newer one as optional.
    [API.md](API.md#what-a-command-does) describes. A change to
    `scripts/build.py` comes with a test in `tests/`; run them with
    `python3 -I -m unittest discover -s tests`.
+   The Swift tooling is available alongside: `swift run catalog check` runs the same checks,
+   `swift run catalog version-check BASE_SHA` the version rule, and
+   `swift run catalog build --output site --patch N --built ISO` writes the same site, byte for
+   byte, as `python3 -I scripts/build.py` with the same flags. `swift run catalog-dev compare-site`
+   builds both and compares every file. The Python build still publishes.
 3. Follow [CONVENTIONS.md](CONVENTIONS.md) for names, terms and citations; the build fails on
    the forms it rules out.
 4. Open a pull request. CI runs the same check.
