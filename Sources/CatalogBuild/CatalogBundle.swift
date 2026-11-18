@@ -15,6 +15,19 @@ public struct CatalogBundle: Equatable, Sendable {
   /// The file name the manifest gives the catalog.
   public static let catalogFileName = "catalog.json"
 
+  /// The major version of `version`, which must be `MAJOR.MINOR` in decimal digits.
+  ///
+  /// - Throws: ``VersionProblem/malformed(_:)`` when it isn't.
+  public static func major(of version: String) throws(VersionProblem) -> String {
+    let parts = version.split(separator: ".", omittingEmptySubsequences: false)
+
+    guard parts.count == 2, parts.allSatisfy({ !$0.isEmpty && $0.utf8.allSatisfy { (0x30...0x39).contains($0) } }) else {
+      throw .malformed(version)
+    }
+
+    return String(parts[0])
+  }
+
   /// Bundles `profiles` and `commandSets`, in the order given, as version `version.patch`.
   ///
   /// - Parameters:
@@ -26,11 +39,7 @@ public struct CatalogBundle: Equatable, Sendable {
   public init(
     profiles: [JSONValue], commandSets: [JSONValue], version: String, patch: Int, built: String? = nil
   ) throws {
-    let parts = version.split(separator: ".", omittingEmptySubsequences: false)
-
-    guard parts.count == 2, parts.allSatisfy({ !$0.isEmpty && $0.utf8.allSatisfy { (0x30...0x39).contains($0) } }) else {
-      throw VersionProblem.malformed(version)
-    }
+    let major = try Self.major(of: version)
 
     let catalog = try JSONWriter.write(
       .object([
@@ -51,7 +60,7 @@ public struct CatalogBundle: Equatable, Sendable {
       members.append(JSONMember(key: "built", value: .string(built)))
     }
 
-    self.directoryName = "v\(parts[0])"
+    self.directoryName = "v\(major)"
     self.catalog = catalog
     self.manifest = try JSONWriter.write(.object(members), style: .init(sortKeys: true, asciiOnly: true)) + "\n"
   }
