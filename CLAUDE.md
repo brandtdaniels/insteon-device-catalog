@@ -17,14 +17,14 @@ API.md describes what software reads.
   running firmware 0x41: ...". A value nobody has checked is marked unverified.
 - **A field's meaning changes only with a version.** `VERSION` holds the MAJOR.MINOR that software
   matches. A change to a file under `schema/` needs a VERSION bump, and a change that only adds
-  data does not. `scripts/check_version.py BASE_SHA` enforces it against a pull request's base.
+  data does not. `swift run catalog version-check BASE_SHA` enforces it against a pull request's base.
 
 ## How a change goes
 
 1. Say what the change adds and which source backs it.
-2. Write the failing test or the failing profile check first (`tests/`, `scripts/build.py`).
-3. Add the data or the schema field, then run `python3 scripts/build.py` and
-   `python3 -I -m unittest discover -s tests`.
+2. Write the failing test or the failing profile check first (`SwiftTests/`, `swift run catalog check`).
+3. Add the data or the schema field, then run `swift run catalog check` and
+   `swift test`.
 4. One logical change per commit; commit messages carry no attribution lines.
 5. Open a pull request. CI must pass on the head commit.
 6. A change to data that software acts on needs a hardware test on the head before it is marked
@@ -32,7 +32,8 @@ API.md describes what software reads.
 
 ## Before pushing
 
-- `python3 scripts/build.py` passes, and `python3 scripts/check_version.py BASE_SHA` passes against the base.
+- `swift build -Xswiftc -warnings-as-errors`, `swift test` and `swift run catalog check` pass, and
+  `swift run catalog version-check BASE_SHA` passes against the base.
 - No em dash or en dash anywhere, in data, docs, commits or pull request text.
 - Check `git log -1 --format=%ae` against the identity the repository is configured with before
   every push.

@@ -1,5 +1,7 @@
 import CatalogBuild
 import CatalogIngest
+import CatalogJSON
+import CatalogSchema
 import Foundation
 import Testing
 
@@ -17,6 +19,14 @@ struct ObservationSchemaTests {
   @Test(.enabled(if: FileManager.default.fileExists(atPath: swiftPackageCopy.path), "the swift package is not next to this checkout"))
   func theVendoredSchemaMatchesTheSwiftPackagesCopy() throws {
     #expect(Array(ObservationSchema.text.utf8) == Array(try Data(contentsOf: Self.swiftPackageCopy)))
+  }
+
+  @Test func theSchemaUsesOnlyKeywordsTheValidatorImplements() throws {
+    let schema = try JSONParser.parse(ObservationSchema.text)
+    let known = SchemaKeywords.validating.union(SchemaKeywords.annotations)
+    let unknown = SchemaKeywords.used(in: schema).subtracting(known)
+
+    #expect(unknown.isEmpty, "the schema uses keywords the validator does not implement: \(unknown.sorted().joined(separator: ", "))")
   }
 
   @Test func theSchemaIsOneTheValidatorAccepts() throws {

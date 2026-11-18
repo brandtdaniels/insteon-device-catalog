@@ -701,4 +701,4 @@ was built; the catalog itself doesn't, so its SHA-256 changes only when its data
 Below 1.0 the format can still change in any MINOR, so a client should only take a catalog with
 the MAJOR.MINOR it was built for. `VERSION` in the repository holds MAJOR.MINOR; the build fails
 a pull request that changes the schemas without raising it, or that lowers it. A change to the
-files' layout in `scripts/build.py` must raise it too.
+files' layout that `catalog build` writes must raise it too.

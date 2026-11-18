@@ -4,9 +4,8 @@ import CatalogSchema
 import Foundation
 import Testing
 
-/// The schema failure cases of the Python build's tests (`tests/test_build.py`), run against the
-/// Swift validator with the same inputs.
-struct PythonSchemaCasesTests {
+/// Hand-built schema failure cases, run against the validator.
+struct SchemaFailureCasesTests {
   static let root = RepositoryRoot(url: CatalogRepository.url)
 
   static func commandSet(_ id: String) throws -> JSONValue {

@@ -13,24 +13,36 @@ jobs:
   build:
     name: Validate and build
     runs-on: ubuntu-latest
+    container: swift:6.3.3@sha256:1038d54c80063f5cdfabc4560990c30af64b5de8ebf28161deb22ca4ad5db866
     steps:
       - uses: actions/checkout@v4.2.2
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v5.3.0
+      - name: Trust the workspace for git
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - uses: actions/cache@v4.2.0
         with:
-          python-version: "3.13"
-      - run: pip install -r requirements.txt
+          path: .build
+          key: swift-6.3.3-${{ hashFiles('Package.swift', 'Package.resolved') }}
+          restore-keys: swift-6.3.3-
+      - name: Build the tools
+        run: swift build --build-tests -Xswiftc -warnings-as-errors
+      - name: Test the tools
+        run: swift test --skip-build
+      - name: Check the profiles and command sets
+        run: swift run catalog check
       - name: Check that schema changes bump VERSION
         if: github.event_name == 'pull_request'
-        run: python3 -I scripts/check_version.py ${{ github.event.pull_request.base.sha }}
-      - name: Build
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: swift run catalog version-check "$BASE_SHA"
+      - name: Build the site
         run: |
           # PATCH counts the commits since VERSION last changed that changed the data.
           patch=$(git rev-list --count "$(git log -1 --format=%H -- VERSION)..HEAD" -- devices commandSets)
-          python3 -I scripts/build.py --output site --patch "$patch" --built "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          swift run catalog build --output site --patch "$patch" --built "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+      # Pull requests build and upload the same artifact; only the deploy job below is skipped.
       - uses: actions/upload-pages-artifact@v3.0.1
-        if: github.event_name != 'pull_request'
         with:
           path: site
 

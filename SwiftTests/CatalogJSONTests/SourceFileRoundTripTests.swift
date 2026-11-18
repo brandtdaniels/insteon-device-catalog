@@ -13,7 +13,7 @@ struct SourceFileRoundTripTests {
 
   /// Directories and files laid out by hand or by another program. They parse strictly and keep
   /// their meaning when rewritten, but their bytes are not the writer's.
-  static let handFormatted = ["documents/reviewed-distinct-titles.json", "tests/fixtures"]
+  static let handFormatted = ["documents/reviewed-distinct-titles.json", "SwiftTests/CatalogIngestTests/Golden/observations"]
 
   static func jsonFiles(under directory: String) -> [String] {
     let base = root.appendingPathComponent(directory)

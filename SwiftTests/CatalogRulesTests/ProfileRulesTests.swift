@@ -2,8 +2,7 @@ import CatalogJSON
 import CatalogRules
 import Testing
 
-/// The rules a profile has beyond its schema. The Python build has no test for these; the sweep
-/// compares them with it.
+/// The rules a profile has beyond its schema.
 struct ProfileRulesTests {
   @Test func aFileNameThatIsNotTheModelIsReported() throws {
     let profile = try Fixtures.profile("2441ZTH")

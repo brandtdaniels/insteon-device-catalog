@@ -5,7 +5,7 @@ firmware) or a public document by exact title and version. -->
 
 ## Checks
 
-- [ ] `python3 scripts/build.py` and `python3 scripts/check_version.py BASE_SHA` pass
+- [ ] `swift run catalog check` and `swift run catalog version-check BASE_SHA` pass
 - [ ] A change under `schema/` bumps `VERSION`
 - [ ] Values that aren't simply documented carry `verification`
 - [ ] No em dash or en dash in the data, docs, commits or this text
