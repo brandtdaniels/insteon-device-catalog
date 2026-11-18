@@ -111,10 +111,16 @@ public struct Pattern: Sendable {
   /// The text of the leftmost match, as `re.search` finds it, or `nil`.
   public func firstMatch(in text: String) -> String? {
     guard let match = expression.firstMatch(in: text, range: NSRange(text.startIndex..., in: text)),
-          let range = Range(match.range, in: text)
+          match.range.location != NSNotFound
     else { return nil }
 
-    return String(text[range])
+    // The match can end inside a grapheme cluster, such as a letter followed by a combining mark.
+    // Converting the range through the UTF-16 view keeps such a match; `Range(_:in:)` can drop it.
+    let units = text.utf16
+    let start = units.index(units.startIndex, offsetBy: match.range.location)
+    let end = units.index(start, offsetBy: match.range.length)
+
+    return String(text[start..<end])
   }
 
   /// Whether the whole text matches, as `re.fullmatch` says: the pattern was made with `whole`.
