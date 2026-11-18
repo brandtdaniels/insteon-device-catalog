@@ -6,6 +6,6 @@ struct Catalog: ParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "catalog",
     abstract: "Tooling for the Insteon device catalog.",
-    subcommands: [Check.self, VersionCheckCommand.self]
+    subcommands: [Check.self, VersionCheckCommand.self, RenderPage.self]
   )
 }

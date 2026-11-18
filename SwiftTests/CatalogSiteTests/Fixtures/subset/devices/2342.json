@@ -1,0 +1,484 @@
+{
+  "model": "2342",
+  "name": "Mini Remote Control",
+  "aliases": [
+    "Mini Remote"
+  ],
+  "description": "A small rechargeable, battery-powered wireless remote that controls Insteon devices or groups of devices. Insteon sells it in 4-scene, 8-scene, and 1-scene switch versions, and it can be wall-mounted without wiring.",
+  "identities": [
+    {
+      "category": "0x00",
+      "subcategory": "0x1A",
+      "region": "US, 8 scene"
+    },
+    {
+      "category": "0x00",
+      "subcategory": "0x1B",
+      "region": "US, 4 scene"
+    },
+    {
+      "category": "0x00",
+      "subcategory": "0x1C",
+      "region": "US, switch"
+    },
+    {
+      "category": "0x00",
+      "subcategory": "0x16",
+      "region": "Europe, 8 scene"
+    },
+    {
+      "category": "0x00",
+      "subcategory": "0x14",
+      "region": "Europe, 4 scene"
+    },
+    {
+      "category": "0x00",
+      "subcategory": "0x15",
+      "region": "Europe, switch"
+    },
+    {
+      "category": "0x00",
+      "subcategory": "0x18",
+      "region": "Australia and New Zealand, 8 scene"
+    },
+    {
+      "category": "0x00",
+      "subcategory": "0x17",
+      "region": "Australia and New Zealand, 4 scene"
+    },
+    {
+      "category": "0x00",
+      "subcategory": "0x19",
+      "region": "Australia and New Zealand, switch"
+    }
+  ],
+  "engines": [
+    {
+      "engine": "i2cs",
+      "category": "0x00",
+      "subcategory": "0x1A"
+    },
+    {
+      "engine": "i2cs",
+      "category": "0x00",
+      "subcategory": "0x1B"
+    },
+    {
+      "engine": "i2cs",
+      "category": "0x00",
+      "subcategory": "0x1C"
+    },
+    {
+      "engine": "i2cs",
+      "category": "0x00",
+      "subcategory": "0x16"
+    },
+    {
+      "engine": "i2cs",
+      "category": "0x00",
+      "subcategory": "0x14"
+    },
+    {
+      "engine": "i2cs",
+      "category": "0x00",
+      "subcategory": "0x15"
+    },
+    {
+      "engine": "i2cs",
+      "category": "0x00",
+      "subcategory": "0x18"
+    },
+    {
+      "engine": "i2cs",
+      "category": "0x00",
+      "subcategory": "0x17"
+    },
+    {
+      "engine": "i2cs",
+      "category": "0x00",
+      "subcategory": "0x19"
+    }
+  ],
+  "commandSets": [
+    {
+      "commandSet": "remoteLinc2EightScene",
+      "category": "0x00",
+      "subcategory": "0x1A",
+      "verification": {
+        "status": "inferred",
+        "note": "The RemoteLinc 2 Developer Notes (the document Insteon's developer store lists as Mini Remotes - Developer Notes) report subcategory 0x10 in their ID Request reply and name no other Mini Remote. Insteon Device Categories (January 2014) lists subcategory 0x1A as the 2342 8 scene remote for its region, and the catalog reads the 2342 as sharing the RemoteLinc 2 commands."
+      }
+    },
+    {
+      "commandSet": "remoteLinc2",
+      "category": "0x00",
+      "subcategory": "0x1B",
+      "verification": {
+        "status": "inferred",
+        "note": "The RemoteLinc 2 Developer Notes (the document Insteon's developer store lists as Mini Remotes - Developer Notes) report subcategory 0x10 in their ID Request reply and name no other Mini Remote. Insteon Device Categories (January 2014) lists subcategory 0x1B as the 2342 4 scene remote for its region, and the catalog reads the 2342 as sharing the RemoteLinc 2 commands."
+      }
+    },
+    {
+      "commandSet": "remoteLinc2Switch",
+      "category": "0x00",
+      "subcategory": "0x1C",
+      "verification": {
+        "status": "inferred",
+        "note": "The RemoteLinc 2 Developer Notes (the document Insteon's developer store lists as Mini Remotes - Developer Notes) report subcategory 0x10 in their ID Request reply and name no other Mini Remote. Insteon Device Categories (January 2014) lists subcategory 0x1C as the 2342 switch remote for its region, and the catalog reads the 2342 as sharing the RemoteLinc 2 commands."
+      }
+    },
+    {
+      "commandSet": "remoteLinc2EightScene",
+      "category": "0x00",
+      "subcategory": "0x16",
+      "verification": {
+        "status": "inferred",
+        "note": "The RemoteLinc 2 Developer Notes (the document Insteon's developer store lists as Mini Remotes - Developer Notes) report subcategory 0x10 in their ID Request reply and name no other Mini Remote. Insteon Device Categories (January 2014) lists subcategory 0x16 as the 2342 8 scene remote for its region, and the catalog reads the 2342 as sharing the RemoteLinc 2 commands."
+      }
+    },
+    {
+      "commandSet": "remoteLinc2",
+      "category": "0x00",
+      "subcategory": "0x14",
+      "verification": {
+        "status": "inferred",
+        "note": "The RemoteLinc 2 Developer Notes (the document Insteon's developer store lists as Mini Remotes - Developer Notes) report subcategory 0x10 in their ID Request reply and name no other Mini Remote. Insteon Device Categories (January 2014) lists subcategory 0x14 as the 2342 4 scene remote for its region, and the catalog reads the 2342 as sharing the RemoteLinc 2 commands."
+      }
+    },
+    {
+      "commandSet": "remoteLinc2Switch",
+      "category": "0x00",
+      "subcategory": "0x15",
+      "verification": {
+        "status": "inferred",
+        "note": "The RemoteLinc 2 Developer Notes (the document Insteon's developer store lists as Mini Remotes - Developer Notes) report subcategory 0x10 in their ID Request reply and name no other Mini Remote. Insteon Device Categories (January 2014) lists subcategory 0x15 as the 2342 switch remote for its region, and the catalog reads the 2342 as sharing the RemoteLinc 2 commands."
+      }
+    },
+    {
+      "commandSet": "remoteLinc2EightScene",
+      "category": "0x00",
+      "subcategory": "0x18",
+      "verification": {
+        "status": "inferred",
+        "note": "The RemoteLinc 2 Developer Notes (the document Insteon's developer store lists as Mini Remotes - Developer Notes) report subcategory 0x10 in their ID Request reply and name no other Mini Remote. Insteon Device Categories (January 2014) doesn't list subcategory 0x18, and the catalog reads the 2342 as sharing the RemoteLinc 2 commands."
+      }
+    },
+    {
+      "commandSet": "remoteLinc2",
+      "category": "0x00",
+      "subcategory": "0x17",
+      "verification": {
+        "status": "inferred",
+        "note": "The RemoteLinc 2 Developer Notes (the document Insteon's developer store lists as Mini Remotes - Developer Notes) report subcategory 0x10 in their ID Request reply and name no other Mini Remote. Insteon Device Categories (January 2014) lists subcategory 0x17 as the 2342 4 scene remote for its region, and the catalog reads the 2342 as sharing the RemoteLinc 2 commands."
+      }
+    },
+    {
+      "commandSet": "remoteLinc2Switch",
+      "category": "0x00",
+      "subcategory": "0x19",
+      "verification": {
+        "status": "inferred",
+        "note": "The RemoteLinc 2 Developer Notes (the document Insteon's developer store lists as Mini Remotes - Developer Notes) report subcategory 0x10 in their ID Request reply and name no other Mini Remote. Insteon Device Categories (January 2014) lists subcategory 0x19 as the 2342 switch remote for its region, and the catalog reads the 2342 as sharing the RemoteLinc 2 commands."
+      }
+    }
+  ],
+  "radio": "rf",
+  "role": "controller",
+  "batteryPowered": true,
+  "capabilities": [],
+  "lifecycle": {
+    "installation": {
+      "steps": [
+        {
+          "text": "Fully charge the Mini Remote with a Type A to Micro-B USB cable before programming; the red charging LED turns off when the battery is fully charged.",
+          "action": "other",
+          "control": "Micro-USB charging jack",
+          "expect": "Charging LED turns off"
+        },
+        {
+          "text": "Slide the power switch to the on position (right).",
+          "action": "powerOn",
+          "control": "power switch"
+        }
+      ],
+      "notes": [
+        "Charging takes about one hour.",
+        "The Mini Remote needs an Insteon dual-band or RF device nearby to talk to the rest of the Insteon network.",
+        "The Mini Remote beeps quietly during setup, so program it in a quiet area."
+      ]
+    },
+    "linking": {
+      "steps": [
+        {
+          "text": "Tap the scene button you want to use; on a four-scene remote the on or off button both work, and on the switch tap the top or bottom of the paddle.",
+          "action": "tap",
+          "control": "scene button"
+        },
+        {
+          "text": "Press and hold the SET button for 3 seconds, until the Mini Remote beeps.",
+          "action": "hold",
+          "control": "SET button",
+          "seconds": 3,
+          "expect": "Beep; LED blinks green"
+        }
+      ],
+      "notes": [
+        "To make a Mini Remote button a scene controller: put the Mini Remote in linking mode, adjust the responder to the state you want, then press and hold the responder's SET button until it beeps or its LED flashes. The Mini Remote double-beeps and its LED stops blinking.",
+        "Test the link by tapping the button on and off; the responder toggles between the scene on-level and off."
+      ],
+      "verification": {
+        "status": "conflicting",
+        "note": "The Mini Remote Control 2342 Owner's Manual says setup mode times out after more than 3 minutes with a long beep; the RemoteLinc 2 Developer Notes say the LED blinks green for 4 minutes or until linked. The catalog uses the owner's manual's 3 minutes (180 seconds)."
+      },
+      "alternatives": [
+        {
+          "description": "From a Hub",
+          "steps": [
+            {
+              "text": "Tap the button that sends group 1: the B button on the 8-scene remote, the top-left button on the 4-scene remote, or the top of the paddle on the switch.",
+              "action": "tap",
+              "control": "group 1 button",
+              "count": 1
+            },
+            {
+              "text": "Press and hold the SET button for 3 seconds, until it beeps.",
+              "action": "hold",
+              "control": "SET button",
+              "seconds": 3,
+              "expect": "Beep; LED blinks green"
+            },
+            {
+              "text": "Tap the SET button.",
+              "action": "tap",
+              "control": "SET button",
+              "count": 1,
+              "expect": "LED double-blinks green"
+            },
+            {
+              "text": "Have the Hub start ALL-Linking as the responder.",
+              "device": "other",
+              "action": "send",
+              "command": "Start ALL-Linking",
+              "expect": "The Hub reports ALL-Linking Completed with the device's Insteon ID"
+            },
+            {
+              "text": "While the device is still awake, have the Hub send Ping to confirm the link.",
+              "action": "send",
+              "command": "Ping",
+              "expect": "The device acknowledges the Ping"
+            },
+            {
+              "text": "Tap the SET button to end linking mode.",
+              "action": "tap",
+              "control": "SET button",
+              "count": 1,
+              "expect": "Double beep; LED turns off"
+            }
+          ],
+          "notes": [
+            "Put the device in linking mode before the Hub starts ALL-Linking. This links the device to the Hub as a controller, with the Hub as the responder, so the Hub receives the device's reports; the Hub makes no link to the device.",
+            "Starting from the button that sends group 1 links the remote's group 1 to the Hub."
+          ],
+          "verification": {
+            "status": "inferred",
+            "note": "Assembled from this profile's multi-linking steps and the standard Insteon commands Start ALL-Linking and Ping; no document describes adding this product to a Hub. The button that sends group 1 is read from the Mini Remote - 8 Scene 2444A2WH8, Mini Remote - 4 Scene 2444A2WH4 and Mini Remote - Switch 2444A3 profiles' groups."
+          }
+        }
+      ]
+    },
+    "linkingTimeoutSeconds": 180,
+    "multiLinking": {
+      "steps": [
+        {
+          "text": "Tap the scene button you want to use; on a four-scene remote the on or off button both work, and on the switch tap the top or bottom of the paddle.",
+          "action": "tap",
+          "control": "scene button"
+        },
+        {
+          "text": "Press and hold the SET button for 3 seconds, until it beeps.",
+          "action": "hold",
+          "control": "SET button",
+          "seconds": 3,
+          "expect": "Beep; LED blinks green"
+        },
+        {
+          "text": "Tap the SET button.",
+          "action": "tap",
+          "control": "SET button",
+          "count": 1,
+          "expect": "LED double-blinks green"
+        },
+        {
+          "text": "For each responder, adjust it to the state you want.",
+          "device": "other",
+          "action": "other"
+        },
+        {
+          "text": "Press and hold the responder's SET button until the Mini Remote double-beeps.",
+          "device": "other",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "Double beep; LED keeps double-blinking green"
+        },
+        {
+          "text": "When all responders are added, tap the SET button.",
+          "action": "tap",
+          "control": "SET button",
+          "count": 1,
+          "expect": "Double beep; LED turns off"
+        }
+      ]
+    },
+    "unlinking": {
+      "steps": [
+        {
+          "text": "Tap the scene button you want to use; on a four-scene remote the on or off button both work, and on the switch tap the top or bottom of the paddle.",
+          "action": "tap",
+          "control": "scene button"
+        },
+        {
+          "text": "Press and hold the SET button for 3 seconds, until the Mini Remote beeps.",
+          "action": "hold",
+          "control": "SET button",
+          "seconds": 3,
+          "expect": "Beep; LED blinks green"
+        },
+        {
+          "text": "Press and hold the SET button again for 3 seconds, until it beeps.",
+          "action": "hold",
+          "control": "SET button",
+          "seconds": 3,
+          "expect": "Beep; LED blinks red"
+        },
+        {
+          "text": "Press and hold the responder's SET button until it double-beeps or its LED blinks.",
+          "device": "other",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "Mini Remote double-beeps and its LED stops blinking"
+        }
+      ],
+      "notes": [
+        "Remove responders you no longer use; otherwise the Mini Remote retries every scene command, which causes delays and shortens battery life.",
+        "To unlink several responders in one session, tap the SET button after the LED starts blinking red (it double-blinks red), press and hold each responder's SET button until the Mini Remote double-beeps, then tap the SET button to finish."
+      ]
+    },
+    "reset": {
+      "steps": [
+        {
+          "text": "If possible, unlink all scene responders first.",
+          "action": "other"
+        },
+        {
+          "text": "Turn the Mini Remote off by sliding the power switch to the left.",
+          "action": "powerOff",
+          "control": "power switch"
+        },
+        {
+          "text": "Press and hold the SET button.",
+          "action": "hold",
+          "control": "SET button"
+        },
+        {
+          "text": "While still holding the SET button, turn the Mini Remote back on by sliding the power switch to the right.",
+          "action": "powerOn",
+          "control": "power switch",
+          "expect": "Beep, LED stays solid green, then a long beep"
+        },
+        {
+          "text": "Keep holding the SET button until the long beep stops.",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "LED turns solid red"
+        },
+        {
+          "text": "Release the SET button.",
+          "action": "release",
+          "control": "SET button",
+          "expect": "Double beep; LED turns off"
+        }
+      ]
+    },
+    "resetErases": [
+      "links",
+      "settings"
+    ],
+    "removal": {
+      "steps": [
+        {
+          "text": "Remove the device from every scene, as a controller.",
+          "action": "other"
+        }
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "Read from how Insteon links work: a device left in a scene keeps links to it in other devices' ALL-Link databases. No document describes removing this product."
+      },
+      "alternatives": [
+        {
+          "description": "From a Hub",
+          "steps": [
+            {
+              "text": "Remove the device from its scenes first, so no other device keeps links to it.",
+              "device": "other",
+              "action": "other"
+            },
+            {
+              "text": "Tap the button that sends group 1: the B button on the 8-scene remote, the top-left button on the 4-scene remote, or the top of the paddle on the switch.",
+              "action": "tap",
+              "control": "group 1 button",
+              "count": 1
+            },
+            {
+              "text": "Press and hold the SET button for 3 seconds, until the Mini Remote beeps.",
+              "action": "hold",
+              "control": "SET button",
+              "seconds": 3,
+              "expect": "Beep; LED blinks green"
+            },
+            {
+              "text": "Press and hold the SET button again for 3 seconds, until it beeps.",
+              "action": "hold",
+              "control": "SET button",
+              "seconds": 3,
+              "expect": "Beep; LED blinks red"
+            },
+            {
+              "text": "Have the Hub start ALL-Linking with link code 0xFF (delete), so the device deletes its group 1 link to the Hub.",
+              "device": "other",
+              "action": "send",
+              "command": "Start ALL-Linking",
+              "expect": "The device deletes its group 1 link to the Hub, and the Hub reports the device's Insteon ID"
+            },
+            {
+              "text": "If the LED is still blinking, tap the SET button until it stops.",
+              "action": "tap",
+              "control": "SET button",
+              "count": 1,
+              "expect": "LED stops blinking"
+            }
+          ],
+          "notes": [
+            "Starting from the button that sends group 1 unlinks the remote's group 1 from the Hub."
+          ],
+          "verification": {
+            "status": "inferred",
+            "note": "Assembled from this profile's unlinking steps and the standard Insteon command Start ALL-Linking; no document describes removing this product from a Hub. The button that sends group 1 is read from the Mini Remote - 8 Scene 2444A2WH8, Mini Remote - 4 Scene 2444A2WH4 and Mini Remote - Switch 2444A3 profiles' groups."
+          }
+        }
+      ]
+    }
+  },
+  "notes": [
+    "Comes as a 4-scene remote, an 8-scene remote, and a single on/off switch.",
+    "Runs on a rechargeable battery and doesn't repeat messages."
+  ],
+  "sources": [
+    "HouseLinc Device Definitions (version 2.9.87)",
+    "Insteon Device Categories (January 2014)",
+    "insteon.com product catalog",
+    "Mini Remote Control 2342 Owner's Manual",
+    "Mini Remote Control 2342 Quick Start Guide",
+    "RemoteLinc 2 Developer Notes"
+  ]
+}

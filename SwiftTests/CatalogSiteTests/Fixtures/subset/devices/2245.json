@@ -1,0 +1,240 @@
+{
+  "model": "2245",
+  "name": "Hub",
+  "aliases": [
+    "Hub 2"
+  ],
+  "description": "The central controller for an Insteon system. It drives its built-in modem over the local network, and runs scenes, schedules and alerts.",
+  "identities": [
+    {
+      "category": "0x03",
+      "subcategory": "0x33",
+      "region": "US and Canada",
+      "verification": {
+        "status": "observed",
+        "note": "Seen on a device running modem firmware 0xA5: a Hub 2245 reported 0x03/0x33, with modem (PLM) firmware 0xA5 in its Get IM Info reply. Its Hub firmware was 1019, as the Get Info page of Insteon Connect shows it under Firmware, and its Hub software Hub2-V04-20140904.",
+        "firmware": [
+          "0xA5"
+        ]
+      }
+    },
+    {
+      "category": "0x03",
+      "subcategory": "0x34"
+    },
+    {
+      "category": "0x03",
+      "subcategory": "0x35"
+    },
+    {
+      "category": "0x03",
+      "subcategory": "0x36"
+    }
+  ],
+  "engines": [
+    {
+      "engine": "i2cs",
+      "category": "0x03",
+      "subcategory": "0x33"
+    },
+    {
+      "engine": "i2cs",
+      "category": "0x03",
+      "subcategory": "0x34"
+    },
+    {
+      "engine": "i2cs",
+      "category": "0x03",
+      "subcategory": "0x35"
+    },
+    {
+      "engine": "i2cs",
+      "category": "0x03",
+      "subcategory": "0x36"
+    }
+  ],
+  "radio": "dual",
+  "role": "both",
+  "capabilities": [
+    {
+      "kind": "modem",
+      "linkData": {
+        "controller": [
+          {
+            "byte": 1,
+            "name": "data1",
+            "description": "Always 0x01 in the records seen; what it means isn't known.",
+            "value": "0x01",
+            "verification": {
+              "status": "observed",
+              "note": "Seen on a device running modem firmware 0xA5: a Hub 2245's modem, linked with Start ALL-Linking as the controller of group 0, kept Data 1 to 3 of its controller record as 0x01, the responder's subcategory and its firmware version, as ALL-Linking Completed reported them, for an I/O Module 2450 (0x01 0x00 0x41), an Outdoor On/Off Plug 2634-222 (0x01 0x38 0x42) and an On/Off Plug 2635-222 (0x01 0x37 0x48). Data 1 isn't the responder's category, which was 0x07 or 0x02. No document says what the modem writes.",
+              "firmware": [
+                "0xA5"
+              ]
+            }
+          },
+          {
+            "byte": 2,
+            "name": "subcategory",
+            "description": "The responder's subcategory.",
+            "identity": "subcategory",
+            "verification": {
+              "status": "observed",
+              "note": "Seen on a device running modem firmware 0xA5: a Hub 2245's modem, linked with Start ALL-Linking as the controller of group 0, kept Data 1 to 3 of its controller record as 0x01, the responder's subcategory and its firmware version, as ALL-Linking Completed reported them, for an I/O Module 2450 (0x01 0x00 0x41), an Outdoor On/Off Plug 2634-222 (0x01 0x38 0x42) and an On/Off Plug 2635-222 (0x01 0x37 0x48). Data 1 isn't the responder's category, which was 0x07 or 0x02. No document says what the modem writes.",
+              "firmware": [
+                "0xA5"
+              ]
+            }
+          },
+          {
+            "byte": 3,
+            "name": "firmware",
+            "description": "The responder's firmware version.",
+            "identity": "firmware",
+            "verification": {
+              "status": "observed",
+              "note": "Seen on a device running modem firmware 0xA5: a Hub 2245's modem, linked with Start ALL-Linking as the controller of group 0, kept Data 1 to 3 of its controller record as 0x01, the responder's subcategory and its firmware version, as ALL-Linking Completed reported them, for an I/O Module 2450 (0x01 0x00 0x41), an Outdoor On/Off Plug 2634-222 (0x01 0x38 0x42) and an On/Off Plug 2635-222 (0x01 0x37 0x48). Data 1 isn't the responder's category, which was 0x07 or 0x02. No document says what the modem writes.",
+              "firmware": [
+                "0xA5"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "kind": "hub",
+      "port": 25105
+    }
+  ],
+  "commandSets": [
+    {
+      "commandSet": "hubModem",
+      "category": "0x03",
+      "subcategory": "0x33",
+      "verification": {
+        "status": "inferred",
+        "note": "The Insteon Hub Developer's Guide describes the Hub 2242's modem, and no document describes the Hub 2245's. A Hub 2245 answered Get IM Info with its modem's firmware, 0xA5."
+      }
+    },
+    {
+      "commandSet": "hubModem",
+      "category": "0x03",
+      "subcategory": "0x34",
+      "verification": {
+        "status": "inferred",
+        "note": "The Insteon Hub Developer's Guide describes the Hub 2242's modem, and no document describes the Hub 2245's. A Hub 2245 answered Get IM Info with its modem's firmware, 0xA5."
+      }
+    },
+    {
+      "commandSet": "hubModem",
+      "category": "0x03",
+      "subcategory": "0x35",
+      "verification": {
+        "status": "inferred",
+        "note": "The Insteon Hub Developer's Guide describes the Hub 2242's modem, and no document describes the Hub 2245's. A Hub 2245 answered Get IM Info with its modem's firmware, 0xA5."
+      }
+    },
+    {
+      "commandSet": "hubModem",
+      "category": "0x03",
+      "subcategory": "0x36",
+      "verification": {
+        "status": "inferred",
+        "note": "The Insteon Hub Developer's Guide describes the Hub 2242's modem, and no document describes the Hub 2245's. A Hub 2245 answered Get IM Info with its modem's firmware, 0xA5."
+      }
+    }
+  ],
+  "lifecycle": {
+    "installation": {
+      "steps": [
+        {
+          "text": "Connect the Hub to the internet and to a power outlet using the Ethernet and power cables provided. Avoid switched outlets and filtered power strips.",
+          "action": "plugIn"
+        },
+        {
+          "text": "Optionally, mount the Hub on a wall: use the template page to drill the mounting holes, then hang the Hub on two screws by aligning its hanger slots and sliding it down.",
+          "action": "mount"
+        },
+        {
+          "text": "From your mobile device, download and install the Insteon for Hub app, launch it and follow the on-screen instructions to create an account and set up the Hub.",
+          "action": "other"
+        }
+      ],
+      "notes": [
+        "For the wall mount, the Hub 2245 Owner's Manual gives screw heads about 5/16 inch (8 mm) in diameter."
+      ]
+    },
+    "reset": {
+      "steps": [
+        {
+          "text": "Disconnect power from the Hub.",
+          "action": "unplug"
+        },
+        {
+          "text": "While holding the SET button, reconnect power to the Hub.",
+          "action": "plugIn",
+          "control": "SET button",
+          "expect": "Hub emits a long beep"
+        },
+        {
+          "text": "When the long beep ends, release the SET button.",
+          "action": "release",
+          "control": "SET button",
+          "expect": "Hub double-beeps, and after 30 seconds beeps again"
+        },
+        {
+          "text": "Unplug the Hub.",
+          "action": "unplug"
+        },
+        {
+          "text": "Reconnect the Hub to power.",
+          "action": "plugIn"
+        }
+      ],
+      "notes": [
+        "Before a factory reset, delete all devices and scenes from the app (or factory reset all of your devices) and delete your user account.",
+        "A Network Reset restores only the default network configuration: tap the SET button three times; the Hub triple-beeps, and after a few seconds it single-beeps."
+      ]
+    },
+    "resetErases": [
+      "links",
+      "settings"
+    ],
+    "removal": {
+      "steps": [
+        {
+          "text": "Delete all devices and scenes from the app, or factory reset all of your devices.",
+          "action": "other"
+        },
+        {
+          "text": "From Settings, tap Account, then tap Delete Account. This cannot be undone and erases your home from Insteon's cloud service.",
+          "action": "other"
+        },
+        {
+          "text": "Disconnect power from the Hub.",
+          "action": "unplug"
+        },
+        {
+          "text": "Factory reset the Hub.",
+          "action": "other"
+        }
+      ],
+      "notes": [
+        "The Hub 2245 Owner's Manual strongly recommends deleting all devices before deleting the account; otherwise network performance degrades. Factory resetting the devices after deleting the account is the alternative."
+      ]
+    }
+  },
+  "notes": [
+    "Seen on a device running Hub firmware 1019: the local interface on port 25105 answers the command pages, such as /3?…=I=3, /buffstatus.xml and /1?XB=M=1, but the settings pages /network.htm and /config.htm don't load, so that device offered no local page for its settings.",
+    "Seen on a device running Hub firmware 1019: after an Outdoor On/Off Plug 2634-222 running firmware 0x42 was linked with the Hub as controller, the Hub's controller record for it held Data 1 to 3 as 0x01 0x38 0x42, while the plug had reported 0x02 0x38 0x42 (its category, subcategory and firmware version) in ALL-Linking Completed. Data 2 and 3 matched its subcategory and firmware version, but Data 1 wasn't its category. It was seen again for a controller record of group 0, still with one product only.",
+    "Seen on a device running Hub firmware 1019, with modem firmware 0xA5: the modem answered Beep (0x77), sent without its parameter byte, with a NAK, 0x02 0x77 0x15.",
+    "Seen on a device running Hub firmware 1019: the request /1?L=USERNAME=1=PASSWORD, sent with the current login to set a new one, was answered with HTTP 200, but the login didn't change, either at once or after the Hub was powered off and on; the earlier login still worked and the new one was refused with HTTP 401. So that device offered no local way to change its login."
+  ],
+  "sources": [
+    "HouseLinc Device Definitions (version 2.9.87)",
+    "insteon.com product catalog",
+    "Hub 2245 Owner's Manual",
+    "Hub 2245 Quick Start Guide"
+  ]
+}

@@ -1,0 +1,481 @@
+{
+  "model": "2441TH",
+  "name": "Thermostat",
+  "aliases": [
+    "TempLinc Thermostat"
+  ],
+  "identities": [
+    {
+      "category": "0x05",
+      "subcategory": "0x0B"
+    },
+    {
+      "category": "0x05",
+      "subcategory": "0x08"
+    },
+    {
+      "category": "0x05",
+      "subcategory": "0x16"
+    },
+    {
+      "category": "0x05",
+      "subcategory": "0x17",
+      "region": "Europe"
+    },
+    {
+      "category": "0x05",
+      "subcategory": "0x18",
+      "region": "Australia and New Zealand"
+    },
+    {
+      "category": "0x05",
+      "subcategory": "0x0F",
+      "region": "Europe"
+    },
+    {
+      "category": "0x05",
+      "subcategory": "0x10",
+      "region": "Australia and New Zealand"
+    }
+  ],
+  "commandSets": [
+    {
+      "commandSet": "tempLinc",
+      "category": "0x05",
+      "subcategory": "0x0B"
+    },
+    {
+      "commandSet": "tempLinc",
+      "category": "0x05",
+      "subcategory": "0x16"
+    },
+    {
+      "commandSet": "tempLinc",
+      "category": "0x05",
+      "subcategory": "0x17"
+    },
+    {
+      "commandSet": "tempLinc",
+      "category": "0x05",
+      "subcategory": "0x18"
+    },
+    {
+      "commandSet": "tempLinc",
+      "category": "0x05",
+      "subcategory": "0x0F"
+    },
+    {
+      "commandSet": "tempLinc",
+      "category": "0x05",
+      "subcategory": "0x10"
+    }
+  ],
+  "radio": "rf",
+  "role": "both",
+  "groups": [
+    {
+      "number": "0x01",
+      "name": "Cooling",
+      "role": "controller"
+    },
+    {
+      "number": "0x02",
+      "name": "Heating",
+      "role": "controller"
+    },
+    {
+      "number": "0x03",
+      "name": "Dehumidifying",
+      "role": "controller"
+    },
+    {
+      "number": "0x04",
+      "name": "Humidifying",
+      "role": "controller"
+    },
+    {
+      "number": "0xFE",
+      "name": "Status reports",
+      "role": "controller",
+      "linkable": "software"
+    }
+  ],
+  "capabilities": [
+    {
+      "kind": "thermostat",
+      "modeValues": "tempLinc",
+      "humidity": true
+    },
+    {
+      "kind": "groupEvents",
+      "events": [
+        {
+          "group": "0x01",
+          "command1": "0x11",
+          "event": "coolingStarted"
+        },
+        {
+          "group": "0x01",
+          "command1": "0x13",
+          "event": "coolingStopped"
+        },
+        {
+          "group": "0x02",
+          "command1": "0x11",
+          "event": "heatingStarted"
+        },
+        {
+          "group": "0x02",
+          "command1": "0x13",
+          "event": "heatingStopped"
+        },
+        {
+          "group": "0x03",
+          "command1": "0x11",
+          "event": "dehumidifyingStarted"
+        },
+        {
+          "group": "0x03",
+          "command1": "0x13",
+          "event": "dehumidifyingStopped"
+        },
+        {
+          "group": "0x04",
+          "command1": "0x11",
+          "event": "humidifyingStarted"
+        },
+        {
+          "group": "0x04",
+          "command1": "0x13",
+          "event": "humidifyingStopped"
+        }
+      ]
+    }
+  ],
+  "lifecycle": {
+    "installation": {
+      "steps": [
+        {
+          "text": "If you have air conditioning, turn off the A/C breaker and confirm the compressor and fan don't come on.",
+          "action": "powerOff",
+          "control": "A/C breaker"
+        },
+        {
+          "text": "Turn off the breaker or fuse for the furnace and confirm the heat no longer runs.",
+          "action": "powerOff",
+          "control": "furnace breaker"
+        },
+        {
+          "text": "Remove the cover of the existing thermostat.",
+          "action": "other"
+        },
+        {
+          "text": "If needed, photograph the wiring.",
+          "action": "other"
+        },
+        {
+          "text": "Label each wire, starting with the C wire.",
+          "action": "other"
+        },
+        {
+          "text": "Disconnect the wires from the existing thermostat.",
+          "action": "other"
+        },
+        {
+          "text": "Remove the existing thermostat's back plate from the wall.",
+          "action": "other"
+        },
+        {
+          "text": "Strip 3 inches of the outer jacket from the cable to expose the individual wires, keeping the labels on.",
+          "action": "wire"
+        },
+        {
+          "text": "Slide the wires through the large hole in the back of the Thermostat.",
+          "action": "other"
+        },
+        {
+          "text": "Mount the Thermostat to the wall.",
+          "action": "mount"
+        },
+        {
+          "text": "Slide the wires through the black grommet (draft shield).",
+          "action": "other"
+        },
+        {
+          "text": "Peel off the grommet's backing and press it in place.",
+          "action": "mount"
+        },
+        {
+          "text": "Connect each wire to the matching terminal: common 24V to C (24V COM), 24V power to RH, heat 1 to W1, heat 2 to W2, fan to G, cooling 1 to Y1, cooling 2 to Y2.",
+          "action": "wire"
+        },
+        {
+          "text": "Close the front of the Thermostat onto the back plate, pressing firmly until the pins seat and the door clicks.",
+          "action": "mount"
+        },
+        {
+          "text": "Turn the breakers back on.",
+          "action": "powerOn"
+        },
+        {
+          "text": "Wait 10 seconds for the Thermostat to start; it is working when the screen shows the current temperature.",
+          "action": "wait",
+          "seconds": 10,
+          "expect": "Display shows the current temperature"
+        }
+      ],
+      "notes": [
+        "Requires a 24V HVAC system with at least 5 wires that runs up to 2 stages of heat and cool; it is not for 120/240V electric radiant heat or millivolt systems. A 4-wire system needs the Add-A-Wire adapter.",
+        "For heat pumps, the Thermostat 2441TH Owner's Manual points to Thermostat for Heat Pump 2732-242 and lists heat pump terminals (O/B, AUX, Y1, Y2, G, RH, C).",
+        "Wire colors vary; match the wires to the labels printed on the Thermostat."
+      ]
+    },
+    "linking": {
+      "steps": [
+        {
+          "text": "Press and hold the SET button until the Thermostat beeps.",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "Beep; SET LED blinks green"
+        },
+        {
+          "text": "Tap the Up or Down arrow to choose the group to link: 1 cooling (default), 2 heating, 3 dehumidification, 4 humidification.",
+          "action": "tap",
+          "control": "Up or Down arrow"
+        }
+      ],
+      "notes": [
+        "As controller: after these steps, adjust the responder to the state you want and press and hold its SET button until it double-beeps or its LED flashes. The Thermostat double-beeps and its LED returns to its previous state.",
+        "As responder: set the Thermostat to the state you want (mode, setpoint, fan, energy button), put the controller in linking mode, then press and hold the Thermostat's SET button (SET LED blinks green, beep, then double beep). To link it to a controller's off command instead, press and hold the SET button and the Down arrow together.",
+        "Group 239 (0xEF, any change) is for linked software controllers and is set up with software."
+      ],
+      "alternatives": [
+        {
+          "description": "From a Hub",
+          "steps": [
+            {
+              "text": "Have the Hub start ALL-Linking as the responder.",
+              "device": "other",
+              "action": "send",
+              "command": "Start ALL-Linking"
+            },
+            {
+              "text": "Press and hold the SET button until the Thermostat beeps.",
+              "action": "hold",
+              "control": "SET button",
+              "expect": "Beep; SET LED blinks green"
+            },
+            {
+              "text": "Wait for the Hub to report the new link.",
+              "device": "other",
+              "action": "wait",
+              "expect": "The Hub reports ALL-Linking Completed with the device's Insteon ID"
+            },
+            {
+              "text": "Have the Hub send ID Request.",
+              "action": "send",
+              "command": "ID Request",
+              "expect": "The device answers with its category, subcategory and firmware version"
+            },
+            {
+              "text": "Have the Hub send Ping to confirm the link.",
+              "action": "send",
+              "command": "Ping",
+              "expect": "The device acknowledges the Ping"
+            }
+          ],
+          "verification": {
+            "status": "inferred",
+            "note": "Assembled from this profile's linking steps and the standard Insteon commands Start ALL-Linking, ID Request, Enter Linking Mode and Ping; no document describes adding this product to a Hub."
+          },
+          "notes": [
+            "Link each further group the device controls the same way, with the modem starting ALL-Linking as the responder and then Enter Linking Mode naming that group in cmd2; fromHub lists every leg."
+          ]
+        }
+      ]
+    },
+    "fromHub": {
+      "legs": [
+        {
+          "modem": "responder",
+          "modemGroup": "0x01",
+          "deviceGroup": "0x01"
+        },
+        {
+          "modem": "responder",
+          "modemGroup": "0x02",
+          "deviceGroup": "0x02"
+        },
+        {
+          "modem": "responder",
+          "modemGroup": "0x03",
+          "deviceGroup": "0x03"
+        },
+        {
+          "modem": "responder",
+          "modemGroup": "0x04",
+          "deviceGroup": "0x04"
+        },
+        {
+          "modem": "responder",
+          "modemGroup": "0xFE",
+          "deviceGroup": "0xFE"
+        }
+      ],
+      "deviceFirst": false,
+      "remoteEnterLinkingMode": {
+        "works": "unknown",
+        "verification": {
+          "status": "inferred",
+          "note": "The Insteon Developer's Guide (2009) says i1 devices don't support Enter Linking Mode (cmd1 0x09), and the catalog doesn't know the engine of every version of this product. An i2 or i2CS version takes it; ask the device with Get Insteon Engine Version (cmd1 0x0D) first."
+        }
+      },
+      "verification": {
+        "status": "inferred",
+        "note": "Read from the From a Hub alternative to this profile's linking, whose steps are assembled from its own linking steps and standard Insteon commands; no document describes adding this product to a Hub."
+      }
+    },
+    "unlinking": {
+      "steps": [
+        {
+          "text": "Press and hold the SET button until the Thermostat beeps.",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "Beep; SET LED blinks green"
+        },
+        {
+          "text": "Press and hold the SET button again until it beeps.",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "Beep; SET LED blinks red"
+        },
+        {
+          "text": "Tap the Up or Down arrow to choose the group to remove (cooling is the default).",
+          "action": "tap",
+          "control": "Up or Down arrow"
+        }
+      ],
+      "notes": [
+        "Then press and hold the responder's SET button; the Thermostat double-beeps when done.",
+        "To remove the Thermostat as a responder: press and hold the controller's scene button until it beeps, press and hold it again until it beeps again, then press and hold the Thermostat's SET button (or the SET button and the Down arrow together for an off-command link).",
+        "The Thermostat 2441TH Owner's Manual recommends using software to manage scene memberships whenever possible."
+      ]
+    },
+    "reset": {
+      "steps": [
+        {
+          "text": "Press and hold the SET button until the Thermostat beeps.",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "Beep; SET LED blinks green"
+        },
+        {
+          "text": "Press and hold the SET button again until it beeps.",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "Beep; SET LED blinks red"
+        },
+        {
+          "text": "Double-tap the SET button.",
+          "action": "tap",
+          "control": "SET button",
+          "count": 2
+        },
+        {
+          "text": "Press and hold the SET button again for about 10 seconds.",
+          "action": "hold",
+          "control": "SET button",
+          "seconds": 10,
+          "expect": "Long beep; display blinks all segments"
+        },
+        {
+          "text": "When the blinking and beeping stop, release the SET button.",
+          "action": "release",
+          "control": "SET button"
+        },
+        {
+          "text": "Wait 10 seconds.",
+          "action": "wait",
+          "seconds": 10,
+          "expect": "Self tests run, then the display returns to normal"
+        }
+      ],
+      "notes": [
+        "Clears all scene memberships, sets the day and time to 12:00 AM Monday, and returns schedules, temperatures and other settings to their defaults. The temperature and humidity offsets are kept.",
+        "Before resetting, remove the Thermostat from every controller's scenes; otherwise the controllers keep retrying commands."
+      ]
+    },
+    "resetErases": [
+      "links",
+      "settings"
+    ],
+    "removal": {
+      "steps": [
+        {
+          "text": "Remove the Thermostat's scene memberships from every responder it controls and from every controller that controls it.",
+          "action": "other"
+        }
+      ],
+      "notes": [
+        "Otherwise controllers retry commands repeatedly and slow the network."
+      ],
+      "alternatives": [
+        {
+          "description": "From a Hub",
+          "steps": [
+            {
+              "text": "Remove the device from its scenes first, so no other device keeps links to it.",
+              "device": "other",
+              "action": "other"
+            },
+            {
+              "text": "Have the Hub send Enter Unlinking Mode (cmd1 0x0A) with cmd2 0x01, for group 1, as an extended message if the device is i2CS.",
+              "action": "send",
+              "command": "Enter Unlinking Mode"
+            },
+            {
+              "text": "Have the Hub start ALL-Linking with link code 0xFF (delete), so the device deletes its group 1 link to the Hub.",
+              "device": "other",
+              "action": "send",
+              "command": "Start ALL-Linking",
+              "expect": "The device deletes its group 1 link to the Hub, and the Hub reports the device's Insteon ID"
+            },
+            {
+              "text": "Have the Hub start unlinking for group 0 (Start ALL-Linking with link code 0xFF).",
+              "device": "other",
+              "action": "send",
+              "command": "Start ALL-Linking"
+            },
+            {
+              "text": "Have the Hub send Enter Linking Mode (cmd1 0x09) with cmd2 0x01, for group 1, as an extended message if the device is i2CS.",
+              "action": "send",
+              "command": "Enter Linking Mode"
+            },
+            {
+              "text": "Wait for the Hub to report that the link is gone.",
+              "device": "other",
+              "action": "wait",
+              "expect": "The Hub reports the device's Insteon ID"
+            }
+          ],
+          "verification": {
+            "status": "inferred",
+            "note": "Assembled from the standard Insteon commands Enter Unlinking Mode, Start ALL-Linking and Enter Linking Mode; no document describes removing this product from a Hub."
+          }
+        }
+      ]
+    }
+  },
+  "notes": [
+    "Subcategory 0x16 is a later firmware, given its own subcategory so software can tell its features apart; HouseLinc lists it as a heat pump thermostat.",
+    "Subcategories 0x0F and 0x10 are the European and Australian and New Zealand versions, the 2732-422 and 2732-522, and 0x17 and 0x18 are their later firmware.",
+    "The Thermostat 2441TH Owner's Manual gives subcategory 0x0B to the 2441TH, 0x0F to the 2732-422 and 0x10 to the 2732-522.",
+    "The Thermostat 2441TH Owner's Manual's list of groups prints the status report group as EF; its footnote, like the catalog, gives FE, group 254."
+  ],
+  "sources": [
+    "HouseLinc Device Definitions (version 2.9.87)",
+    "Thermostat 2441TH Owner's Manual",
+    "Thermostat 2441TH Quick Start Guide",
+    "Insteon Developer's Guide (2009)"
+  ]
+}

@@ -1,0 +1,432 @@
+{
+  "model": "2982-222",
+  "name": "Smoke Bridge",
+  "identities": [
+    {
+      "category": "0x10",
+      "subcategory": "0x0A"
+    }
+  ],
+  "engines": [
+    {
+      "engine": "i2cs",
+      "category": "0x10",
+      "subcategory": "0x0A",
+      "firmware": {
+        "only": [
+          "0xDC"
+        ]
+      }
+    }
+  ],
+  "commandSets": [
+    {
+      "commandSet": "smokeBridge",
+      "category": "0x10",
+      "subcategory": "0x0A"
+    }
+  ],
+  "radio": "powerline",
+  "role": "controller",
+  "groups": [
+    {
+      "number": "0x01",
+      "name": "Smoke",
+      "role": "controller"
+    },
+    {
+      "number": "0x02",
+      "name": "Carbon monoxide",
+      "role": "controller"
+    },
+    {
+      "number": "0x03",
+      "name": "Test",
+      "role": "controller"
+    },
+    {
+      "number": "0x04",
+      "name": "Unknown alarm",
+      "role": "controller"
+    },
+    {
+      "number": "0x05",
+      "name": "Clear",
+      "role": "controller"
+    },
+    {
+      "number": "0x06",
+      "name": "Low battery",
+      "role": "controller"
+    },
+    {
+      "number": "0x07",
+      "name": "Malfunction",
+      "role": "controller"
+    },
+    {
+      "number": "0x0A",
+      "name": "Heartbeat",
+      "role": "controller"
+    }
+  ],
+  "capabilities": [
+    {
+      "kind": "groupEvents",
+      "events": [
+        {
+          "group": "0x01",
+          "command1": "0x11",
+          "event": "smoke"
+        },
+        {
+          "group": "0x02",
+          "command1": "0x11",
+          "event": "carbonMonoxide"
+        },
+        {
+          "group": "0x03",
+          "command1": "0x11",
+          "event": "test"
+        },
+        {
+          "group": "0x04",
+          "command1": "0x11",
+          "event": "unknownAlarm"
+        },
+        {
+          "group": "0x05",
+          "command1": "0x11",
+          "event": "clear"
+        },
+        {
+          "group": "0x06",
+          "command1": "0x11",
+          "event": "lowBattery"
+        },
+        {
+          "group": "0x07",
+          "command1": "0x11",
+          "event": "malfunction"
+        }
+      ]
+    },
+    {
+      "kind": "heartbeat",
+      "group": "0x0A",
+      "intervalMinutes": 1440
+    }
+  ],
+  "lifecycle": {
+    "installation": {
+      "steps": [
+        {
+          "text": "Plug the Smoke Bridge into an unswitched wall outlet near the First Alert alarm.",
+          "action": "plugIn"
+        },
+        {
+          "text": "Press and hold the SET button until the Smoke Bridge beeps.",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "LED blinks green"
+        },
+        {
+          "text": "Within four minutes, press and hold the First Alert alarm's test button until it beeps or says \"testing\".",
+          "action": "hold",
+          "control": "First Alert test button",
+          "expect": "Smoke Bridge LED blinks red while the alarm sends its test messages, then stops"
+        },
+        {
+          "text": "Test the pairing by pressing and holding the First Alert alarm's test button again.",
+          "action": "hold",
+          "control": "First Alert test button",
+          "expect": "Smoke Bridge LED blinks red until the message ends"
+        }
+      ],
+      "notes": [
+        "Requires a First Alert ONELINK smoke and CO alarm.",
+        "The Smoke Bridge doesn't receive wireless RF signals from Insteon devices."
+      ]
+    },
+    "linking": {
+      "steps": [
+        {
+          "text": "Press and hold the SET button until the Smoke Bridge beeps.",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "LED blinks green"
+        }
+      ],
+      "notes": [
+        "Then adjust the responder to the state you want and press and hold its SET button until it double-beeps. The Smoke Bridge double-beeps and its LED stops blinking.",
+        "Test by setting the responder to a different state and tapping the Smoke Bridge's SET button; it cycles through smoke, CO, low battery, error and all clear. Links made with the SET button respond only to smoke detected; use software for the other groups.",
+        "The Smoke Bridge is a controller only.",
+        "If either device's LED keeps blinking, the link failed; tap its SET button until the LED stops and try again."
+      ],
+      "alternatives": [
+        {
+          "description": "From a Hub",
+          "steps": [
+            {
+              "text": "Have the Hub start ALL-Linking as the responder.",
+              "device": "other",
+              "action": "send",
+              "command": "Start ALL-Linking"
+            },
+            {
+              "text": "Press and hold the SET button until the Smoke Bridge beeps.",
+              "action": "hold",
+              "control": "SET button",
+              "expect": "LED blinks green"
+            },
+            {
+              "text": "Wait for the Hub to report the new link.",
+              "device": "other",
+              "action": "wait",
+              "expect": "The Hub reports ALL-Linking Completed with the device's Insteon ID"
+            },
+            {
+              "text": "Have the Hub send ID Request.",
+              "action": "send",
+              "command": "ID Request",
+              "expect": "The device answers with its category, subcategory and firmware version"
+            },
+            {
+              "text": "Have the Hub send Ping to confirm the link.",
+              "action": "send",
+              "command": "Ping",
+              "expect": "The device acknowledges the Ping"
+            }
+          ],
+          "verification": {
+            "status": "inferred",
+            "note": "Assembled from this profile's linking steps and the standard Insteon commands Start ALL-Linking, ID Request, Enter Linking Mode and Ping; no document describes adding this product to a Hub."
+          },
+          "notes": [
+            "Link each further group the device controls the same way, with the modem starting ALL-Linking as the responder and then Enter Linking Mode naming that group in cmd2; fromHub lists every leg.",
+            "Seen on a device running firmware 0x43, which had been added to another Hub: its ALL-Link database held a controller record for each of groups 1 to 7, naming that Hub, each with Data 1 to 3 as 0x03 0x1F 0x00, at 0x0FEF down to 0x0FBF in order, and a responder record for that Hub's group 254 with Data 1 to 3 as 0x00 0x1C 0x00 at 0x0F97. It held no controller record for group 10, the heartbeat group. How that Hub wrote the records, by linking mode or by writing the database, wasn't seen."
+          ]
+        }
+      ]
+    },
+    "linkingTimeoutSeconds": 240,
+    "fromHub": {
+      "legs": [
+        {
+          "modem": "responder",
+          "modemGroup": "0x01",
+          "deviceGroup": "0x01"
+        },
+        {
+          "modem": "responder",
+          "modemGroup": "0x02",
+          "deviceGroup": "0x02"
+        },
+        {
+          "modem": "responder",
+          "modemGroup": "0x03",
+          "deviceGroup": "0x03"
+        },
+        {
+          "modem": "responder",
+          "modemGroup": "0x04",
+          "deviceGroup": "0x04"
+        },
+        {
+          "modem": "responder",
+          "modemGroup": "0x05",
+          "deviceGroup": "0x05"
+        },
+        {
+          "modem": "responder",
+          "modemGroup": "0x06",
+          "deviceGroup": "0x06"
+        },
+        {
+          "modem": "responder",
+          "modemGroup": "0x07",
+          "deviceGroup": "0x07"
+        },
+        {
+          "modem": "responder",
+          "modemGroup": "0x0A",
+          "deviceGroup": "0x0A"
+        }
+      ],
+      "deviceFirst": false,
+      "remoteEnterLinkingMode": {
+        "works": "unknown",
+        "verification": {
+          "status": "inferred",
+          "note": "The Insteon Developer's Guide (2009) says i1 devices don't support Enter Linking Mode (cmd1 0x09), and the catalog doesn't know the engine of every version of this product. An i2 or i2CS version takes it; ask the device with Get Insteon Engine Version (cmd1 0x0D) first. Seen on a device running firmware 0x43, an i2CS version, through a Hub 2245: with the modem in Start ALL-Linking as the responder for each leg, the device acknowledged the extended Enter Linking Mode with cmd2 naming groups 1 to 7 and 10 in turn, and the modem reported ALL-Linking Completed in group 1 every time and kept one responder record for the device, in group 1. Afterward the device held no controller record naming the modem for any of those groups; it held a controller record for group 255 with Data 1 to 3 as 0x03 0x1C 0x00 and a responder record for the modem's group 0 with 0x0F 0x1C 0x00. So the legs after the first didn't link their groups on this firmware."
+        }
+      },
+      "verification": {
+        "status": "inferred",
+        "note": "Read from the From a Hub alternative to this profile's linking, whose steps are assembled from its own linking steps and standard Insteon commands; no document describes adding this product to a Hub."
+      }
+    },
+    "multiLinking": {
+      "steps": [
+        {
+          "text": "Press and hold the SET button until the Smoke Bridge beeps.",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "LED blinks green"
+        },
+        {
+          "text": "Tap the SET button.",
+          "action": "tap",
+          "control": "SET button",
+          "count": 1,
+          "expect": "LED double-blinks green"
+        },
+        {
+          "text": "For each responder, adjust it to the scene state.",
+          "device": "other",
+          "action": "other"
+        },
+        {
+          "text": "Press and hold the responder's SET button until it double-beeps.",
+          "device": "other",
+          "action": "hold",
+          "control": "SET button"
+        },
+        {
+          "text": "Tap the SET button to finish.",
+          "action": "tap",
+          "control": "SET button",
+          "count": 1,
+          "expect": "Beep; LED stops blinking"
+        }
+      ]
+    },
+    "unlinking": {
+      "steps": [
+        {
+          "text": "Press and hold the SET button until the Smoke Bridge beeps.",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "LED blinks green"
+        },
+        {
+          "text": "Press and hold the SET button again until it beeps.",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "LED blinks red"
+        }
+      ],
+      "notes": [
+        "Then press and hold the responder's SET button until it double-beeps; the Smoke Bridge double-beeps and its LED stops blinking.",
+        "For several responders, tap the SET button after the LED blinks red (it double-blinks red), press and hold each responder's SET button until it double-beeps, then tap the SET button to finish."
+      ]
+    },
+    "reset": {
+      "steps": [
+        {
+          "text": "Unplug the Smoke Bridge.",
+          "action": "unplug"
+        },
+        {
+          "text": "Wait 5 seconds.",
+          "action": "wait",
+          "seconds": 5
+        },
+        {
+          "text": "Press and hold the SET button while plugging the Smoke Bridge back in; don't let go.",
+          "action": "plugIn",
+          "control": "SET button",
+          "expect": "Long beep"
+        },
+        {
+          "text": "When the long beep stops, release the SET button.",
+          "action": "release",
+          "control": "SET button",
+          "expect": "After a few seconds, a double beep"
+        },
+        {
+          "text": "Pair the Smoke Bridge with the First Alert alarm again.",
+          "action": "other"
+        }
+      ],
+      "notes": [
+        "Erases all settings and scenes, including the pairing with the First Alert alarm."
+      ]
+    },
+    "resetErases": [
+      "links",
+      "settings"
+    ],
+    "removal": {
+      "steps": [
+        {
+          "text": "Remove the Smoke Bridge as a controller from each of its responders.",
+          "action": "other"
+        }
+      ],
+      "alternatives": [
+        {
+          "description": "From a Hub",
+          "steps": [
+            {
+              "text": "Remove the device from its scenes first, so no other device keeps links to it.",
+              "device": "other",
+              "action": "other"
+            },
+            {
+              "text": "Have the Hub send Enter Unlinking Mode (cmd1 0x0A) with cmd2 0x01, for group 1, as an extended message if the device is i2CS.",
+              "action": "send",
+              "command": "Enter Unlinking Mode"
+            },
+            {
+              "text": "Have the Hub start ALL-Linking with link code 0xFF (delete), so the device deletes its group 1 link to the Hub.",
+              "device": "other",
+              "action": "send",
+              "command": "Start ALL-Linking",
+              "expect": "The device deletes its group 1 link to the Hub, and the Hub reports the device's Insteon ID"
+            },
+            {
+              "text": "Have the Hub start unlinking for group 0 (Start ALL-Linking with link code 0xFF).",
+              "device": "other",
+              "action": "send",
+              "command": "Start ALL-Linking"
+            },
+            {
+              "text": "Have the Hub send Enter Linking Mode (cmd1 0x09) with cmd2 0x01, for group 1, as an extended message if the device is i2CS.",
+              "action": "send",
+              "command": "Enter Linking Mode"
+            },
+            {
+              "text": "Wait for the Hub to report that the link is gone.",
+              "device": "other",
+              "action": "wait",
+              "expect": "The Hub reports the device's Insteon ID"
+            }
+          ],
+          "notes": [
+            "Inferred: seen on three i2CS devices (Outdoor On/Off Plug 2634-222 firmware 0x42, On/Off Plug 2635-222 firmware 0x48, I/O Module 2450 firmware 0x41) linked to a Hub 2245, these steps should remove every link between the Hub and the device with no SET button press. First the device's group 1 link: Enter Unlinking Mode (cmd1 0x0A) is sent to the device while the modem joins as responder. Then the modem's group 0 link: the modem starts ALL-Linking with link code 0xFF while the device is sent Enter Linking Mode (cmd1 0x09). This applies to the firmware versions this profile's engines give as i2CS.",
+            "Inferred: seen on an i2CS device (I/O Module 2450 firmware 0x41) linked to a Hub 2245: unlinking by the modem's own records left the device's records for the Hub's other groups, and an i2CS device answers a device that's in its ALL-Link database. So a device that still answers the Hub after removal may hold other records for it; a factory reset, as the Smoke Bridge 2982-222 Owner's Manual gives it, clears them. This applies to the firmware versions this profile's engines give as i2CS."
+          ],
+          "verification": {
+            "status": "inferred",
+            "note": "Assembled from the standard Insteon commands Enter Unlinking Mode, Start ALL-Linking and Enter Linking Mode; no document describes removing this product from a Hub."
+          }
+        }
+      ]
+    }
+  },
+  "notes": [
+    "HouseLinc names it Smoke Detector.",
+    "It sends Insteon messages over powerline only; its radio only listens for the smoke alarms it's paired with.",
+    "Tapping its SET button sends each group's command as a test, ending with the all-clear.",
+    "It sends a heartbeat to group 10 (0x0A) about once every 24 hours, which software can turn off.",
+    "Group 4 is the all-clear on earlier firmware and a new or unknown alarm on later firmware."
+  ],
+  "sources": [
+    "HouseLinc Device Definitions (version 2.9.87)",
+    "Smoke Bridge Developer Notes",
+    "Smoke Bridge 2982-222 Owner's Manual",
+    "Smoke Bridge 2982-222 Quick Start Guide",
+    "Insteon Developer's Guide (2009)"
+  ]
+}

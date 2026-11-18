@@ -1,0 +1,10 @@
+{
+  "dimmable": "Dims a load.",
+  "groupEvents": "What the product means by the commands it sends to its groups.",
+  "heartbeat": "A periodic heartbeat to a group, for noticing a product that has gone quiet.",
+  "hub": "A Hub's local HTTP interface, through which its modem is driven.",
+  "hubPro": "The Hub Pro's own HTTP interface for adding and removing devices and updating its software.",
+  "modem": "A modem: a PowerLinc Modem, USB Adapter or Hub's own modem.",
+  "onOff": "Turns a load on and off.",
+  "thermostat": "A thermostat, with the mode values it uses in mode status reports."
+}

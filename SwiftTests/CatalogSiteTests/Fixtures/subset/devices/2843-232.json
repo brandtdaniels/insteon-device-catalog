@@ -1,0 +1,399 @@
+{
+  "model": "2843-232",
+  "name": "Door Sensor",
+  "description": "A wireless, battery-powered door sensor that reports when the door opens or closes.",
+  "identities": [
+    {
+      "category": "0x10",
+      "subcategory": "0x09"
+    }
+  ],
+  "commandSets": [
+    {
+      "commandSet": "openCloseSensor",
+      "category": "0x10",
+      "subcategory": "0x09",
+      "verification": {
+        "status": "inferred",
+        "note": "Read from the Open/Close Sensor 2843, which shares its device category; no document describes this sensor."
+      }
+    }
+  ],
+  "radio": "rf",
+  "role": "controller",
+  "batteryPowered": true,
+  "groups": [
+    {
+      "number": "0x01",
+      "name": "Open/close",
+      "role": "controller"
+    },
+    {
+      "number": "0x02",
+      "name": "Closed",
+      "role": "controller"
+    },
+    {
+      "number": "0x04",
+      "name": "Heartbeat",
+      "role": "controller"
+    }
+  ],
+  "capabilities": [
+    {
+      "kind": "groupEvents",
+      "events": [
+        {
+          "group": "0x01",
+          "command1": "0x11",
+          "event": "opened"
+        },
+        {
+          "group": "0x01",
+          "command1": "0x13",
+          "event": "closed"
+        }
+      ]
+    },
+    {
+      "kind": "heartbeat",
+      "group": "0x04",
+      "intervalMinutes": 1428
+    }
+  ],
+  "lifecycle": {
+    "installation": {
+      "steps": [
+        {
+          "text": "Remove the sensor's cover.",
+          "action": "other"
+        },
+        {
+          "text": "Install the battery.",
+          "action": "insertBatteries"
+        },
+        {
+          "text": "Mount the sensor on the door frame.",
+          "action": "mount"
+        },
+        {
+          "text": "Mount the magnet on the door, next to the sensor and lined up with it.",
+          "action": "mount"
+        },
+        {
+          "text": "Test by opening and closing the door.",
+          "action": "other"
+        }
+      ],
+      "notes": [
+        "The sensor reads closed while the magnet is next to it and open when the magnet moves away."
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "Read from the Open/Close Sensor 2843, which shares its device category; no document describes this sensor's setup."
+      }
+    },
+    "linking": {
+      "steps": [
+        {
+          "text": "Press and hold the SET button for 3 seconds.",
+          "action": "hold",
+          "control": "SET button",
+          "seconds": 3,
+          "expect": "LED blinks green"
+        }
+      ],
+      "notes": [
+        "Then turn the responder on (or set it to any state) and press and hold its SET button for 3 seconds; the sensor's LED turns solid green. By default the sensor turns responders on when it opens and off when it closes.",
+        "When adding it to a Hub, press and hold the SET button until the LED blinks and then tap the SET button (the LED double-blinks).",
+        "The sensor is a controller only."
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "Read from the Open/Close Sensor 2843, which shares its device category; no document describes this sensor's setup."
+      },
+      "alternatives": [
+        {
+          "description": "From a Hub",
+          "steps": [
+            {
+              "text": "Press and hold the SET button for 3 seconds.",
+              "action": "hold",
+              "control": "SET button",
+              "seconds": 3,
+              "expect": "LED blinks green"
+            },
+            {
+              "text": "Tap the SET button.",
+              "action": "tap",
+              "control": "SET button",
+              "count": 1,
+              "expect": "LED double-blinks green"
+            },
+            {
+              "text": "Have the Hub start ALL-Linking as the responder.",
+              "device": "other",
+              "action": "send",
+              "command": "Start ALL-Linking",
+              "expect": "The Hub reports ALL-Linking Completed with the device's Insteon ID"
+            },
+            {
+              "text": "While the sensor is still awake, have the Hub send extended Set (cmd1 0x2E, cmd2 0x00) with D1 0x01, D2 0x04 (stay awake) and D3 the number of seconds to stay awake.",
+              "action": "send",
+              "command": "Extended Set"
+            },
+            {
+              "text": "While the device is still awake, have the Hub send Ping to confirm the link.",
+              "action": "send",
+              "command": "Ping",
+              "expect": "The device acknowledges the Ping"
+            },
+            {
+              "text": "Press and hold the SET button for 3 seconds to finish.",
+              "action": "hold",
+              "control": "SET button",
+              "seconds": 3,
+              "expect": "LED stops blinking"
+            }
+          ],
+          "verification": {
+            "status": "inferred",
+            "note": "Assembled from this profile's multi-linking and waking steps and the standard Insteon commands Start ALL-Linking, Extended Set and Ping; no document describes adding this product to a Hub. The extended Set that keeps the sensor awake is read from the Open/Close Sensor 2843 profile."
+          }
+        }
+      ]
+    },
+    "fromHub": {
+      "legs": [
+        {
+          "modem": "responder",
+          "modemGroup": "0x01",
+          "deviceGroup": "0x01",
+          "allGroupsWhen": {
+            "flag": "linkToAllGroups",
+            "set": true
+          },
+          "verification": {
+            "status": "inferred",
+            "note": "The Open/Close Sensor Developer Notes give the Link to FF Group option as bit 6 of the configuration byte, on in its default 0x43. That a link made with the SET button covers every group the sensor controls while it's on is read from that; with it off, the button links group 1 only. No document describes adding this product to a Hub."
+          }
+        }
+      ],
+      "deviceFirst": true,
+      "remoteEnterLinkingMode": {
+        "works": "unknown",
+        "verification": {
+          "status": "inferred",
+          "note": "The device sleeps to save its battery and hears messages only while awake, and no document or observation says it answers Enter Linking Mode (cmd1 0x09); its linking steps put it in linking mode with its own controls."
+        }
+      },
+      "keepAwake": {
+        "when": "afterLinked",
+        "send": {
+          "command": "stayAwake"
+        },
+        "verification": {
+          "status": "inferred",
+          "note": "The Open/Close Sensor Developer Notes give the extended Set with D1 0x01 and D2 0x04, the command set's stayAwake, with the seconds to stay awake in D3. Sending it once ALL-Linking Completed gives the device's Insteon ID, while it's still awake, is assembled from this profile's linking and waking steps; no document describes adding this product to a Hub."
+        }
+      },
+      "verification": {
+        "status": "inferred",
+        "note": "Read from the From a Hub alternative to this profile's linking, whose steps are assembled from its own linking steps and standard Insteon commands; no document describes adding this product to a Hub."
+      }
+    },
+    "multiLinking": {
+      "steps": [
+        {
+          "text": "Press and hold the SET button for 3 seconds.",
+          "action": "hold",
+          "control": "SET button",
+          "seconds": 3,
+          "expect": "LED blinks green"
+        },
+        {
+          "text": "Tap the SET button.",
+          "action": "tap",
+          "control": "SET button",
+          "count": 1,
+          "expect": "LED double-blinks green"
+        },
+        {
+          "text": "For each responder, set it to the scene state.",
+          "device": "other",
+          "action": "other"
+        },
+        {
+          "text": "Press and hold the responder's SET button for 3 seconds.",
+          "device": "other",
+          "action": "hold",
+          "control": "SET button",
+          "seconds": 3
+        },
+        {
+          "text": "Press and hold the SET button for 3 seconds to finish.",
+          "action": "hold",
+          "control": "SET button",
+          "seconds": 3,
+          "expect": "LED stops blinking"
+        }
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "Read from the Open/Close Sensor 2843, which shares its device category; no document describes this sensor's setup."
+      }
+    },
+    "unlinking": {
+      "steps": [
+        {
+          "text": "Press and hold the SET button for 3 seconds.",
+          "action": "hold",
+          "control": "SET button",
+          "seconds": 3,
+          "expect": "LED blinks green"
+        },
+        {
+          "text": "Press and hold the SET button again for 3 seconds.",
+          "action": "hold",
+          "control": "SET button",
+          "seconds": 3,
+          "expect": "LED keeps blinking green"
+        }
+      ],
+      "notes": [
+        "Then press and hold the responder's SET button for 3 seconds; the sensor's LED stops blinking and turns solid."
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "Read from the Open/Close Sensor 2843, which shares its device category; no document describes this sensor's setup."
+      }
+    },
+    "waking": {
+      "steps": [
+        {
+          "text": "While the sensor is awake, send extended Set (cmd1 0x2E, cmd2 0x00) with D1 0x01, D2 0x04 (stay awake) and D3 the number of seconds to stay awake.",
+          "action": "send",
+          "command": "Extended Set"
+        }
+      ],
+      "notes": [
+        "The sensor sleeps quickly to save battery and must be awake to send or receive messages; 0xF0 seconds is about 4 minutes, and the maximum is 0xFF.",
+        "How to wake the sensor before sending the command isn't known."
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "Read from the Open/Close Sensor 2843, which shares its device category; no document describes this sensor's setup."
+      }
+    },
+    "reset": {
+      "steps": [
+        {
+          "text": "Unlink any responders from the sensor.",
+          "action": "other"
+        },
+        {
+          "text": "Gently remove the sensor's case with a small screwdriver.",
+          "action": "other"
+        },
+        {
+          "text": "Remove the battery.",
+          "action": "removeBatteries"
+        },
+        {
+          "text": "Wait at least 15 seconds.",
+          "action": "wait",
+          "seconds": 15
+        },
+        {
+          "text": "Press and hold the SET button while reinstalling the battery.",
+          "action": "insertBatteries",
+          "control": "SET button"
+        },
+        {
+          "text": "Release the SET button when the status LED turns on.",
+          "action": "release",
+          "control": "SET button",
+          "expect": "LED stays on about 4 seconds, then turns off"
+        }
+      ],
+      "notes": [
+        "Erases all settings and scenes."
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "Read from the Open/Close Sensor 2843, which shares its device category; no document describes this sensor's setup."
+      }
+    },
+    "resetErases": [
+      "links",
+      "settings"
+    ],
+    "removal": {
+      "steps": [
+        {
+          "text": "Remove the sensor as a controller from each of its responders.",
+          "action": "other"
+        }
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "Read from the Open/Close Sensor 2843, which shares its device category; no document describes this sensor's setup."
+      },
+      "alternatives": [
+        {
+          "description": "From a Hub",
+          "steps": [
+            {
+              "text": "Remove the device from its scenes first, so no other device keeps links to it.",
+              "device": "other",
+              "action": "other"
+            },
+            {
+              "text": "Press and hold the SET button for 3 seconds.",
+              "action": "hold",
+              "control": "SET button",
+              "seconds": 3,
+              "expect": "LED blinks green"
+            },
+            {
+              "text": "Press and hold the SET button again for 3 seconds.",
+              "action": "hold",
+              "control": "SET button",
+              "seconds": 3,
+              "expect": "LED keeps blinking green"
+            },
+            {
+              "text": "Have the Hub start ALL-Linking with link code 0xFF (delete), so the device deletes its group 1 link to the Hub.",
+              "device": "other",
+              "action": "send",
+              "command": "Start ALL-Linking",
+              "expect": "The device deletes its group 1 link to the Hub, and the Hub reports the device's Insteon ID"
+            },
+            {
+              "text": "If the LED is still blinking, tap the SET button until it stops.",
+              "action": "tap",
+              "control": "SET button",
+              "count": 1,
+              "expect": "LED stops blinking"
+            }
+          ],
+          "verification": {
+            "status": "inferred",
+            "note": "Assembled from this profile's unlinking steps and the standard Insteon command Start ALL-Linking; no document describes removing this product from a Hub."
+          }
+        }
+      ]
+    }
+  },
+  "notes": [
+    "Its heartbeat's cmd1 is 0x11 while it's open and 0x13 while it's closed."
+  ],
+  "sources": [
+    "HouseLinc Device Definitions (version 2.9.87)",
+    "Open/Close Sensor Developer Notes"
+  ],
+  "verification": {
+    "status": "inferred",
+    "note": "Read from its device category: it shares category 0x10 with the Open/Close Sensor 2843, and its commands, groups and setup are read from that sensor. The HouseLinc Device Definitions (version 2.9.87) lists subcategory 0x09 as the Door Sensor 2843-232; no other document gives its model number, and none describes the sensor itself."
+  }
+}

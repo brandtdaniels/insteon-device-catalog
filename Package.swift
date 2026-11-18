@@ -12,6 +12,7 @@ let package = Package(
     .library(name: "CatalogSchema", targets: ["CatalogSchema"]),
     .library(name: "CatalogRules", targets: ["CatalogRules"]),
     .library(name: "CatalogBuild", targets: ["CatalogBuild"]),
+    .library(name: "CatalogSite", targets: ["CatalogSite"]),
     .executable(name: "catalog", targets: ["catalog"]),
     .executable(name: "catalog-dev", targets: ["catalog-dev"])
   ],
@@ -23,19 +24,23 @@ let package = Package(
     .target(name: "CatalogSchema", dependencies: ["CatalogJSON"], path: "Sources/CatalogSchema"),
     .target(name: "CatalogRules", dependencies: ["CatalogJSON"], path: "Sources/CatalogRules"),
     .target(name: "CatalogBuild", dependencies: ["CatalogJSON", "CatalogSchema", "CatalogRules"], path: "Sources/CatalogBuild"),
+    .target(name: "CatalogSite", dependencies: ["CatalogJSON", "CatalogBuild"], path: "Sources/CatalogSite"),
     .executableTarget(
       name: "catalog",
       dependencies: [
         "CatalogBuild",
+        "CatalogSite",
         .product(name: "ArgumentParser", package: "swift-argument-parser")
       ],
       path: "Sources/catalog"
     ),
-    .target(name: "CatalogSweep", dependencies: ["CatalogJSON", "CatalogBuild"], path: "Sources/CatalogSweep"),
+    .target(name: "CatalogSweep", dependencies: ["CatalogJSON", "CatalogBuild", "CatalogSite"], path: "Sources/CatalogSweep"),
     .executableTarget(
       name: "catalog-dev",
       dependencies: [
         "CatalogSweep",
+        "CatalogBuild",
+        "CatalogSite",
         .product(name: "ArgumentParser", package: "swift-argument-parser")
       ],
       path: "Sources/catalog-dev"
@@ -57,8 +62,14 @@ let package = Package(
     ),
     .testTarget(
       name: "CatalogSweepTests",
-      dependencies: ["CatalogJSON", "CatalogBuild", "CatalogSweep"],
+      dependencies: ["CatalogJSON", "CatalogBuild", "CatalogSweep", "CatalogSite"],
       path: "SwiftTests/CatalogSweepTests"
+    ),
+    .testTarget(
+      name: "CatalogSiteTests",
+      dependencies: ["CatalogJSON", "CatalogBuild", "CatalogSite"],
+      path: "SwiftTests/CatalogSiteTests",
+      exclude: ["Fixtures"]
     ),
     .testTarget(
       name: "CatalogRulesTests",
