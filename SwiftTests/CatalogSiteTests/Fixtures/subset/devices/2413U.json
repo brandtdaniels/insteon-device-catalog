@@ -1,0 +1,173 @@
+{
+  "model": "2413U",
+  "name": "USB Modem",
+  "aliases": [
+    "PowerLinc USB Modem"
+  ],
+  "description": "A USB powerline modem that connects a computer to an Insteon network, so home automation software can send and receive Insteon messages.",
+  "identities": [
+    {
+      "category": "0x03",
+      "subcategory": "0x15"
+    }
+  ],
+  "engines": [
+    {
+      "engine": "i2cs",
+      "category": "0x03",
+      "subcategory": "0x15",
+      "firmware": {
+        "only": [
+          "0x9A",
+          "0x9B"
+        ]
+      }
+    }
+  ],
+  "radio": "dual",
+  "role": "both",
+  "capabilities": [
+    {
+      "kind": "modem"
+    }
+  ],
+  "commandSets": [
+    {
+      "commandSet": "modem",
+      "category": "0x03",
+      "subcategory": "0x15"
+    }
+  ],
+  "lifecycle": {
+    "installation": {
+      "steps": [
+        {
+          "text": "Make sure the modem is not plugged into your computer.",
+          "action": "other"
+        },
+        {
+          "text": "Download and run the FTDI virtual COM port (VCP) driver installer for Windows.",
+          "action": "other"
+        },
+        {
+          "text": "Plug the modem into an AC wall outlet, not a power strip or AC line filter.",
+          "action": "plugIn"
+        },
+        {
+          "text": "Plug the square end of the included USB cable into the modem's USB jack.",
+          "action": "other",
+          "control": "USB jack"
+        },
+        {
+          "text": "Plug the rectangular end of the cable into an available USB port on your computer.",
+          "action": "other",
+          "expect": "The computer detects new hardware"
+        }
+      ],
+      "notes": [
+        "Use a cable no longer than 10 feet (6 feet or less recommended), use only one modem per computer, and keep the modem away from large metal objects such as refrigerators or TVs.",
+        "Computers and their accessories can absorb the modem's powerline signals; use a filter on the computer's power strip.",
+        "HouseLinc adds the modem as its computer interface: in HouseLinc's Options window click Start, select the modem and click Activate."
+      ]
+    },
+    "linking": {
+      "steps": [
+        {
+          "text": "Press and hold the SET button for more than three seconds.",
+          "action": "hold",
+          "control": "SET button",
+          "seconds": 3,
+          "expect": "LED blinks continuously, half a second on and half a second off"
+        }
+      ],
+      "notes": [
+        "Then press and hold the SET button on the device you want to link to the modem; the modem reports ALL-Linking Completed with the other device's ID.",
+        "When linking is started with the SET button, the modem decides the controller or responder role and assigns the ALL-Link group automatically.",
+        "Software can end linking mode with Cancel ALL-Linking, and can turn off SET button linking by setting bit 7 of the modem's configuration flags.",
+        "The Insteon Modem Developer's Guide gives 4 minutes for linking mode started with Start ALL-Linking."
+      ],
+      "alternatives": [
+        {
+          "description": "From software",
+          "steps": [
+            {
+              "text": "Have software send the Start ALL-Linking command, choosing whether the modem links as controller, as responder, or as controller when it starts the session and responder otherwise, and the ALL-Link group.",
+              "action": "send",
+              "expect": "LED blinks continuously, half a second on and half a second off",
+              "command": "Start ALL-Linking"
+            }
+          ]
+        }
+      ]
+    },
+    "linkingTimeoutSeconds": 240,
+    "unlinking": {
+      "steps": [
+        {
+          "text": "Have software send the Start ALL-Linking command with link code 0xFF and the ALL-Link group to unlink.",
+          "action": "send",
+          "expect": "The modem enters unlinking mode for 4 minutes",
+          "command": "Start ALL-Linking"
+        },
+        {
+          "text": "Press and hold the SET button on the device to unlink.",
+          "device": "other",
+          "action": "hold",
+          "control": "SET button",
+          "expect": "ALL-Linking Completed reports link code 0xFF, meaning the link was deleted"
+        }
+      ],
+      "notes": [
+        "The Insteon Modem Developer's Guide gives no SET button sequence for the modem's own unlinking mode."
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "Taken from the Insteon Modem Developer's Guide's command example; no owner's document describes unlinking the modem."
+      }
+    },
+    "reset": {
+      "steps": [
+        {
+          "text": "Unplug the modem from the wall outlet.",
+          "action": "unplug"
+        },
+        {
+          "text": "Wait 10 seconds.",
+          "action": "wait",
+          "seconds": 10
+        },
+        {
+          "text": "Press and hold the SET button and, while continuing to hold it, plug the modem back in.",
+          "action": "plugIn",
+          "control": "SET button",
+          "expect": "A long beep sounds"
+        },
+        {
+          "text": "Continue holding the SET button until the beep stops.",
+          "action": "hold",
+          "control": "SET button"
+        },
+        {
+          "text": "Release the SET button.",
+          "action": "release",
+          "control": "SET button",
+          "expect": "After several seconds the status LED turns on to show the reset is complete"
+        }
+      ],
+      "notes": [
+        "The Insteon Modem Developer's Guide describes holding the SET button for 10 seconds while applying power; software can also send the Reset the IM command. The modem then sends User Reset Detected."
+      ]
+    },
+    "resetErases": [
+      "links",
+      "settings"
+    ]
+  },
+  "sources": [
+    "HouseLinc Device Definitions (version 2.9.87)",
+    "insteon.com product catalog",
+    "USB Modem 2413U Quick Start Guide",
+    "HouseLinc Owner's Manual",
+    "Insteon Modem Developer's Guide"
+  ]
+}

@@ -1,0 +1,1022 @@
+{
+  "id": "tempLinc",
+  "name": "TempLinc Thermostat",
+  "description": "The TempLinc thermostats: wired, wireless zone, regional and heat pump versions, and their later firmware.",
+  "displayScale": {
+    "celsiusWhen": "displayCelsius"
+  },
+  "enumerations": [
+    {
+      "name": "reportedMode",
+      "description": "The mode a mode report gives.",
+      "values": [
+        {
+          "value": "0x00",
+          "name": "off"
+        },
+        {
+          "value": "0x01",
+          "name": "heat"
+        },
+        {
+          "value": "0x02",
+          "name": "cool"
+        },
+        {
+          "value": "0x03",
+          "name": "programAuto"
+        },
+        {
+          "value": "0x04",
+          "name": "fanOn"
+        },
+        {
+          "value": "0x05",
+          "name": "manualAuto"
+        },
+        {
+          "value": "0x08",
+          "name": "fanAuto"
+        }
+      ]
+    },
+    {
+      "name": "modeCommand",
+      "description": "The cmd2 that sets a mode or the fan.",
+      "values": [
+        {
+          "value": "0x04",
+          "name": "heat"
+        },
+        {
+          "value": "0x05",
+          "name": "cool"
+        },
+        {
+          "value": "0x06",
+          "name": "manualAuto"
+        },
+        {
+          "value": "0x07",
+          "name": "fanOn"
+        },
+        {
+          "value": "0x08",
+          "name": "fanAuto"
+        },
+        {
+          "value": "0x09",
+          "name": "off"
+        },
+        {
+          "value": "0x0A",
+          "name": "programAuto"
+        }
+      ]
+    },
+    {
+      "name": "systemMode",
+      "description": "The mode the thermostat keeps.",
+      "values": [
+        {
+          "value": "0x00",
+          "name": "off"
+        },
+        {
+          "value": "0x01",
+          "name": "manualAuto"
+        },
+        {
+          "value": "0x02",
+          "name": "heat"
+        },
+        {
+          "value": "0x03",
+          "name": "cool"
+        },
+        {
+          "value": "0x04",
+          "name": "programAuto"
+        }
+      ]
+    },
+    {
+      "name": "fanMode",
+      "description": "The fan setting.",
+      "values": [
+        {
+          "value": "0x00",
+          "name": "auto"
+        },
+        {
+          "value": "0x01",
+          "name": "on"
+        }
+      ]
+    }
+  ],
+  "standardCommands": [
+    {
+      "name": "raiseSetpoint",
+      "description": "Raises the setpoint.",
+      "effect": "configuration",
+      "idempotent": false,
+      "command1": "0x68",
+      "parameter": {
+        "name": "change",
+        "description": "How far to raise it.",
+        "scale": 0.5,
+        "unit": "displayDegrees"
+      }
+    },
+    {
+      "name": "lowerSetpoint",
+      "description": "Lowers the setpoint.",
+      "effect": "configuration",
+      "idempotent": false,
+      "command1": "0x69",
+      "parameter": {
+        "name": "change",
+        "description": "How far to lower it.",
+        "scale": 0.5,
+        "unit": "displayDegrees"
+      }
+    },
+    {
+      "name": "setMode",
+      "description": "Sets the mode or the fan.",
+      "effect": "actuation",
+      "idempotent": true,
+      "command1": "0x6B",
+      "parameter": {
+        "name": "mode",
+        "description": "The mode or fan setting.",
+        "kind": "enumeration",
+        "enumeration": "modeCommand"
+      }
+    },
+    {
+      "name": "setCoolSetpoint",
+      "description": "Sets the cool setpoint.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x6C",
+      "parameter": {
+        "name": "coolSetpoint",
+        "description": "The cool setpoint.",
+        "scale": 0.5,
+        "unit": "displayDegrees"
+      }
+    },
+    {
+      "name": "setHeatSetpoint",
+      "description": "Sets the heat setpoint.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x6D",
+      "parameter": {
+        "name": "heatSetpoint",
+        "description": "The heat setpoint.",
+        "scale": 0.5,
+        "unit": "displayDegrees"
+      }
+    }
+  ],
+  "extendedCommands": [
+    {
+      "name": "readStatus",
+      "description": "Reads the clock, mode, setpoints, humidity, temperature and what's running.",
+      "effect": "readOnly",
+      "idempotent": true,
+      "command1": "0x2E",
+      "command2": "0x02",
+      "integrity": "crc",
+      "reply": {
+        "command2": "0x02",
+        "match": [
+          {
+            "position": 1,
+            "value": "0x01"
+          }
+        ],
+        "integrity": "crc",
+        "values": [
+          {
+            "name": "day",
+            "description": "The day of the week.",
+            "byte": 2
+          },
+          {
+            "name": "hour",
+            "description": "The hour.",
+            "byte": 3,
+            "unit": "hours"
+          },
+          {
+            "name": "minute",
+            "description": "The minute.",
+            "byte": 4,
+            "unit": "minutes"
+          },
+          {
+            "name": "second",
+            "description": "The second.",
+            "byte": 5,
+            "unit": "seconds"
+          },
+          {
+            "name": "systemMode",
+            "description": "The mode.",
+            "byte": 6,
+            "mask": "0xF0",
+            "kind": "enumeration",
+            "enumeration": "systemMode"
+          },
+          {
+            "name": "fanMode",
+            "description": "The fan setting.",
+            "byte": 6,
+            "mask": "0x0F",
+            "kind": "enumeration",
+            "enumeration": "fanMode"
+          },
+          {
+            "name": "coolSetpoint",
+            "description": "The cool setpoint, in whole degrees.",
+            "byte": 7,
+            "unit": "displayDegrees"
+          },
+          {
+            "name": "humidity",
+            "description": "The relative humidity.",
+            "byte": 8,
+            "unit": "percent"
+          },
+          {
+            "name": "temperature",
+            "description": "The temperature, whatever the display shows.",
+            "bytes": [
+              9,
+              10
+            ],
+            "scale": 0.1,
+            "unit": "celsius"
+          },
+          {
+            "name": "status",
+            "description": "What's running, and how the thermostat displays temperatures.",
+            "byte": 11,
+            "kind": "flags",
+            "bits": [
+              {
+                "mask": "0x01",
+                "name": "cooling"
+              },
+              {
+                "mask": "0x02",
+                "name": "heating"
+              },
+              {
+                "mask": "0x08",
+                "name": "displayCelsius"
+              }
+            ]
+          },
+          {
+            "name": "heatSetpoint",
+            "description": "The heat setpoint, in whole degrees.",
+            "byte": 12,
+            "unit": "displayDegrees"
+          }
+        ]
+      }
+    },
+    {
+      "name": "readSettings",
+      "description": "Reads the first page of settings.",
+      "effect": "readOnly",
+      "idempotent": true,
+      "command1": "0x2E",
+      "command2": "0x00",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x01"
+        },
+        {
+          "position": 3,
+          "value": "0x00"
+        }
+      ],
+      "integrity": "checksum",
+      "reply": {
+        "command2": "0x00",
+        "match": [
+          {
+            "position": 2,
+            "value": "0x01"
+          },
+          {
+            "position": 3,
+            "value": "0x00"
+          }
+        ],
+        "values": [
+          {
+            "name": "humidity",
+            "description": "The relative humidity.",
+            "byte": 5,
+            "unit": "percent"
+          },
+          {
+            "name": "temperatureOffset",
+            "description": "The correction added to the temperature it measures.",
+            "byte": 6,
+            "signed": true,
+            "scale": 0.1,
+            "unit": "celsius"
+          },
+          {
+            "name": "humidityOffset",
+            "description": "The correction added to the humidity it measures.",
+            "byte": 7,
+            "signed": true,
+            "scale": 0.1,
+            "unit": "percent"
+          },
+          {
+            "name": "systemMode",
+            "description": "The mode.",
+            "byte": 8,
+            "kind": "enumeration",
+            "enumeration": "systemMode"
+          },
+          {
+            "name": "fanMode",
+            "description": "The fan setting.",
+            "byte": 9,
+            "kind": "enumeration",
+            "enumeration": "fanMode"
+          },
+          {
+            "name": "backlight",
+            "description": "How long the backlight stays on: 0 for always off, and 99 for always on.",
+            "byte": 10,
+            "unit": "seconds"
+          },
+          {
+            "name": "hysteresis",
+            "description": "The least time between turning the system on and off.",
+            "byte": 11,
+            "unit": "minutes"
+          },
+          {
+            "name": "energySetback",
+            "description": "How far energy saving moves the setpoints.",
+            "byte": 12,
+            "unit": "displayDegrees"
+          },
+          {
+            "name": "flags",
+            "description": "The thermostat's settings.",
+            "byte": 13,
+            "kind": "flags",
+            "bits": [
+              {
+                "mask": "0x01",
+                "name": "programmingLock"
+              },
+              {
+                "mask": "0x02",
+                "name": "beep"
+              },
+              {
+                "mask": "0x04",
+                "name": "buttonLock"
+              },
+              {
+                "mask": "0x08",
+                "name": "displayCelsius"
+              },
+              {
+                "mask": "0x10",
+                "name": "clock24Hour"
+              },
+              {
+                "mask": "0x20",
+                "name": "softwareButtonLock"
+              },
+              {
+                "mask": "0x40",
+                "name": "heatCoolLed"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "readMoreSettings",
+      "description": "Reads the second page of settings.",
+      "effect": "readOnly",
+      "idempotent": true,
+      "command1": "0x2E",
+      "command2": "0x00",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x01"
+        },
+        {
+          "position": 3,
+          "value": "0x01"
+        }
+      ],
+      "integrity": "checksum",
+      "reply": {
+        "command2": "0x00",
+        "match": [
+          {
+            "position": 2,
+            "value": "0x01"
+          },
+          {
+            "position": 3,
+            "value": "0x01"
+          }
+        ],
+        "values": [
+          {
+            "name": "humidityHigh",
+            "description": "The humidity above which it dehumidifies.",
+            "byte": 4,
+            "unit": "percent"
+          },
+          {
+            "name": "humidityLow",
+            "description": "The humidity below which it humidifies.",
+            "byte": 5,
+            "unit": "percent"
+          },
+          {
+            "name": "firmwareRevision",
+            "description": "The firmware revision.",
+            "byte": 6
+          },
+          {
+            "name": "coolSetpoint",
+            "description": "The cool setpoint, in whole degrees.",
+            "byte": 7,
+            "unit": "displayDegrees"
+          },
+          {
+            "name": "heatSetpoint",
+            "description": "The heat setpoint, in whole degrees.",
+            "byte": 8,
+            "unit": "displayDegrees"
+          },
+          {
+            "name": "stageOneMinutes",
+            "description": "How long stage 1 runs before stage 2 starts.",
+            "byte": 11,
+            "unit": "minutes"
+          },
+          {
+            "name": "statusReports",
+            "description": "Whether it sends status reports.",
+            "byte": 12,
+            "kind": "boolean"
+          }
+        ]
+      }
+    },
+    {
+      "name": "setTemperatureOffset",
+      "description": "Sets the correction added to the temperature it measures.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x2E",
+      "command2": "0x00",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x01"
+        },
+        {
+          "position": 2,
+          "value": "0x02"
+        }
+      ],
+      "integrity": "checksum",
+      "parameters": [
+        {
+          "name": "temperatureOffset",
+          "description": "The correction.",
+          "byte": 3,
+          "signed": true,
+          "scale": 0.1,
+          "unit": "celsius",
+          "range": {
+            "from": -5,
+            "through": 5
+          }
+        }
+      ]
+    },
+    {
+      "name": "setHumidityOffset",
+      "description": "Sets the correction added to the humidity it measures.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x2E",
+      "command2": "0x00",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x01"
+        },
+        {
+          "position": 2,
+          "value": "0x03"
+        }
+      ],
+      "integrity": "checksum",
+      "parameters": [
+        {
+          "name": "humidityOffset",
+          "description": "The correction.",
+          "byte": 3,
+          "signed": true,
+          "scale": 0.1,
+          "unit": "percent",
+          "range": {
+            "from": -10,
+            "through": 10
+          }
+        }
+      ]
+    },
+    {
+      "name": "setFlags",
+      "description": "Sets the thermostat's settings all at once.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x2E",
+      "command2": "0x00",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x01"
+        },
+        {
+          "position": 2,
+          "value": "0x04"
+        }
+      ],
+      "integrity": "checksum",
+      "parameters": [
+        {
+          "name": "flags",
+          "description": "The settings.",
+          "byte": 4,
+          "kind": "flags",
+          "bits": [
+            {
+              "mask": "0x01",
+              "name": "programmingLock",
+              "guard": "neverSet"
+            },
+            {
+              "mask": "0x02",
+              "name": "beep"
+            },
+            {
+              "mask": "0x04",
+              "name": "buttonLock"
+            },
+            {
+              "mask": "0x08",
+              "name": "displayCelsius"
+            },
+            {
+              "mask": "0x10",
+              "name": "clock24Hour"
+            },
+            {
+              "mask": "0x20",
+              "name": "softwareButtonLock"
+            },
+            {
+              "mask": "0x40",
+              "name": "heatCoolLed"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "setBacklight",
+      "description": "Sets how long the backlight stays on.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x2E",
+      "command2": "0x00",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x01"
+        },
+        {
+          "position": 2,
+          "value": "0x05"
+        }
+      ],
+      "integrity": "checksum",
+      "parameters": [
+        {
+          "name": "backlight",
+          "description": "0 for always off, 99 for always on, or the seconds.",
+          "byte": 3,
+          "unit": "seconds",
+          "range": {
+            "from": 0,
+            "through": 99
+          }
+        }
+      ]
+    },
+    {
+      "name": "setHysteresis",
+      "description": "Sets the least time between turning the system on and off.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x2E",
+      "command2": "0x00",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x01"
+        },
+        {
+          "position": 2,
+          "value": "0x06"
+        }
+      ],
+      "integrity": "checksum",
+      "parameters": [
+        {
+          "name": "hysteresis",
+          "description": "The time.",
+          "byte": 3,
+          "unit": "minutes",
+          "range": {
+            "from": 2,
+            "through": 20
+          }
+        }
+      ]
+    },
+    {
+      "name": "setEnergySetback",
+      "description": "Sets how far energy saving moves the setpoints.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x2E",
+      "command2": "0x00",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x01"
+        },
+        {
+          "position": 2,
+          "value": "0x07"
+        }
+      ],
+      "integrity": "checksum",
+      "parameters": [
+        {
+          "name": "energySetback",
+          "description": "The distance.",
+          "byte": 3,
+          "unit": "displayDegrees",
+          "range": {
+            "from": 1,
+            "through": 10
+          }
+        }
+      ]
+    },
+    {
+      "name": "enableStatusReports",
+      "description": "Has the thermostat check its group 0xFE links, after software links a device to it in group 0xFE, so it sends that device status reports.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x2E",
+      "command2": "0x00",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x01"
+        },
+        {
+          "position": 2,
+          "value": "0x08"
+        }
+      ],
+      "integrity": "checksum"
+    },
+    {
+      "name": "setStageOneMinutes",
+      "description": "Sets how long stage 1 runs before stage 2 starts.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x2E",
+      "command2": "0x00",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x01"
+        },
+        {
+          "position": 2,
+          "value": "0x0A"
+        }
+      ],
+      "integrity": "checksum",
+      "parameters": [
+        {
+          "name": "stageOneMinutes",
+          "description": "The time.",
+          "byte": 3,
+          "unit": "minutes",
+          "range": {
+            "from": 1,
+            "through": 60
+          }
+        }
+      ]
+    },
+    {
+      "name": "setHumidityHigh",
+      "description": "Sets the humidity above which it dehumidifies.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x2E",
+      "command2": "0x00",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x01"
+        },
+        {
+          "position": 2,
+          "value": "0x0B"
+        }
+      ],
+      "integrity": "checksum",
+      "parameters": [
+        {
+          "name": "humidityHigh",
+          "description": "The humidity.",
+          "byte": 3,
+          "unit": "percent",
+          "range": {
+            "from": 20,
+            "through": 99
+          }
+        }
+      ]
+    },
+    {
+      "name": "setHumidityLow",
+      "description": "Sets the humidity below which it humidifies.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x2E",
+      "command2": "0x00",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x01"
+        },
+        {
+          "position": 2,
+          "value": "0x0C"
+        }
+      ],
+      "integrity": "checksum",
+      "parameters": [
+        {
+          "name": "humidityLow",
+          "description": "The humidity.",
+          "byte": 3,
+          "unit": "percent",
+          "range": {
+            "from": 1,
+            "through": 79
+          }
+        }
+      ]
+    },
+    {
+      "name": "programmingLockOn",
+      "description": "Locks out linking and programming from the thermostat itself. A Set Operating Flags command.",
+      "effect": "destructive",
+      "idempotent": true,
+      "command1": "0x20",
+      "command2": "0x00",
+      "integrity": "checksum",
+      "guard": "never"
+    },
+    {
+      "name": "programmingLockOff",
+      "description": "Allows linking and programming from the thermostat itself. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x20",
+      "command2": "0x01",
+      "integrity": "checksum"
+    },
+    {
+      "name": "beepOn",
+      "description": "Turns the button beep on. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x20",
+      "command2": "0x02",
+      "integrity": "checksum"
+    },
+    {
+      "name": "beepOff",
+      "description": "Turns the button beep off. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x20",
+      "command2": "0x03",
+      "integrity": "checksum"
+    },
+    {
+      "name": "buttonLockOn",
+      "description": "Locks the buttons. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x20",
+      "command2": "0x04",
+      "integrity": "checksum"
+    },
+    {
+      "name": "buttonLockOff",
+      "description": "Unlocks the buttons. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x20",
+      "command2": "0x05",
+      "integrity": "checksum"
+    },
+    {
+      "name": "setDisplayCelsius",
+      "description": "Displays Celsius. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x20",
+      "command2": "0x06",
+      "integrity": "checksum"
+    },
+    {
+      "name": "setDisplayFahrenheit",
+      "description": "Displays Fahrenheit. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x20",
+      "command2": "0x07",
+      "integrity": "checksum"
+    },
+    {
+      "name": "setClock24Hour",
+      "description": "Shows a 24-hour clock. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x20",
+      "command2": "0x08",
+      "integrity": "checksum"
+    },
+    {
+      "name": "setClock12Hour",
+      "description": "Shows a 12-hour clock. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x20",
+      "command2": "0x09",
+      "integrity": "checksum"
+    },
+    {
+      "name": "softwareButtonLockOn",
+      "description": "Locks the buttons from software. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x20",
+      "command2": "0x0A",
+      "integrity": "checksum"
+    },
+    {
+      "name": "softwareButtonLockOff",
+      "description": "Unlocks the buttons from software. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x20",
+      "command2": "0x0B",
+      "integrity": "checksum"
+    },
+    {
+      "name": "heatCoolLedOn",
+      "description": "Turns the heat and cool LEDs on. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x20",
+      "command2": "0x0C",
+      "integrity": "checksum"
+    },
+    {
+      "name": "heatCoolLedOff",
+      "description": "Turns the heat and cool LEDs off. A Set Operating Flags command.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x20",
+      "command2": "0x0D",
+      "integrity": "checksum"
+    }
+  ],
+  "directMessages": [
+    {
+      "name": "temperatureReport",
+      "description": "The temperature changed.",
+      "command1": "0x6E",
+      "value": {
+        "name": "temperature",
+        "description": "The temperature.",
+        "scale": 0.5,
+        "unit": "displayDegrees"
+      }
+    },
+    {
+      "name": "humidityReport",
+      "description": "The relative humidity changed.",
+      "command1": "0x6F",
+      "value": {
+        "name": "humidity",
+        "description": "The relative humidity.",
+        "unit": "percent"
+      }
+    },
+    {
+      "name": "modeReport",
+      "description": "The mode or the fan changed.",
+      "command1": "0x70",
+      "value": {
+        "name": "mode",
+        "description": "The mode or fan setting.",
+        "kind": "enumeration",
+        "enumeration": "reportedMode"
+      }
+    },
+    {
+      "name": "coolSetpointReport",
+      "description": "The cool setpoint changed.",
+      "command1": "0x71",
+      "value": {
+        "name": "coolSetpoint",
+        "description": "The cool setpoint.",
+        "scale": 0.5,
+        "unit": "displayDegrees"
+      }
+    },
+    {
+      "name": "heatSetpointReport",
+      "description": "The heat setpoint changed.",
+      "command1": "0x72",
+      "value": {
+        "name": "heatSetpoint",
+        "description": "The heat setpoint.",
+        "scale": 0.5,
+        "unit": "displayDegrees"
+      }
+    }
+  ],
+  "notes": [
+    "The thermostat sends its reports as direct messages to each device linked to it in group 0xFE, once enableStatusReports has told it to check that group.",
+    "Mode reports use a different table from the mode the thermostat keeps. Earlier sources give the kept table for mode reports; later sources, used here, give a table of its own.",
+    "Insteon's later documents don't list reads with cmd1 0x6A, or with cmd1 0x6B and cmd2 0x02 or 0x03, for the TempLinc. Read its state with readStatus or readSettings instead.",
+    "The TempLinc's Get Operating Flags reply isn't documented; read its settings from readSettings.",
+    "Insteon's documents don't give the units of the first page's own temperature, the zone temperatures, or the external temperature report, cmd1 0x73.",
+    "Earlier sources read the extended Get with the temperature in D3 and D4, and a second page chosen by D2 0x10; later sources, used here, choose pages by D3.",
+    "Extended Get and Set take 0x01 in D1; other values are also accepted.",
+    "setCoolSetpoint and setHeatSetpoint, as the Thermostat Developer Notes and the Wireless Thermostat Developer Notes give them, set a setpoint that the thermostat keeps and acts on, as a dimmer keeps its on-level, so each is configuration and idempotent.",
+    "setMode, as the Thermostat Developer Notes and the Wireless Thermostat Developer Notes give it, sets the mode or the fan, and fan on and fan off act at once, so it's actuation and idempotent.",
+    "raiseSetpoint and lowerSetpoint, as the Thermostat Developer Notes and the Wireless Thermostat Developer Notes give them, move the kept setpoint by the change in cmd2 from wherever it is, so each is configuration and not idempotent: sending one twice moves the setpoint twice."
+  ],
+  "sources": [
+    "Thermostat Developer Notes",
+    "Wireless Thermostat Developer Notes"
+  ]
+}

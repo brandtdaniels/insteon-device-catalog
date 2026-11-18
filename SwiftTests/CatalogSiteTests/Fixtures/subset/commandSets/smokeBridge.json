@@ -1,0 +1,157 @@
+{
+  "id": "smokeBridge",
+  "name": "Smoke Bridge",
+  "description": "The Smoke Bridge, which relays a paired smoke alarm's alarms to Insteon groups.",
+  "operatingFlags": [
+    {
+      "name": "programmingLock",
+      "label": "Programming lock",
+      "section": "Linking",
+      "description": "The bridge can't enter linking mode.",
+      "query": "0x00",
+      "bit": "0x01",
+      "on": "0x00",
+      "off": "0x01",
+      "guard": "neverSet"
+    },
+    {
+      "name": "ledOnTransmit",
+      "label": "Blink LED when sending",
+      "section": "LEDs",
+      "description": "The LED blinks when the bridge sends an Insteon message.",
+      "query": "0x00",
+      "bit": "0x02",
+      "on": "0x02",
+      "off": "0x03"
+    },
+    {
+      "name": "ledOff",
+      "label": "LED off",
+      "section": "LEDs",
+      "description": "The LED is off, except in linking mode.",
+      "query": "0x00",
+      "bit": "0x10",
+      "on": "0x08",
+      "off": "0x09"
+    },
+    {
+      "name": "heartbeat",
+      "label": "Heartbeat",
+      "section": "Sensor",
+      "description": "The bridge sends a heartbeat to group 0x0A.",
+      "query": "0x00",
+      "bit": "0x20",
+      "on": "0x06",
+      "off": "0x07"
+    },
+    {
+      "name": "cleanupReport",
+      "label": "Send cleanup reports",
+      "section": "Communication",
+      "advanced": true,
+      "description": "The bridge sends a success report after each group broadcast.",
+      "query": "0x00",
+      "bit": "0x40",
+      "on": "0x0B",
+      "off": "0x0A"
+    }
+  ],
+  "readings": [
+    {
+      "name": "databaseDelta",
+      "label": "ALL-Link database changes",
+      "section": "Diagnostics",
+      "advanced": true,
+      "description": "A count that goes up whenever the ALL-Link database changes. It clears when the device loses power.",
+      "query": "0x01"
+    }
+  ],
+  "standardCommands": [
+    {
+      "name": "beep",
+      "description": "Beeps the bridge's beeper once.",
+      "effect": "actuation",
+      "idempotent": true,
+      "command1": "0x30",
+      "command2": "0x01"
+    }
+  ],
+  "extendedCommands": [
+    {
+      "name": "readSmokeAlarmId",
+      "description": "Reads the Insteon ID of the smoke alarm the bridge is paired with.",
+      "effect": "readOnly",
+      "idempotent": true,
+      "command1": "0x2F",
+      "command2": "0x00",
+      "fixed": [
+        {
+          "position": 2,
+          "value": "0x00"
+        },
+        {
+          "position": 3,
+          "value": "0x03"
+        },
+        {
+          "position": 4,
+          "value": "0x07"
+        },
+        {
+          "position": 5,
+          "value": "0x01"
+        }
+      ],
+      "reply": {
+        "command2": "0x00",
+        "match": [
+          {
+            "position": 2,
+            "value": "0x01"
+          },
+          {
+            "position": 3,
+            "value": "0x03"
+          },
+          {
+            "position": 4,
+            "value": "0x07"
+          }
+        ],
+        "integrity": "checksum",
+        "values": [
+          {
+            "name": "record",
+            "description": "The record's control bits.",
+            "byte": 6,
+            "kind": "flags",
+            "bits": [
+              {
+                "mask": "0x80",
+                "name": "active",
+                "description": "The pairing is in use."
+              }
+            ]
+          },
+          {
+            "name": "smokeAlarmId",
+            "description": "The paired smoke alarm's ID.",
+            "bytes": [
+              8,
+              9,
+              10
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "notes": [
+    "The configuration byte is 0x62 by default: LED blink on transmit, heartbeat and cleanup reports on.",
+    "The Smoke Bridge Developer Notes describe LED On, 0x09, as making the bridge enter linking mode on power-up. Its example and the flag table read it as turning the LED on.",
+    "readSmokeAlarmId reads the bridge's ALL-Link database at address 0x0307."
+  ],
+  "sources": [
+    "Smoke Bridge Developer Notes"
+  ]
+}

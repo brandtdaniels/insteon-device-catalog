@@ -1,0 +1,51 @@
+{
+  "model": "2772",
+  "name": "Motorized Shades",
+  "identities": [
+    {
+      "category": "0x0E",
+      "subcategory": "0x04",
+      "region": "US"
+    },
+    {
+      "category": "0x0E",
+      "subcategory": "0x05",
+      "region": "Europe"
+    },
+    {
+      "category": "0x0E",
+      "subcategory": "0x06",
+      "region": "Australia and New Zealand"
+    }
+  ],
+  "radio": "rf",
+  "role": "both",
+  "batteryPowered": true,
+  "groups": [
+    {
+      "number": "0x01",
+      "name": "Height 1",
+      "role": "controller"
+    },
+    {
+      "number": "0x02",
+      "name": "Height 2",
+      "role": "controller"
+    },
+    {
+      "number": "0x04",
+      "name": "Heartbeat",
+      "role": "controller"
+    }
+  ],
+  "capabilities": [],
+  "notes": [
+    "On opens and off closes; fast on and fast off open and close fully; brighten and dim start opening and closing, and stopping ends the movement.",
+    "Doesn't repeat Insteon messages."
+  ],
+  "sources": [],
+  "verification": {
+    "status": "inferred",
+    "note": "Read from its groups: it responds to On and Off and sends its heights and heartbeat to controller groups."
+  }
+}

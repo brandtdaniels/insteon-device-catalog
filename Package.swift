@@ -66,7 +66,8 @@ let package = Package(
     .testTarget(
       name: "CatalogSiteTests",
       dependencies: ["CatalogJSON", "CatalogBuild", "CatalogSite"],
-      path: "SwiftTests/CatalogSiteTests"
+      path: "SwiftTests/CatalogSiteTests",
+      exclude: ["Fixtures"]
     ),
     .testTarget(
       name: "CatalogRulesTests",

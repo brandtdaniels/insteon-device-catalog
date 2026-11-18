@@ -1,0 +1,837 @@
+{
+  "id": "switchLincDimmer",
+  "name": "SwitchLinc Dimmer",
+  "description": "The SwitchLinc dimmers, which run the KeypadLinc code base with a single load and no button masks.",
+  "enumerations": [
+    {
+      "name": "triggerLevel",
+      "description": "Which level a triggered group sets the local load to.",
+      "values": [
+        {
+          "value": "0x00",
+          "name": "localOnLevel",
+          "description": "The local load's own on-level."
+        },
+        {
+          "value": "0x01",
+          "name": "givenLevel",
+          "description": "The level in D3."
+        }
+      ]
+    },
+    {
+      "name": "triggerRampRate",
+      "description": "How fast a triggered group changes the local load.",
+      "values": [
+        {
+          "value": "0x00",
+          "name": "localRampRate",
+          "description": "At the local load's ramp rate."
+        },
+        {
+          "value": "0x01",
+          "name": "instant",
+          "description": "Instantly."
+        }
+      ]
+    },
+    {
+      "name": "setButtonTap",
+      "description": "What a remote SET button tap sets.",
+      "values": [
+        {
+          "value": "0x00",
+          "name": "onLevel"
+        },
+        {
+          "value": "0x02",
+          "name": "rampRate"
+        }
+      ]
+    }
+  ],
+  "valueTables": [
+    {
+      "name": "rampRate",
+      "description": "How long each ramp rate takes to go from off to full on.",
+      "values": [
+        {
+          "value": "0x00",
+          "label": "2 s",
+          "seconds": 2
+        },
+        {
+          "value": "0x01",
+          "label": "8 min",
+          "seconds": 480
+        },
+        {
+          "value": "0x02",
+          "label": "7 min",
+          "seconds": 420
+        },
+        {
+          "value": "0x03",
+          "label": "6 min",
+          "seconds": 360
+        },
+        {
+          "value": "0x04",
+          "label": "5 min",
+          "seconds": 300
+        },
+        {
+          "value": "0x05",
+          "label": "4 min 30 s",
+          "seconds": 270
+        },
+        {
+          "value": "0x06",
+          "label": "4 min",
+          "seconds": 240
+        },
+        {
+          "value": "0x07",
+          "label": "3 min 30 s",
+          "seconds": 210
+        },
+        {
+          "value": "0x08",
+          "label": "3 min",
+          "seconds": 180
+        },
+        {
+          "value": "0x09",
+          "label": "2 min 30 s",
+          "seconds": 150
+        },
+        {
+          "value": "0x0A",
+          "label": "2 min",
+          "seconds": 120
+        },
+        {
+          "value": "0x0B",
+          "label": "1 min 30 s",
+          "seconds": 90
+        },
+        {
+          "value": "0x0C",
+          "label": "1 min",
+          "seconds": 60
+        },
+        {
+          "value": "0x0D",
+          "label": "47 s",
+          "seconds": 47
+        },
+        {
+          "value": "0x0E",
+          "label": "43 s",
+          "seconds": 43
+        },
+        {
+          "value": "0x0F",
+          "label": "38.5 s",
+          "seconds": 38.5
+        },
+        {
+          "value": "0x10",
+          "label": "34 s",
+          "seconds": 34
+        },
+        {
+          "value": "0x11",
+          "label": "32 s",
+          "seconds": 32
+        },
+        {
+          "value": "0x12",
+          "label": "30 s",
+          "seconds": 30
+        },
+        {
+          "value": "0x13",
+          "label": "28 s",
+          "seconds": 28
+        },
+        {
+          "value": "0x14",
+          "label": "26 s",
+          "seconds": 26
+        },
+        {
+          "value": "0x15",
+          "label": "23.5 s",
+          "seconds": 23.5
+        },
+        {
+          "value": "0x16",
+          "label": "21.5 s",
+          "seconds": 21.5
+        },
+        {
+          "value": "0x17",
+          "label": "19 s",
+          "seconds": 19
+        },
+        {
+          "value": "0x18",
+          "label": "8.5 s",
+          "seconds": 8.5
+        },
+        {
+          "value": "0x19",
+          "label": "6.5 s",
+          "seconds": 6.5
+        },
+        {
+          "value": "0x1A",
+          "label": "4.5 s",
+          "seconds": 4.5
+        },
+        {
+          "value": "0x1B",
+          "label": "2 s",
+          "seconds": 2
+        },
+        {
+          "value": "0x1C",
+          "label": "0.5 s",
+          "seconds": 0.5
+        },
+        {
+          "value": "0x1D",
+          "label": "0.3 s",
+          "seconds": 0.3
+        },
+        {
+          "value": "0x1E",
+          "label": "0.2 s",
+          "seconds": 0.2
+        },
+        {
+          "value": "0x1F",
+          "label": "0.1 s",
+          "seconds": 0.1
+        }
+      ]
+    }
+  ],
+  "operatingFlags": [
+    {
+      "name": "programmingLock",
+      "label": "Programming lock",
+      "section": "Linking",
+      "description": "Linking and programming from the device itself are locked out.",
+      "query": "0x00",
+      "bit": "0x01",
+      "on": "0x00",
+      "off": "0x01",
+      "guard": "neverSet"
+    },
+    {
+      "name": "ledOnTransmit",
+      "label": "Blink LED when sending",
+      "section": "LEDs",
+      "description": "The status LED blinks when the device sends an Insteon message.",
+      "query": "0x00",
+      "bit": "0x02",
+      "on": "0x02",
+      "off": "0x03"
+    },
+    {
+      "name": "resumeDim",
+      "label": "Resume dim",
+      "section": "Load",
+      "description": "Turning the load on at the device restores its last level instead of the on-level.",
+      "query": "0x00",
+      "bit": "0x04",
+      "on": "0x04",
+      "off": "0x05"
+    },
+    {
+      "name": "ledOff",
+      "label": "LED off",
+      "section": "LEDs",
+      "description": "The status LEDs and button backlights are off.",
+      "query": "0x00",
+      "bit": "0x10",
+      "on": "0x08",
+      "off": "0x09",
+      "verification": {
+        "status": "conflicting",
+        "note": "One source swaps 0x08 and 0x09 (backlight on and off); the values here are those the SwitchLinc 2-Wire Dimmer Developer Notes give. The Insteon Developer's Guide (2009) reads bit 4 of the 0x00 reply as LED on, but the SwitchLinc 2-Wire Dimmer Developer Notes read it as LED off, the state 0x08 sets."
+      }
+    },
+    {
+      "name": "keyBeep",
+      "label": "Beep on button press",
+      "section": "Buttons",
+      "description": "The device beeps when a button is pressed.",
+      "query": "0x00",
+      "bit": "0x20",
+      "on": "0x0A",
+      "off": "0x0B",
+      "verification": {
+        "status": "conflicting",
+        "note": "The Insteon Developer's Guide (2009) lists bit 5 of the 0x00 reply as load sense, set with 0x06 and 0x07 (Get Operating Flags, printed page 128; Set Operating Flags, printed page 130); the SwitchLinc 2-Wire Dimmer Developer Notes also list bit 5 as load sense (Read Operating Flags Table, PDF page 5) but make 0x0A and 0x0B the key beep (Set Operating Flags Table, PDF page 9); the KeypadLinc Line Developer Notes give bit 5 as the key beep (Read Operating Flags Table, PDF page 8). The catalog uses the key beep."
+      }
+    },
+    {
+      "name": "radioOff",
+      "label": "Turn off radio",
+      "section": "Communication",
+      "advanced": true,
+      "description": "The device doesn't originate RF messages. It still repeats the RF messages it hears.",
+      "query": "0x00",
+      "bit": "0x40",
+      "on": "0x0C",
+      "off": "0x0D",
+      "guard": "keep"
+    },
+    {
+      "name": "powerLineOff",
+      "label": "Turn off powerline",
+      "section": "Communication",
+      "advanced": true,
+      "description": "Insteon communication over the powerline is off. The device turns it back on whenever it powers up.",
+      "query": "0x00",
+      "bit": "0x80",
+      "on": "0x0E",
+      "off": "0x0F",
+      "guard": "keep"
+    },
+    {
+      "name": "applicationRetries",
+      "label": "Application retries",
+      "section": "Communication",
+      "advanced": true,
+      "description": "The device retries application messages as many times as its ALL-Link database says, and reports cleanup errors.",
+      "query": "0x05",
+      "bit": "0x01",
+      "on": "0x10",
+      "off": "0x11"
+    },
+    {
+      "name": "x10Off",
+      "label": "Turn off X10",
+      "section": "X10",
+      "advanced": true,
+      "description": "X10 sending and receiving are off.",
+      "query": "0x05",
+      "bit": "0x02",
+      "on": "0x12",
+      "off": "0x13"
+    },
+    {
+      "name": "errorBlink",
+      "label": "Blink LED on errors",
+      "section": "LEDs",
+      "description": "The status LED blinks when a communication error occurs.",
+      "query": "0x05",
+      "bit": "0x04",
+      "on": "0x15",
+      "off": "0x14"
+    },
+    {
+      "name": "cleanupReport",
+      "label": "Send cleanup reports",
+      "section": "Communication",
+      "advanced": true,
+      "description": "The device sends a success report after the cleanup messages that follow a group command.",
+      "query": "0x05",
+      "bit": "0x08",
+      "on": "0x17",
+      "off": "0x16"
+    },
+    {
+      "name": "checksumRequired",
+      "label": "Require checksums",
+      "section": "Communication",
+      "advanced": true,
+      "description": "Extended Set and ALL-Link database write messages must carry a checksum in D14.",
+      "query": "0x05",
+      "bit": "0x10",
+      "on": "0x19",
+      "off": "0x18",
+      "guard": "keep"
+    },
+    {
+      "name": "longHoldoff",
+      "label": "Long holdoff",
+      "section": "Communication",
+      "advanced": true,
+      "description": "The device holds off 8 times as long before sending, 16 to 72 zero crossings rather than 2 to 9.",
+      "query": "0x05",
+      "bit": "0x20",
+      "verification": {
+        "status": "inferred",
+        "note": "Only the SwitchLinc 2-Wire Dimmer Developer Notes list this bit for a SwitchLinc, as BigHoldOff, and they list cmd2 0x1A and 0x1B as unused; its meaning is read from the Global Line Developer Notes, which set it with 0x1B. On the KeypadLinc the same bit is detach load."
+      }
+    },
+    {
+      "name": "smartHops",
+      "label": "Smart hops",
+      "section": "Communication",
+      "advanced": true,
+      "description": "Each message starts with the hop count of the last acknowledgment received (smart hops). When the bit is 0, each message starts with one hop.",
+      "query": "0x05",
+      "bit": "0x40",
+      "on": "0x1C",
+      "off": "0x1D",
+      "verification": {
+        "status": "inferred",
+        "note": "Read from the KeypadLinc Line Developer Notes and Global Line Developer Notes, which name bit 6 of the 0x05 reply smart hops, or IA start hops, and set it with cmd2 0x1C; the SwitchLinc 2-Wire Dimmer Developer Notes list the bit but give cmd2 0x1C and 0x1D as unused."
+      }
+    }
+  ],
+  "readings": [
+    {
+      "name": "databaseDelta",
+      "label": "ALL-Link database changes",
+      "section": "Diagnostics",
+      "advanced": true,
+      "description": "A count that goes up whenever the ALL-Link database changes.",
+      "query": "0x01"
+    },
+    {
+      "name": "crcErrorCount",
+      "label": "CRC errors",
+      "section": "Diagnostics",
+      "advanced": true,
+      "description": "The number of messages received with a CRC error.",
+      "query": "0x02",
+      "verification": {
+        "status": "conflicting",
+        "note": "The Insteon Developer's Guide (2009) lists query 0x02 as the Signal-to-Noise Value for dimmers (Get Operating Flags, Chapter 8, printed page 128), and the SwitchLinc 2-Wire Dimmer Developer Notes mark it N/A (Read Operating Flags Table, PDF page 5); the KeypadLinc Line Developer Notes give it as the CRC error count (Read Operating Flags Table, PDF page 8). The catalog uses the CRC error count."
+      }
+    },
+    {
+      "name": "signalToNoiseFailureCount",
+      "label": "Signal-to-noise failures",
+      "section": "Diagnostics",
+      "advanced": true,
+      "description": "The number of signal-to-noise failures.",
+      "query": "0x03"
+    }
+  ],
+  "flagCommands": [
+    {
+      "name": "yakityYakOff",
+      "description": "Turns the Yakity Yak signaling option off.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x26"
+    },
+    {
+      "name": "yakityYakOn",
+      "description": "Turns the Yakity Yak signaling option on.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x27"
+    },
+    {
+      "name": "modSyncFailureNoHop",
+      "description": "When modulation sync fails, the device doesn't hop the message.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x28"
+    },
+    {
+      "name": "modSyncFailureOwnZeroCrossing",
+      "description": "When modulation sync fails, the device uses its own zero crossing.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x29"
+    },
+    {
+      "name": "pushHopsToRadioOn",
+      "description": "The device repeats every powerline hop over RF.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x2A"
+    },
+    {
+      "name": "pushHopsToRadioOff",
+      "description": "The device doesn't repeat every powerline hop over RF.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command2": "0x2B"
+    }
+  ],
+  "extendedSettings": {
+    "perButton": false,
+    "values": [
+      {
+        "name": "x10HouseCode",
+        "label": "X10 house code",
+        "section": "X10",
+        "advanced": true,
+        "description": "The X10 house code, or 0x20 for no X10 address.",
+        "byte": 5
+      },
+      {
+        "name": "x10UnitCode",
+        "label": "X10 unit code",
+        "section": "X10",
+        "advanced": true,
+        "description": "The X10 unit code.",
+        "byte": 6
+      },
+      {
+        "name": "rampRate",
+        "label": "Ramp rate",
+        "section": "Load",
+        "description": "The ramp rate, from 0x01 (8 minutes) to 0x1F (0.1 second). 0x00 is 2 seconds.",
+        "byte": 7,
+        "range": {
+          "from": "0x00",
+          "through": "0x1F"
+        },
+        "table": "rampRate",
+        "verification": {
+          "status": "conflicting",
+          "note": "The Insteon Developer's Guide (2009) gives the ramp rate range 0x00 through 0x1F as 0.1 second to 9 minutes; the table gives 0x00 as 2 seconds."
+        }
+      },
+      {
+        "name": "onLevel",
+        "label": "On-level",
+        "section": "Load",
+        "description": "The level the load turns on to, from 0x00 (off) to 0xFF (full).",
+        "byte": 8,
+        "range": {
+          "from": "0x00",
+          "through": "0xFF"
+        },
+        "unit": "percent",
+        "scale": 0.392157
+      },
+      {
+        "name": "ledBrightness",
+        "label": "LED brightness",
+        "section": "LEDs",
+        "description": "The brightness of the status LEDs, from 0x11 (dimmest) to 0x7F (brightest).",
+        "byte": 9,
+        "range": {
+          "from": "0x11",
+          "through": "0x7F"
+        }
+      }
+    ],
+    "writes": [
+      {
+        "name": "x10Address",
+        "description": "Sets the X10 address.",
+        "selector": "0x04",
+        "perButton": false,
+        "bytes": [
+          {
+            "position": 3,
+            "value": "x10HouseCode"
+          },
+          {
+            "position": 4,
+            "value": "x10UnitCode"
+          }
+        ]
+      },
+      {
+        "name": "rampRate",
+        "description": "Sets the ramp rate.",
+        "selector": "0x05",
+        "perButton": false,
+        "bytes": [
+          {
+            "position": 3,
+            "value": "rampRate"
+          }
+        ]
+      },
+      {
+        "name": "onLevel",
+        "description": "Sets the on-level.",
+        "selector": "0x06",
+        "perButton": false,
+        "bytes": [
+          {
+            "position": 3,
+            "value": "onLevel"
+          }
+        ]
+      },
+      {
+        "name": "ledBrightness",
+        "description": "Sets the brightness of the status LED.",
+        "selector": "0x07",
+        "perButton": false,
+        "bytes": [
+          {
+            "position": 3,
+            "value": "ledBrightness"
+          }
+        ]
+      },
+      {
+        "name": "maxRetries",
+        "description": "Sets how many times the device retries a message, from 0x01 to 0xFF. 0x00 restores the factory default of 5.",
+        "selector": "0x0F",
+        "perButton": false,
+        "bytes": [
+          {
+            "position": 3,
+            "value": "maxRetries"
+          }
+        ]
+      }
+    ]
+  },
+  "groupTypes": [
+    {
+      "name": "light",
+      "label": "Light",
+      "kind": "dimmer",
+      "state": {
+        "command": "readStatus"
+      },
+      "actions": [
+        {
+          "name": "on",
+          "label": "On",
+          "command": "lightOn"
+        },
+        {
+          "name": "off",
+          "label": "Off",
+          "command": "lightOff"
+        }
+      ],
+      "linkData": {
+        "responder": [
+          {
+            "byte": 1,
+            "name": "onLevel",
+            "label": "On-level",
+            "description": "The level the group goes to when its controller's On arrives, 0x00 (off) to 0xFF (full). 0x00 makes the link off only.",
+            "range": {
+              "from": "0x00",
+              "through": "0xFF"
+            },
+            "unit": "percent",
+            "scale": 0.392157,
+            "verification": {
+              "status": "conflicting",
+              "note": "The SwitchLinc 2-Wire Dimmer Developer Notes list Data 1 to 3 of a responder ALL-Link record as not used (ALL-Link database record format, PDF page 15); the KeypadLinc Line Developer Notes (PDF page 19), the LED Bulb Developer Notes (PDF page 47) and the 2472D Developer Notes (PDF page 12) give Data 1 as the on-level, and the Insteon Developer's Guide (2009) gives Data 1 as link-specific data, for example the on-level, and Data 2 as link-specific data, for example the ramp rate (ALL-Link database record format, Chapter 7, printed page 103). The catalog uses the on-level."
+            }
+          },
+          {
+            "byte": 2,
+            "name": "rampRate",
+            "label": "Ramp rate",
+            "description": "How fast the group goes to its on-level.",
+            "table": "rampRate",
+            "verification": {
+              "status": "conflicting",
+              "note": "The SwitchLinc 2-Wire Dimmer Developer Notes list Data 1 to 3 of a responder ALL-Link record as not used (ALL-Link database record format, PDF page 15); the KeypadLinc Line Developer Notes (PDF page 19), the LED Bulb Developer Notes (PDF page 47) and the 2472D Developer Notes (PDF page 12) give Data 2 as the ramp rate, and the Insteon Developer's Guide (2009) gives Data 1 as link-specific data, for example the on-level, and Data 2 as link-specific data, for example the ramp rate (ALL-Link database record format, Chapter 7, printed page 103). The catalog uses the ramp rate."
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "notes": [
+    "The Insteon Developer's Guide (2009) gives ramp rates 0x00 through 0x1F as 0.1 second to 9 minutes; the table makes 0x01 8 minutes and 0x00 2 seconds.",
+    "Inferred: seen on two i2CS devices (Outdoor On/Off Plug 2634-222 firmware 0x42, On/Off Plug 2635-222 firmware 0x48) linked to a Hub 2245, the device itself writes its responder record when it's linked remotely or with the SET button, and takes Data 1 from the load's state at that moment: the two plugs wrote 0x00 when the load was off and 0xFF when it was on. So Data 1 (on-level) of the light group's responder records is the state the load was in when the device was linked. The On/Off Plug 2635-222 Owner's Manual says to make sure the module is on before linking it as a responder; the 2-Wire Dimmer Switch 2474DWH Owner's Manual, the Dimmer Switch 2476D Owner's Manual and the Dimmer Switch 2477D Owner's Manual say to set the load to the state the link should recall before linking it as a responder; the Dimmer Switch 240V 2478D Owner's Manual says to turn the load on before linking it as a responder. The values its link data give are what to write when writing the record by hand.",
+    "remoteSetButtonTap: the SwitchLinc 2-Wire Dimmer Developer Notes give cmd2 0x00 to set the on-level and 0x02 the ramp rate from the load's present level, and the Insteon Developer's Guide (2009) gives cmd2 as a count of taps of the SET button. The sources conflict and neither describes linking; the Developer Notes' reading sets a kept level, so it's configuration, and not idempotent, since under the tap-count reading a second tap may undo the first.",
+    "triggerGroup, as the SwitchLinc 2-Wire Dimmer Developer Notes give it, sends a group command to the group's responders, and a responder's reply to a second one, such as a toggle or a momentary relay acting again, isn't something the sender can see, so it's actuation and not idempotent."
+  ],
+  "sources": [
+    "Insteon Developer's Guide (2009)",
+    "SwitchLinc 2-Wire Dimmer Developer Notes"
+  ],
+  "standardCommands": [
+    {
+      "name": "lightOn",
+      "description": "Turns the load on to the level in cmd2 at the saved ramp rate.",
+      "effect": "actuation",
+      "idempotent": true,
+      "command1": "0x11",
+      "parameter": {
+        "name": "onLevel",
+        "description": "The level to go to, from 0x00 (off) to 0xFF (full).",
+        "range": {
+          "from": 0,
+          "through": 255
+        }
+      }
+    },
+    {
+      "name": "lightOnFast",
+      "description": "Turns the load on to the level in cmd2 instantly.",
+      "effect": "actuation",
+      "idempotent": true,
+      "command1": "0x12",
+      "parameter": {
+        "name": "onLevel",
+        "description": "The level to go to, from 0x00 (off) to 0xFF (full).",
+        "range": {
+          "from": 0,
+          "through": 255
+        }
+      }
+    },
+    {
+      "name": "lightOff",
+      "description": "Turns the load off at the saved ramp rate. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
+      "command1": "0x13"
+    },
+    {
+      "name": "lightOffFast",
+      "description": "Turns the load off instantly. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
+      "command1": "0x14"
+    },
+    {
+      "name": "readStatus",
+      "description": "Reads the load's level. The acknowledgment's cmd1 carries the ALL-Link database delta.",
+      "effect": "readOnly",
+      "idempotent": true,
+      "command1": "0x19",
+      "command2": "0x00",
+      "reply": {
+        "name": "onLevel",
+        "description": "The load's level, from 0x00 (off) to 0xFF (full).",
+        "unit": "percent",
+        "scale": 0.392157
+      }
+    },
+    {
+      "name": "instantChange",
+      "description": "Sets the load to the level in cmd2 instantly.",
+      "effect": "actuation",
+      "idempotent": true,
+      "command1": "0x21",
+      "parameter": {
+        "name": "onLevel",
+        "description": "The level to go to, from 0x00 (off) to 0xFF (full).",
+        "range": {
+          "from": 0,
+          "through": 255
+        }
+      }
+    },
+    {
+      "name": "remoteSetButtonTap",
+      "description": "Acts as a tap of the SET button: sets the on-level or the ramp rate from the load's present level, so turn the load to that level first.",
+      "effect": "configuration",
+      "idempotent": false,
+      "command1": "0x25",
+      "parameter": {
+        "name": "setting",
+        "description": "What to set.",
+        "kind": "enumeration",
+        "enumeration": "setButtonTap"
+      },
+      "verification": {
+        "status": "conflicting",
+        "note": "The SwitchLinc 2-Wire Dimmer Developer Notes send 0x00 to set the on-level and 0x02 to set the ramp rate, as used here (Remote Tap of Set Button, PDF page 6); the Insteon Developer's Guide (2009) (Remote SET Button Tap, Chapter 8, printed pages 131 and 132) and the Insteon Command Tables (2007) (printed page 10) call cmd2 0x00 unused and count taps there, 0x01 for one tap and 0x02 for two."
+      }
+    },
+    {
+      "name": "onAtRampRate",
+      "description": "Turns the load on to a level at a ramp rate, both given in cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
+      "command1": "0x2E",
+      "parameter": {
+        "name": "levelAndRampRate",
+        "description": "Bits 4 through 7 give the level, which is 16 times their value plus 0x0F, and bits 0 through 3 the ramp rate, which is 2 times their value plus 1."
+      },
+      "verification": {
+        "status": "conflicting",
+        "note": "The SwitchLinc 2-Wire Dimmer Developer Notes give the level as 16 times bits 4 through 7 plus 0x0F and the ramp rate as 2 times bits 0 through 3 plus 1, as used here; the Insteon Developer's Guide (2009) prints bits 4 through 7 as the on-level plus 0x0F and bits 0 through 3 as 2 times the ramp rate plus 1."
+      }
+    },
+    {
+      "name": "offAtRampRate",
+      "description": "Turns the load off at a ramp rate given in cmd2. Bits 4 through 7 are 0.",
+      "effect": "actuation",
+      "idempotent": true,
+      "command1": "0x2F",
+      "parameter": {
+        "name": "rampRate",
+        "description": "The ramp rate, which is 2 times this value plus 1.",
+        "mask": "0x0F"
+      },
+      "verification": {
+        "status": "inferred",
+        "note": "Read from the SwitchLinc 2-Wire Dimmer Developer Notes and the KeypadLinc code base; the Insteon Developer's Guide (2009) reserves standard commands 0x2F through 0x3F."
+      }
+    },
+    {
+      "name": "beep",
+      "description": "Beeps once, as pressing the SET button does. The device ignores cmd2.",
+      "effect": "actuation",
+      "idempotent": true,
+      "command1": "0x30",
+      "verification": {
+        "status": "inferred",
+        "note": "Read from the SwitchLinc 2-Wire Dimmer Developer Notes and the KeypadLinc code base; the Insteon Developer's Guide (2009) reserves standard commands 0x2F through 0x3F."
+      }
+    }
+  ],
+  "extendedCommands": [
+    {
+      "name": "triggerGroup",
+      "description": "Acts as if group D1's button had been pressed: sends the cmd1 and cmd2 in D4 and D5 to group D1, and sets the local load as D2, D3 and D6 say. The device doesn't parse the command it sends, so to turn the local load off, put 0x01 in D2 and 0x00 in D3.",
+      "effect": "actuation",
+      "idempotent": false,
+      "command1": "0x30",
+      "command2": "0x00",
+      "perButton": true,
+      "parameters": [
+        {
+          "name": "levelSource",
+          "description": "Which level the local load goes to.",
+          "byte": 2,
+          "kind": "enumeration",
+          "enumeration": "triggerLevel"
+        },
+        {
+          "name": "onLevel",
+          "description": "The level the local load goes to when D2 is 0x01.",
+          "byte": 3,
+          "range": {
+            "from": 0,
+            "through": 255
+          }
+        },
+        {
+          "name": "groupCommand1",
+          "description": "The cmd1 to send to the group.",
+          "byte": 4
+        },
+        {
+          "name": "groupCommand2",
+          "description": "The cmd2 to send to the group.",
+          "byte": 5
+        },
+        {
+          "name": "rampRate",
+          "description": "How fast the local load changes.",
+          "byte": 6,
+          "kind": "enumeration",
+          "enumeration": "triggerRampRate"
+        }
+      ],
+      "verification": {
+        "status": "conflicting",
+        "note": "The SwitchLinc 2-Wire Dimmer Developer Notes make D2 and D6 0x00 the local on-level and ramp rate, as used here; the Insteon Developer's Guide (2009) makes them the on-level and ramp rate stored in the ALL-Link database."
+      }
+    }
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "model": "2410S",
+  "name": "SeriaLinc",
+  "description": "An interface between an Insteon network and an RS232 serial port.",
+  "identities": [
+    {
+      "category": "0x03",
+      "subcategory": "0x0A"
+    }
+  ],
+  "capabilities": [],
+  "lifecycle": {
+    "installation": {
+      "steps": [
+        {
+          "text": "Create a CSV file with your serial codes and download the SeriaLinc Downloader application.",
+          "action": "other"
+        },
+        {
+          "text": "Plug SeriaLinc into an electrical outlet within reach of your computer with the included serial cable, or use an extension cord.",
+          "action": "plugIn"
+        },
+        {
+          "text": "Tap the SET button on SeriaLinc to enter Configuration Mode.",
+          "action": "tap",
+          "control": "SET button",
+          "expect": "Status LED begins blinking"
+        },
+        {
+          "text": "Connect SeriaLinc to your computer using the included serial cable.",
+          "action": "other"
+        },
+        {
+          "text": "In the SeriaLinc Downloader application, open the CSV file.",
+          "action": "other"
+        },
+        {
+          "text": "Link the devices that respond to serial codes (defined as 1 in the CSV file) to SeriaLinc by their group number (see linking).",
+          "action": "other"
+        },
+        {
+          "text": "Choose the COM port SeriaLinc is connected to and select Download to SeriaLinc.",
+          "action": "other"
+        },
+        {
+          "text": "When prompted, unplug SeriaLinc and plug it back in, making sure not to tap the SET button.",
+          "action": "plugIn",
+          "expect": "Status LED stops blinking"
+        },
+        {
+          "text": "Close the SeriaLinc Downloader application.",
+          "action": "other"
+        },
+        {
+          "text": "Plug SeriaLinc into your RS-232 device using the included null modem adapter.",
+          "action": "other"
+        }
+      ],
+      "notes": [
+        "Configuration Mode is entered by tapping the SET button within 4 seconds of power-up, before the LED turns on. Powering up without tapping the SET button starts Serial Translation Mode.",
+        "Don't plug SeriaLinc into a switched outlet or a filtered power strip, and don't stack it with other Insteon devices."
+      ]
+    },
+    "linking": {
+      "steps": [
+        {
+          "text": "With SeriaLinc in Configuration Mode and connected to the computer, click the button for the group defined in the CSV file on the right side of the SeriaLinc Downloader application.",
+          "action": "other",
+          "expect": "SeriaLinc enters that group's linking mode"
+        },
+        {
+          "text": "Press and hold the responder's SET button for 3 seconds.",
+          "device": "other",
+          "action": "hold",
+          "control": "SET button",
+          "seconds": 3
+        },
+        {
+          "text": "Repeat for each group as needed.",
+          "action": "other"
+        }
+      ],
+      "notes": [
+        "SeriaLinc is the controller of these links; the responder is each device that should respond to a serial code."
+      ]
+    },
+    "multiLinking": {
+      "steps": [
+        {
+          "text": "Click the group's button in the SeriaLinc Downloader application.",
+          "action": "other"
+        },
+        {
+          "text": "Press and hold the next responder's SET button for 3 seconds.",
+          "device": "other",
+          "action": "hold",
+          "control": "SET button",
+          "seconds": 3
+        },
+        {
+          "text": "Repeat for each responder and group.",
+          "action": "other"
+        }
+      ]
+    },
+    "reset": {
+      "steps": [
+        {
+          "text": "Unplug SeriaLinc.",
+          "action": "unplug"
+        },
+        {
+          "text": "Wait about 10 seconds.",
+          "action": "wait",
+          "seconds": 10
+        },
+        {
+          "text": "While holding down the SET button, plug SeriaLinc back in, making sure not to let go of the SET button.",
+          "action": "plugIn",
+          "control": "SET button"
+        },
+        {
+          "text": "Continue to hold down the SET button for 3 seconds.",
+          "action": "hold",
+          "control": "SET button",
+          "seconds": 3
+        },
+        {
+          "text": "Release the SET button.",
+          "action": "release",
+          "control": "SET button",
+          "expect": "After a few seconds the status LED turns on"
+        }
+      ]
+    },
+    "resetErases": [
+      "links",
+      "settings"
+    ]
+  },
+  "notes": [
+    "Insteon Device Categories and Product Keys (October 2008) gives 0x03/0x0A to the 2412E PowerLinc Modem Ethernet."
+  ],
+  "sources": [
+    "Insteon Device Categories (January 2014)",
+    "Insteon Device Categories and Product Keys (October 2008)",
+    "SeriaLinc 2410S Owner's Manual",
+    "SeriaLinc 2410S Quick Start Guide"
+  ]
+}

@@ -1,0 +1,261 @@
+{
+  "model": "2242",
+  "name": "Hub",
+  "identities": [
+    {
+      "category": "0x03",
+      "subcategory": "0x2B",
+      "region": "US"
+    },
+    {
+      "category": "0x03",
+      "subcategory": "0x2E",
+      "region": "Europe"
+    },
+    {
+      "category": "0x03",
+      "subcategory": "0x2F",
+      "region": "Australia and New Zealand"
+    },
+    {
+      "category": "0x03",
+      "subcategory": "0x30",
+      "region": "UK"
+    },
+    {
+      "category": "0x03",
+      "subcategory": "0x31"
+    },
+    {
+      "category": "0x03",
+      "subcategory": "0x32"
+    },
+    {
+      "category": "0x03",
+      "subcategory": "0x37",
+      "region": "US"
+    }
+  ],
+  "engines": [
+    {
+      "engine": "i2cs",
+      "category": "0x03",
+      "subcategory": "0x2B"
+    },
+    {
+      "engine": "i2cs",
+      "category": "0x03",
+      "subcategory": "0x2E"
+    },
+    {
+      "engine": "i2cs",
+      "category": "0x03",
+      "subcategory": "0x2F"
+    },
+    {
+      "engine": "i2cs",
+      "category": "0x03",
+      "subcategory": "0x30"
+    },
+    {
+      "engine": "i2cs",
+      "category": "0x03",
+      "subcategory": "0x31"
+    },
+    {
+      "engine": "i2cs",
+      "category": "0x03",
+      "subcategory": "0x32"
+    },
+    {
+      "engine": "i2cs",
+      "category": "0x03",
+      "subcategory": "0x37"
+    }
+  ],
+  "radio": "dual",
+  "role": "both",
+  "capabilities": [
+    {
+      "kind": "modem"
+    },
+    {
+      "kind": "hub",
+      "port": 25105
+    }
+  ],
+  "commandSets": [
+    {
+      "commandSet": "hubModem",
+      "category": "0x03",
+      "subcategory": "0x2B"
+    },
+    {
+      "commandSet": "hubModem",
+      "category": "0x03",
+      "subcategory": "0x2E"
+    },
+    {
+      "commandSet": "hubModem",
+      "category": "0x03",
+      "subcategory": "0x2F"
+    },
+    {
+      "commandSet": "hubModem",
+      "category": "0x03",
+      "subcategory": "0x30"
+    },
+    {
+      "commandSet": "hubModem",
+      "category": "0x03",
+      "subcategory": "0x31"
+    },
+    {
+      "commandSet": "hubModem",
+      "category": "0x03",
+      "subcategory": "0x32"
+    },
+    {
+      "commandSet": "hubModem",
+      "category": "0x03",
+      "subcategory": "0x37"
+    }
+  ],
+  "lifecycle": {
+    "installation": {
+      "steps": [
+        {
+          "text": "Connect the Hub to your router using only the included Ethernet cable.",
+          "action": "other",
+          "control": "Ethernet port"
+        },
+        {
+          "text": "Then plug the Hub's power cable into a wall outlet, not a power strip or a switched outlet.",
+          "action": "plugIn",
+          "expect": "Status LED turns on"
+        },
+        {
+          "text": "Optionally, mount the Hub on a wall: drive two screws (#6 drywall screws recommended) at the marks on the template, leaving each screw head about 1/4 inch from the wall, and hang the Hub on the screws.",
+          "action": "mount"
+        },
+        {
+          "text": "On your smartphone or tablet, connected to the same network by Wi-Fi, download the Insteon for Hub app, launch it and follow the on-screen instructions to create an account and set up the Hub.",
+          "action": "other"
+        }
+      ],
+      "notes": [
+        "The Hub 2242 Owner's Manual gives the proper start-up sequence as plugging the Ethernet cable into both the router and the Hub first, then applying power.",
+        "Plugging the Hub directly into an outlet gives the greatest signal range and reliability.",
+        "To use the Hub with Insteon-compatible software such as HouseLinc instead of the app, install the software and follow its instructions for adding the Hub as a computer interface; the Hub 2242 Owner's Manual says not to do this if you use the Insteon for Hub app."
+      ]
+    },
+    "linking": {
+      "steps": [
+        {
+          "text": "Press and hold the SET button for more than three seconds.",
+          "action": "hold",
+          "control": "SET button",
+          "seconds": 3,
+          "expect": "LED blinks continuously, half a second on and half a second off"
+        }
+      ],
+      "notes": [
+        "When linking is done with the SET button, the Hub's modem decides the controller or responder role and assigns the ALL-Link group automatically; the Start ALL-Linking command sets them explicitly.",
+        "Linking mode ends when a link completes (the modem reports ALL-Linking Completed) or when software sends Cancel ALL-Linking.",
+        "Software can turn off SET button linking by setting bit 7 of the modem's configuration flags.",
+        "In everyday use, the Hub 2242 Owner's Manual adds devices and scenes from the Insteon for Hub app, which does the linking."
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "Taken from the Insteon Hub Developer's Guide for the Hub's built-in modem; the Hub 2242 Owner's Manual does not describe linking with the Hub's SET button."
+      },
+      "alternatives": [
+        {
+          "description": "From software",
+          "steps": [
+            {
+              "text": "Have software send the Start ALL-Linking command to the Hub's modem, choosing whether it links as controller, as responder, or as controller when it starts the session and responder otherwise.",
+              "action": "send",
+              "expect": "LED blinks continuously, half a second on and half a second off",
+              "command": "Start ALL-Linking"
+            }
+          ]
+        }
+      ]
+    },
+    "unlinking": {
+      "steps": [
+        {
+          "text": "Have software send the Start ALL-Linking command with link code 0xFF and the ALL-Link group to delete.",
+          "action": "send",
+          "expect": "ALL-Linking Completed reports link code 0xFF, meaning the link was deleted",
+          "command": "Start ALL-Linking"
+        }
+      ],
+      "verification": {
+        "status": "inferred",
+        "note": "Taken from the Insteon Hub Developer's Guide; the Hub 2242 Owner's Manual removes devices and scenes through the app."
+      }
+    },
+    "reset": {
+      "steps": [
+        {
+          "text": "Remove power from the Hub.",
+          "action": "unplug"
+        },
+        {
+          "text": "Press and hold the SET button. Do not let go.",
+          "action": "hold",
+          "control": "SET button"
+        },
+        {
+          "text": "While continuing to hold the SET button, reapply power to the Hub.",
+          "action": "plugIn",
+          "expect": "Hub emits a long beep and the LED turns red"
+        },
+        {
+          "text": "After the beep stops, release the SET button.",
+          "action": "release",
+          "control": "SET button",
+          "expect": "After a few seconds the Hub double-beeps, the LED turns blue and the LEDs on the Ethernet jack flash"
+        }
+      ],
+      "notes": [
+        "If you have already set up the Hub in the app, you must delete your account before factory resetting the Hub; factory reset the devices you added first.",
+        "The Insteon Hub Developer's Guide says the SET button is held for 10 seconds while power is applied, and that software can also reset the modem with the Reset the IM command; the modem then sends User Reset Detected.",
+        "A Network Reset (hold the SET button until the Hub beeps, then slowly tap it six times, then remove power for about 10 seconds and reapply it) restores only the network settings."
+      ]
+    },
+    "resetErases": [
+      "links",
+      "settings"
+    ],
+    "removal": {
+      "steps": [
+        {
+          "text": "Factory reset each Insteon device you added to the app.",
+          "action": "other"
+        },
+        {
+          "text": "In the app, tap the settings button, select Edit Settings, select Account and tap Delete Account. This cannot be undone.",
+          "action": "other"
+        },
+        {
+          "text": "Factory reset the Hub.",
+          "action": "other"
+        }
+      ]
+    }
+  },
+  "notes": [
+    "Insteon Device Categories (January 2014) lists 0x03/0x2B as the 915 MHz Hub without RF, so radio: dual doesn't hold for it, and 0x03/0x37 as the one with RF.",
+    "Sold as the 2242-222 in the US, 2242-422 in Europe, 2242-442 in the UK and 2242-522 in Australia and New Zealand."
+  ],
+  "sources": [
+    "HouseLinc Device Definitions (version 2.9.87)",
+    "Insteon Device Categories (January 2014)",
+    "Hub 2242 Owner's Manual",
+    "Hub 2242 Quick Start Guide",
+    "Insteon Hub Developer's Guide"
+  ]
+}

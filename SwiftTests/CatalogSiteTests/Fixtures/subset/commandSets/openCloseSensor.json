@@ -1,0 +1,267 @@
+{
+  "id": "openCloseSensor",
+  "name": "Open/Close Sensor",
+  "description": "The Open/Close Sensor and the Leak Sensor, whose Developer Notes give the same configuration byte and extended settings.",
+  "operatingFlags": [
+    {
+      "name": "cleanupReport",
+      "label": "Send cleanup reports",
+      "section": "Communication",
+      "advanced": true,
+      "description": "The sensor sends a success report after each group broadcast.",
+      "query": "0x00",
+      "bit": "0x01"
+    },
+    {
+      "name": "ignoreJumper",
+      "label": "Ignore jumper",
+      "section": "Communication",
+      "advanced": true,
+      "description": "The sensor doesn't read its jumper.",
+      "query": "0x00",
+      "bit": "0x02"
+    },
+    {
+      "name": "twoGroups",
+      "label": "Send open and closed to separate groups",
+      "section": "Sensor",
+      "description": "The sensor uses two groups.",
+      "query": "0x00",
+      "bit": "0x04"
+    },
+    {
+      "name": "repeatOpen",
+      "label": "Repeat open",
+      "section": "Sensor",
+      "description": "The sensor repeats its open message.",
+      "query": "0x00",
+      "bit": "0x08"
+    },
+    {
+      "name": "repeatClosed",
+      "label": "Repeat closed",
+      "section": "Sensor",
+      "description": "The sensor repeats its closed message.",
+      "query": "0x00",
+      "bit": "0x10"
+    },
+    {
+      "name": "ledOff",
+      "label": "LED off",
+      "section": "LEDs",
+      "description": "The LED is off.",
+      "query": "0x00",
+      "bit": "0x20"
+    },
+    {
+      "name": "linkToAllGroups",
+      "label": "Link to all groups at once",
+      "section": "Linking",
+      "description": "The guides' Link to FF Group option is on.",
+      "query": "0x00",
+      "bit": "0x40"
+    },
+    {
+      "name": "programmingLock",
+      "label": "Programming lock",
+      "section": "Linking",
+      "description": "Linking and programming from the sensor itself are locked out.",
+      "query": "0x00",
+      "bit": "0x80",
+      "guard": "neverSet"
+    }
+  ],
+  "readings": [
+    {
+      "name": "databaseDelta",
+      "label": "ALL-Link database changes",
+      "section": "Diagnostics",
+      "advanced": true,
+      "description": "A count that goes up whenever the ALL-Link database changes. It clears when the device loses power.",
+      "query": "0x01"
+    }
+  ],
+  "extendedSettings": {
+    "perButton": false,
+    "values": [
+      {
+        "name": "ledBrightness",
+        "label": "LED brightness",
+        "section": "LEDs",
+        "description": "The LED's brightness, from 0x00 to 0xFF (brightest). It's 0x64 by default.",
+        "byte": 3,
+        "range": {
+          "from": "0x00",
+          "through": "0xFF"
+        },
+        "default": "0x64"
+      },
+      {
+        "name": "configuration",
+        "label": "Configuration",
+        "section": "Communication",
+        "advanced": true,
+        "description": "The configuration byte, which Get Operating Flags with cmd2 0x00 also reads.",
+        "byte": 6,
+        "flagsQuery": "0x00"
+      }
+    ],
+    "writes": [
+      {
+        "name": "ledBrightness",
+        "description": "Sets the LED's brightness.",
+        "selector": "0x02",
+        "perButton": false,
+        "bytes": [
+          {
+            "position": 3,
+            "value": "ledBrightness"
+          }
+        ]
+      },
+      {
+        "name": "stayAwake",
+        "description": "Keeps the sensor awake for the number of seconds in D3.",
+        "selector": "0x04",
+        "perButton": false,
+        "bytes": [
+          {
+            "position": 3,
+            "value": "stayAwakeSeconds"
+          }
+        ]
+      },
+      {
+        "name": "configuration",
+        "description": "Sets the configuration byte.",
+        "selector": "0x05",
+        "perButton": false,
+        "bytes": [
+          {
+            "position": 3,
+            "value": "configuration"
+          }
+        ]
+      }
+    ]
+  },
+  "extendedCommands": [
+    {
+      "name": "readSettings",
+      "description": "Reads the LED's brightness and the configuration byte.",
+      "effect": "readOnly",
+      "idempotent": true,
+      "command1": "0x2E",
+      "command2": "0x00",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x01"
+        }
+      ],
+      "reply": {
+        "command2": "0x00",
+        "match": [
+          {
+            "position": 2,
+            "value": "0x01"
+          }
+        ],
+        "values": [
+          {
+            "name": "ledBrightness",
+            "description": "The LED's brightness, 0xFF brightest.",
+            "byte": 3,
+            "range": {
+              "from": 0,
+              "through": 255
+            }
+          },
+          {
+            "name": "configuration",
+            "description": "The configuration byte.",
+            "byte": 6,
+            "kind": "flags",
+            "bits": [
+              {
+                "mask": "0x01",
+                "name": "cleanupReport"
+              },
+              {
+                "mask": "0x02",
+                "name": "ignoreJumper"
+              },
+              {
+                "mask": "0x04",
+                "name": "twoGroups"
+              },
+              {
+                "mask": "0x08",
+                "name": "repeatOpen"
+              },
+              {
+                "mask": "0x10",
+                "name": "repeatClosed"
+              },
+              {
+                "mask": "0x20",
+                "name": "ledOff"
+              },
+              {
+                "mask": "0x40",
+                "name": "linkToAllGroups"
+              },
+              {
+                "mask": "0x80",
+                "name": "programmingLock"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "stayAwake",
+      "description": "Keeps the sensor awake.",
+      "effect": "configuration",
+      "idempotent": true,
+      "command1": "0x2E",
+      "command2": "0x00",
+      "fixed": [
+        {
+          "position": 1,
+          "value": "0x01"
+        },
+        {
+          "position": 2,
+          "value": "0x04"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "duration",
+          "description": "How long to stay awake.",
+          "byte": 3,
+          "unit": "seconds",
+          "range": {
+            "from": 0,
+            "through": 255
+          }
+        }
+      ],
+      "integrity": "checksum"
+    }
+  ],
+  "notes": [
+    "The sensors sleep to save their batteries, and hear commands only while awake.",
+    "Direct commands from a device that isn't in the sensor's ALL-Link database get a NAK with 0xFF in cmd2.",
+    "The Open/Close Sensor's configuration byte is 0x43 by default, and the Leak Sensor's is 0x4F.",
+    "The Open/Close Sensor Developer Notes and the Leak Sensor Developer Notes give D4 and D5 of the extended Get reply as 0x01 and 0x23 without saying what they hold.",
+    "The guides document no Set Operating Flags commands for these sensors. Write the configuration byte with an extended Set instead.",
+    "stayAwake, as the Open/Close Sensor Developer Notes and the Leak Sensor Developer Notes give it, keeps the sensor awake for the seconds in D3; it changes no load or output, and as a keepAwake message it's configuration and idempotent."
+  ],
+  "sources": [
+    "Open/Close Sensor Developer Notes",
+    "Leak Sensor Developer Notes"
+  ]
+}
