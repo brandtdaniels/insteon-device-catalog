@@ -125,7 +125,9 @@
   "notes": [
     "HouseLinc names it Central Controller.",
     "Sold as a HomeKit bridge, which current versions of HomeKit no longer support.",
-    "Its hub interface on port 25105 is expected to match the other Hubs' but hasn't been verified.",
+    "Seen on an early unit whose only label was a HomeKit ID sticker marked stage, with no firmware version reported: nothing answered on ports 25105, 25106 or 9761, and only ports 80 and 443 accepted connections. Whether units that shipped serve the Hub interface on port 25105 as the other Hubs do hasn't been verified.",
+    "Seen on the same unit: port 80 answered POST /settings with no body by returning the error Invalid JSON content. With a JSON object, empty or naming the command, it returned only {\"command\": \"settings\"} and no settings. GET / without credentials returned 401 with no WWW-Authenticate header.",
+    "Seen on the same unit: port 443 served TLS 1.2 with a 2048-bit key and a certificate issued to INSTEON that was valid from 2013-05-06 to 2014-05-06, so it had expired.",
     "Sold as the 2243-222 in the US, 2243-422 in Europe, 2243-442 in the UK and 2243-522 in Australia and New Zealand."
   ],
   "sources": [
