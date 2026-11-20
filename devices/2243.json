@@ -41,7 +41,7 @@
       "subcategory": "0x3A",
       "verification": {
         "status": "inferred",
-        "note": "HouseLinc Device Definitions (version 2.9.87) lists this Hub Pro only for subcategories 0x18, 0x2C and 0x2D, and no source consulted gives the engine for 0x3A. i2cs is read from the other three subcategories of the same product. An Insteon device reports its engine in reply to a Get Insteon Engine Version request, and no reply from a unit that reports subcategory 0x3A has been read."
+        "note": "HouseLinc Device Definitions (version 2.9.87) lists this Hub Pro only for subcategories 0x18, 0x2C and 0x2D, and no source consulted gives the engine for 0x3A. i2CS is read from the other three subcategories of the same product. An Insteon device reports its engine in reply to a Get Insteon Engine Version request, and no reply from a unit that reports subcategory 0x3A has been read."
       }
     }
   ],
