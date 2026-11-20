@@ -40,8 +40,11 @@
       "category": "0x03",
       "subcategory": "0x3A",
       "verification": {
-        "status": "inferred",
-        "note": "HouseLinc Device Definitions (version 2.9.87) lists this Hub Pro only for subcategories 0x18, 0x2C and 0x2D, and no source consulted gives the engine for 0x3A. i2CS is read from the other three subcategories of the same product. An Insteon device reports its engine in reply to a Get Insteon Engine Version request, and no reply from a unit that reports subcategory 0x3A has been read."
+        "status": "observed",
+        "note": "Seen on a device running modem firmware 0x9D: a Hub Pro whose address Insteon's staging get-info page listed with category 0x03 and subcategory 0x3A answered a Get Insteon Engine Version request (cmd1 0x0D) from a Hub 2245's modem with i2CS. It wasn't linked to that modem, and it gave no category, subcategory, firmware or product key in answer to the ID Request. HouseLinc Device Definitions (version 2.9.87) lists this Hub Pro only for subcategories 0x18, 0x2C and 0x2D, so no document gives the engine for 0x3A.",
+        "firmware": [
+          "0x9D"
+        ]
       }
     }
   ],
