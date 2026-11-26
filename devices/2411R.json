@@ -23,6 +23,7 @@
       }
     }
   ],
+  "role": "controller",
   "capabilities": [],
   "lifecycle": {
     "installation": {
@@ -235,5 +236,9 @@
     "Infrared Receiver 2411R Owner's Manual",
     "Infrared Receiver 2411R Quick Start Guide",
     "Insteon Device Categories and Product Keys (October 2008)"
-  ]
+  ],
+  "verification": {
+    "status": "inferred",
+    "note": "Role: the Infrared Receiver 2411R Owner's Manual describes linking it only as a controller, which sends Insteon commands for the infrared it receives; no document read says it can't respond."
+  }
 }

@@ -31,6 +31,7 @@
       "subcategory": "0x06"
     }
   ],
+  "role": "responder",
   "capabilities": [],
   "lifecycle": {
     "installation": {
@@ -243,5 +244,9 @@
   "sources": [
     "HouseLinc Device Definitions (version 2.9.87)",
     "Morning Industry Lock Controller 2458A1 Owner's Manual"
-  ]
+  ],
+  "verification": {
+    "status": "inferred",
+    "note": "Role: the Morning Industry Lock Controller 2458A1 Owner's Manual describes linking it only to Insteon controllers, which lock and unlock doors through it; no document read says it can't control. The product's name refers to the locks it controls."
+  }
 }
