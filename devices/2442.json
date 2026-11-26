@@ -22,10 +22,16 @@
       }
     }
   ],
+  "radio": "dual",
   "capabilities": [],
   "sources": [
     "HouseLinc Device Definitions (version 2.9.87)",
     "Insteon Device Categories and Product Keys (October 2008)",
-    "Insteon Developer's Guide (2009)"
-  ]
+    "Insteon Developer's Guide (2009)",
+    "Tabletop Controller 2430 Owner's Manual"
+  ],
+  "verification": {
+    "status": "documented",
+    "note": "Radio: the Tabletop Controller 2430 Owner's Manual says this product retransmits Insteon signals across both radio frequency and the powerline. The Insteon Developer's Guide (2009) says it is the only product using first-generation i1/RF, at 904 MHz, which can't communicate with the i2/RF radios of other products."
+  }
 }
