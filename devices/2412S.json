@@ -15,6 +15,7 @@
       "subcategory": "0x1E"
     }
   ],
+  "radio": "powerline",
   "capabilities": [
     {
       "kind": "modem"
@@ -151,6 +152,11 @@
     "Insteon Device Categories (January 2014)",
     "HouseLinc Owner's Manual",
     "Insteon Modem Developer's Guide",
-    "Insteon Device Categories and Product Keys (October 2008)"
-  ]
+    "Insteon Device Categories and Product Keys (October 2008)",
+    "Insteon Developer's Guide (2009)"
+  ],
+  "verification": {
+    "status": "documented",
+    "note": "Radio: the Insteon Developer's Guide (2009) lists this identity as the 2412S serial modem and describes the PowerLinc Modem, an RS232 module that plugs into a power outlet and uses a powerline modem chip that connects through the house wiring."
+  }
 }
