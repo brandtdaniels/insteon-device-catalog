@@ -45,6 +45,7 @@
       "subcategory": "0x3E"
     }
   ],
+  "radio": "dual",
   "capabilities": [
     {
       "kind": "dimmable"
@@ -311,6 +312,11 @@
     "HouseLinc Device Definitions (version 2.9.87)",
     "Ballast Dimmer 2446 Owner's Manual",
     "Ballast Dimmer 2446 Quick Start Guide",
-    "In-Line 0-10VDC Dimmer Developer Notes"
-  ]
+    "In-Line 0-10VDC Dimmer Developer Notes",
+    "0-10V Ballast Dimmer 2475DA2 Owner's Manual"
+  ],
+  "verification": {
+    "status": "documented",
+    "note": "Radio: the 0-10V Ballast Dimmer 2475DA2 Owner's Manual (Rev: 10/19/2015) also covers this product, as the 2446-422 (869 MHz, subcategory 0x3D) and the 2446-522 (921 MHz, subcategory 0x3E)."
+  }
 }
