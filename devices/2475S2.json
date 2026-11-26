@@ -37,6 +37,7 @@
       "subcategory": "0x14"
     }
   ],
+  "radio": "powerline",
   "role": "both",
   "groups": [
     {
@@ -382,5 +383,9 @@
     "In-Line On/Off Module with Sense 2475S2 Quick Start Guide",
     "Insteon Device Categories and Product Keys (October 2008)",
     "Insteon Developer's Guide (2009)"
-  ]
+  ],
+  "verification": {
+    "status": "inferred",
+    "note": "Radio: the In-Line On/Off Module with Sense 2475S2 Owner's Manual's specifications list only a powerline frequency, and its troubleshooting asks for two Access Points or other dual-band products to detect the two powerline phases, so the catalog reads it as powerline."
+  }
 }

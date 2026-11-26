@@ -8,6 +8,7 @@
       "subcategory": "0x0A"
     }
   ],
+  "radio": "powerline",
   "role": "both",
   "capabilities": [],
   "lifecycle": {
@@ -147,5 +148,9 @@
     "Insteon Device Categories and Product Keys (October 2008)",
     "SeriaLinc 2410S Owner's Manual",
     "SeriaLinc 2410S Quick Start Guide"
-  ]
+  ],
+  "verification": {
+    "status": "inferred",
+    "note": "Radio: no document states it in so many words. The SeriaLinc 2410S Owner's Manual says computers and their accessories can absorb SeriaLinc signals from the powerline and gives the product no RF radio, so the catalog reads it as powerline."
+  }
 }

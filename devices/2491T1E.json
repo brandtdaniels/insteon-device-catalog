@@ -28,6 +28,7 @@
       "subcategory": "0x0E"
     }
   ],
+  "radio": "rf",
   "role": "both",
   "capabilities": [
     {
@@ -260,5 +261,9 @@
   ],
   "notes": [
     "A Venstar thermostat with the 2441V's board built in, so it uses the same commands."
-  ]
+  ],
+  "verification": {
+    "status": "inferred",
+    "note": "Radio: the Integrated Remote Control Thermostat 2491T1E Owner's Manual says the thermostat repeats RF Insteon commands via RF and doesn't say it communicates over the powerline, so the catalog reads it as RF."
+  }
 }
