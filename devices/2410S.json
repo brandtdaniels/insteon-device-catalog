@@ -8,6 +8,7 @@
       "subcategory": "0x0A"
     }
   ],
+  "role": "both",
   "capabilities": [],
   "lifecycle": {
     "installation": {

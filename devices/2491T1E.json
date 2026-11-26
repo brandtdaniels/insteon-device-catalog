@@ -28,6 +28,7 @@
       "subcategory": "0x0E"
     }
   ],
+  "role": "both",
   "capabilities": [
     {
       "kind": "thermostat",
