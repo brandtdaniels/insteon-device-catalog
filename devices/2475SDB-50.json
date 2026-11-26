@@ -29,6 +29,7 @@
       "subcategory": "0x2B"
     }
   ],
+  "radio": "dual",
   "groups": [
     {
       "number": "0x01",
@@ -369,5 +370,9 @@
     "In-LineLinc On/Off 2475SDB Quick Start Guide",
     "2475SDB Developer Notes",
     "Insteon Developer's Guide (2009)"
-  ]
+  ],
+  "verification": {
+    "status": "inferred",
+    "note": "Radio: no document read gives this subcategory. Read from the similar 2475SDB: the In-LineLinc On/Off 2475SDB Owner's Manual, which gives subcategory 0x1F only, says it communicates over both RF and the powerline."
+  }
 }
