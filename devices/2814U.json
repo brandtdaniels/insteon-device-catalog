@@ -11,11 +11,16 @@
       "productKey": "none"
     }
   ],
+  "radio": "powerline",
   "capabilities": [],
   "sources": [
     "HouseLinc Device Definitions (version 2.9.87)",
     "Insteon Device Categories (January 2014)",
     "Insteon Device Categories and Product Keys (October 2008)",
     "Insteon Developer's Guide (2009)"
-  ]
+  ],
+  "verification": {
+    "status": "inferred",
+    "note": "Radio: no document read states it. Read from the similar PowerLinc V2 Controller: the Insteon Developer's Guide (2009) draws it, with a USB or RS232 interface, as connected to the powerline and not to RF, and lists this ICON model beside it."
+  }
 }
