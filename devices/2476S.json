@@ -50,6 +50,7 @@
       "subcategory": "0x1C"
     }
   ],
+  "radio": "powerline",
   "groups": [
     {
       "number": "0x01",
@@ -360,5 +361,9 @@
     "On/Off Switch 2476S Quick Start Guide",
     "Insteon Device Categories and Product Keys (October 2008)",
     "Insteon Developer's Guide (2009)"
-  ]
+  ],
+  "verification": {
+    "status": "inferred",
+    "note": "Radio: no document states it in so many words. The On/Off Switch 2476S Owner's Manual for revision 6.0 and later says the switch needs an Access Point 2443 or another dual-band device to communicate with RF-only devices, so the catalog reads it as powerline; no document says what earlier revisions have."
+  }
 }
