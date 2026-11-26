@@ -11,6 +11,7 @@
       "productKey": "none"
     }
   ],
+  "radio": "powerline",
   "capabilities": [],
   "lifecycle": {
     "installation": {
@@ -143,5 +144,9 @@
     "Tabletop Controller 2430 Owner's Manual",
     "Insteon Device Categories and Product Keys (October 2008)",
     "Insteon Developer's Guide (2009)"
-  ]
+  ],
+  "verification": {
+    "status": "inferred",
+    "note": "Radio: no document states it in so many words. The Tabletop Controller 2430 Owner's Manual's specifications list only a powerline frequency, and it asks for two RF Signal Enhancers in the home. The Insteon Developer's Guide (2009) says the RF Signal Enhancer is the only product using first-generation i1/RF."
+  }
 }

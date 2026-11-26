@@ -7,6 +7,7 @@
       "subcategory": "0x23"
     }
   ],
+  "radio": "dual",
   "capabilities": [],
   "lifecycle": {
     "linking": {
@@ -116,5 +117,9 @@
   },
   "sources": [
     "Insteon Device Categories (January 2014)"
-  ]
+  ],
+  "verification": {
+    "status": "inferred",
+    "note": "Radio: read from the product's name in Insteon Device Categories (January 2014), LampLinc Dual-Band EZ; no document describes the product."
+  }
 }

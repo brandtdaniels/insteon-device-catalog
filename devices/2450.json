@@ -69,6 +69,8 @@
       }
     }
   ],
+  "radio": "powerline",
+  "role": "both",
   "groups": [
     {
       "number": "0x01",
@@ -385,5 +387,9 @@
     "I/O Module 2450 Owner's Manual",
     "Insteon Device Categories and Product Keys (October 2008)",
     "Insteon Developer's Guide (2009)"
-  ]
+  ],
+  "verification": {
+    "status": "inferred",
+    "note": "Radio: the I/O Module 2450 Owner's Manual's specifications list only a powerline frequency, so the catalog reads it as powerline."
+  }
 }

@@ -11,6 +11,7 @@
       "productKey": "0x000054"
     }
   ],
+  "radio": "powerline",
   "capabilities": [
     {
       "kind": "modem"
@@ -150,6 +151,11 @@
     "HouseLinc Device Definitions (version 2.9.87)",
     "HouseLinc Owner's Manual",
     "Insteon Modem Developer's Guide",
-    "Insteon Device Categories and Product Keys (October 2008)"
-  ]
+    "Insteon Device Categories and Product Keys (October 2008)",
+    "Insteon Developer's Guide (2009)"
+  ],
+  "verification": {
+    "status": "inferred",
+    "note": "Radio: no document read states it for this model. Read from the similar 2412S: the Insteon Developer's Guide (2009) describes the PowerLinc Modem as using a powerline modem chip."
+  }
 }

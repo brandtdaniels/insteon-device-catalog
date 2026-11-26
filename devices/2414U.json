@@ -11,10 +11,15 @@
       "productKey": "none"
     }
   ],
+  "radio": "powerline",
   "capabilities": [],
   "sources": [
     "HouseLinc Device Definitions (version 2.9.87)",
     "Insteon Device Categories and Product Keys (October 2008)",
     "Insteon Developer's Guide (2009)"
-  ]
+  ],
+  "verification": {
+    "status": "documented",
+    "note": "Radio: the Insteon Developer's Guide (2009) draws the PowerLinc V2 Controller, with a USB or RS232 interface, as a PL / Serial device, connected to the powerline and not to RF, and lists this identity as the 2414U."
+  }
 }
