@@ -18,6 +18,7 @@
     }
   ],
   "radio": "powerline",
+  "role": "both",
   "groups": [
     {
       "number": "0x01",
@@ -270,6 +271,11 @@
   "sources": [
     "HouseLinc Device Definitions (version 2.9.87)",
     "Countdown Timer Dimmer Keypad, 8 Buttons 2484D Quick Start Guide",
-    "Insteon Developer's Guide (2009)"
-  ]
+    "Insteon Developer's Guide (2009)",
+    "Countdown Timer Dimmer Keypad, 8 Buttons 2484D Owner's Manual"
+  ],
+  "verification": {
+    "status": "inferred",
+    "note": "Role: no document read covers this model. Read from the similar 2484D: the Countdown Timer Dimmer Keypad, 8 Buttons 2484D Owner's Manual says it responds to and controls other Insteon devices."
+  }
 }

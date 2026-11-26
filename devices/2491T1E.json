@@ -29,6 +29,7 @@
     }
   ],
   "radio": "rf",
+  "role": "both",
   "capabilities": [
     {
       "kind": "thermostat",

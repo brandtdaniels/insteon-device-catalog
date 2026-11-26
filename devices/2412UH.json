@@ -12,6 +12,7 @@
     }
   ],
   "radio": "powerline",
+  "role": "both",
   "capabilities": [
     {
       "kind": "modem"
@@ -156,6 +157,6 @@
   ],
   "verification": {
     "status": "inferred",
-    "note": "Radio: no document read states it for this model. Read from the similar 2412S: the Insteon Developer's Guide (2009) describes the PowerLinc Modem as using a powerline modem chip."
+    "note": "Radio and role: no document read states them for this model. Both are read from the similar 2412S: the Insteon Developer's Guide (2009) describes the PowerLinc Modem as using a powerline modem chip, and the Insteon Modem Developer's Guide has the modem ALL-Link as a controller or as a responder."
   }
 }

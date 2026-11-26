@@ -18,6 +18,7 @@
       "subcategory": "0x07"
     }
   ],
+  "role": "both",
   "groups": [
     {
       "number": "0x01",

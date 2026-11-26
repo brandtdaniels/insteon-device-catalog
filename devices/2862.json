@@ -15,6 +15,7 @@
     }
   ],
   "radio": "powerline",
+  "role": "both",
   "capabilities": [],
   "lifecycle": {
     "installation": {
@@ -213,5 +214,9 @@
     "HouseLinc Device Definitions (version 2.9.87)",
     "Lock Controller 2862 Owner's Manual",
     "Lock Controller 2862 Quick Start Guide"
-  ]
+  ],
+  "verification": {
+    "status": "documented",
+    "note": "Role: the Lock Controller 2862 Owner's Manual's specifications list scene commands it supports as a controller and as a responder, and give one as the most scenes it controls; its linking steps describe it only as a responder."
+  }
 }

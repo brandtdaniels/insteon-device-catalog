@@ -16,6 +16,7 @@
     }
   ],
   "radio": "powerline",
+  "role": "both",
   "capabilities": [
     {
       "kind": "modem"
@@ -157,6 +158,6 @@
   ],
   "verification": {
     "status": "documented",
-    "note": "Radio: the Insteon Developer's Guide (2009) lists this identity as the 2412S serial modem and describes the PowerLinc Modem, an RS232 module that plugs into a power outlet and uses a powerline modem chip that connects through the house wiring."
+    "note": "Radio: the Insteon Developer's Guide (2009) lists this identity as the 2412S serial modem and describes the PowerLinc Modem, an RS232 module that plugs into a power outlet and uses a powerline modem chip that connects through the house wiring. Role: the Insteon Modem Developer's Guide has the modem ALL-Link as a controller or as a responder."
   }
 }

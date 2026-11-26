@@ -46,6 +46,7 @@
     }
   ],
   "radio": "dual",
+  "role": "both",
   "capabilities": [
     {
       "kind": "dimmable"
@@ -317,6 +318,6 @@
   ],
   "verification": {
     "status": "documented",
-    "note": "Radio: the 0-10V Ballast Dimmer 2475DA2 Owner's Manual (Rev: 10/19/2015) also covers this product, as the 2446-422 (869 MHz, subcategory 0x3D) and the 2446-522 (921 MHz, subcategory 0x3E)."
+    "note": "Radio and role: the 0-10V Ballast Dimmer 2475DA2 Owner's Manual (Rev: 10/19/2015) also covers this product, as the 2446-422 (869 MHz, subcategory 0x3D) and the 2446-522 (921 MHz, subcategory 0x3E)."
   }
 }

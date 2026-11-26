@@ -9,6 +9,7 @@
     }
   ],
   "radio": "powerline",
+  "role": "both",
   "capabilities": [],
   "lifecycle": {
     "installation": {

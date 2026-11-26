@@ -30,6 +30,7 @@
       "subcategory": "0x15"
     }
   ],
+  "role": "both",
   "groups": [
     {
       "number": "0x01",
@@ -182,6 +183,11 @@
     "HouseLinc Device Definitions (version 2.9.87)",
     "Insteon Device Categories (January 2014)",
     "Insteon Device Categories and Product Keys (October 2008)",
-    "Insteon Developer's Guide (2009)"
-  ]
+    "Insteon Developer's Guide (2009)",
+    "On/Off Switch 2476S Owner's Manual"
+  ],
+  "verification": {
+    "status": "inferred",
+    "note": "Role: no document read covers this model. Read from the similar 2476S: the On/Off Switch 2476S Owner's Manual says it can be added as both a controller and a responder."
+  }
 }

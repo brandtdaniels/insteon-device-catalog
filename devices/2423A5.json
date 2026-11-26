@@ -17,6 +17,7 @@
       "subcategory": "0x09"
     }
   ],
+  "role": "controller",
   "capabilities": [],
   "lifecycle": {
     "installation": {
@@ -158,5 +159,9 @@
     "HouseLinc Device Definitions (version 2.9.87)",
     "SynchroLinc Developer Notes",
     "Appliance Status Sensor 2423A5 Owner's Manual"
-  ]
+  ],
+  "verification": {
+    "status": "inferred",
+    "note": "Role: the Appliance Status Sensor 2423A5 Owner's Manual calls it a controller and describes linking it only to responders; no document read says it can't respond."
+  }
 }

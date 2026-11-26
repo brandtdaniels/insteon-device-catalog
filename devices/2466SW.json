@@ -40,6 +40,7 @@
       "subcategory": "0x1A"
     }
   ],
+  "role": "both",
   "groups": [
     {
       "number": "0x01",

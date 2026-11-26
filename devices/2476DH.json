@@ -32,6 +32,7 @@
       "subcategory": "0x1D"
     }
   ],
+  "role": "both",
   "groups": [
     {
       "number": "0x01",
@@ -361,5 +362,9 @@
     "Dimmer Switch 2476D Quick Start Guide",
     "Insteon Device Categories and Product Keys (October 2008)",
     "Insteon Developer's Guide (2009)"
-  ]
+  ],
+  "verification": {
+    "status": "inferred",
+    "note": "Role: no document read names the high wattage model. Read from the similar 2476D: the Dimmer Switch 2476D Owner's Manual describes it as a controller and as a responder."
+  }
 }
