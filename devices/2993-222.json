@@ -18,6 +18,7 @@
       }
     }
   ],
+  "radio": "powerline",
   "capabilities": [],
   "lifecycle": {
     "installation": {
