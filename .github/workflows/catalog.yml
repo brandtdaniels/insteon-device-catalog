@@ -25,6 +25,10 @@ jobs:
           path: .build
           key: swift-6.3.3-${{ hashFiles('Package.swift', 'Package.resolved') }}
           restore-keys: swift-6.3.3-
+      # The page tests run the page's script, which takes Node.js where there is no JavaScriptCore.
+      - uses: actions/setup-node@v4.2.0
+        with:
+          node-version: 22
       - name: Build the tools
         run: swift build --build-tests -Xswiftc -warnings-as-errors
       - name: Test the tools

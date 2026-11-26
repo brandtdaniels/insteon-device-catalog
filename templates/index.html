@@ -35,6 +35,7 @@
     --radius-card: 12px;
     --radius-pill: 999px;
     --page-width: 72rem;
+    --toolbar-clearance: 8rem;
     --measure: 44rem;
     --gutter: var(--space-4);
     --pill-border: 1px;
@@ -129,7 +130,7 @@
   .category-code { margin: var(--space-1) 0 0; color: var(--muted); font-size: var(--text-sm); }
   .category-description { margin: var(--space-2) 0 var(--space-4); color: var(--muted); max-width: var(--measure); font-size: var(--text-sm); }
 
-  .grid { display: grid; gap: var(--space-4); align-items: start; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); }
+  .grid { display: grid; gap: var(--space-4); grid-auto-flow: row dense; align-items: start; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); }
   .card { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-4); border: 1px solid var(--line); border-radius: var(--radius-card); background: var(--raised); font-size: var(--text-sm); }
   .card .top { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-2); }
   .card .model { font-weight: 600; font-variant-numeric: tabular-nums; }
@@ -140,7 +141,46 @@
   .marks { font-size: var(--text-xs); color: var(--muted); }
   .chips { justify-content: flex-end; }
 
+  .card.open { grid-column: 1 / -1; scroll-margin-top: var(--toolbar-clearance); }
   .more > summary { cursor: pointer; color: var(--accent); }
+  .load-status { margin-top: var(--space-3) !important; color: var(--muted); }
+  .full { display: flex; flex-direction: column; gap: var(--space-5); margin-top: var(--space-4); }
+  .full > section { padding-top: var(--space-3); border-top: 1px solid var(--line); }
+  .full h4 { margin: 0 0 var(--space-3); font-size: var(--text-base); }
+  .full h5 { margin: var(--space-4) 0 var(--space-2); font-size: var(--text-sm); }
+  .full ul, .full ol { margin: 0; }
+  .entries { display: grid; gap: var(--space-3); grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr)); padding: 0; list-style: none; }
+  .entry { min-width: 0; padding: var(--space-3); border: 1px solid var(--line); border-radius: var(--radius-control); background: var(--surface); overflow-wrap: anywhere; }
+  .entry > * + * { margin-top: var(--space-2) !important; }
+  .entry-title code { color: var(--muted); margin-left: var(--space-2); }
+  .entry-title strong code { color: var(--text); margin-left: 0; }
+  .entry-text, .used-by { max-width: var(--measure); }
+  .used-by { color: var(--muted); margin-bottom: var(--space-2) !important; }
+  .facts { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-4); margin: 0; }
+  .facts > div { display: flex; flex-wrap: wrap; gap: 0 var(--space-2); align-items: baseline; min-width: 0; }
+  .facts dt { color: var(--muted); }
+  .facts dd { margin: 0; overflow-wrap: anywhere; }
+  .nested { padding-left: var(--space-3); border-left: 2px solid var(--line); }
+  .nested-title { margin-bottom: var(--space-2) !important; font-size: var(--text-xs); font-weight: 600; color: var(--muted); }
+  .nested .entries, .list-body .entries .entries { grid-template-columns: 1fr; }
+  .verification { color: var(--muted); font-size: var(--text-xs); }
+  .verification .pill { color: var(--text); }
+  .verification .status-observed { color: var(--observed-text); }
+  .notes { padding-left: var(--space-5); max-width: var(--measure); }
+  .notes li + li { margin-top: var(--space-1); }
+  .steps { padding-left: var(--space-5); }
+  .steps > li { max-width: var(--measure); }
+  .steps > li + li { margin-top: var(--space-2); }
+  .steps .facts { font-size: var(--text-xs); }
+  .full .list > summary { padding: var(--space-1) 0; font-size: var(--text-sm); }
+  .list-body { padding: var(--space-2) 0 var(--space-2) var(--space-3); }
+  .list-body > * + * { margin-top: var(--space-3) !important; }
+  .command-set + .command-set { margin-top: var(--space-5); }
+  .command-set h5 { margin-top: 0; font-size: var(--text-base); }
+  .scroll { overflow-x: auto; }
+  .values { border-collapse: collapse; }
+  .values th, .values td { padding: var(--space-1) var(--space-4) var(--space-1) 0; text-align: left; vertical-align: top; border-top: 1px solid var(--line); }
+  .values th { color: var(--muted); font-weight: 500; font-size: var(--text-xs); }
   .groups { display: flex; flex-direction: column; gap: var(--space-4); margin-top: var(--space-3); }
   .groups > section { padding-top: var(--space-3); border-top: 1px solid var(--line); }
   .groups h4 { margin: 0 0 var(--space-2); font-size: var(--text-xs); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
@@ -162,6 +202,7 @@
   .identity-table th { font-weight: 500; color: var(--muted); overflow-wrap: normal; }
 
   @media (max-width: 40rem) {
+    .card.open { scroll-margin-top: var(--space-2); }
     .toolbar { position: static; margin-top: var(--space-5); }
     input[type=search], select { font-size: var(--text-base); }
     .statuses-table thead { display: none; }
@@ -199,7 +240,7 @@ firmware version a device reports. Version $catalog_version.</p>
 </nav>
 </header>
 
-<main class="container">
+<main class="container" data-catalog="v$version/catalog.json">
 $coverage
 
 $capabilities
@@ -282,5 +323,7 @@ $how
   apply();
 })();
 </script>
+<script>
+$detail_script</script>
 </body>
 </html>
