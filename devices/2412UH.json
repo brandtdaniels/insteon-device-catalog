@@ -11,6 +11,8 @@
       "productKey": "0x000053"
     }
   ],
+  "radio": "powerline",
+  "role": "both",
   "capabilities": [
     {
       "kind": "modem"
@@ -150,6 +152,11 @@
     "HouseLinc Device Definitions (version 2.9.87)",
     "HouseLinc Owner's Manual",
     "Insteon Modem Developer's Guide",
-    "Insteon Device Categories and Product Keys (October 2008)"
-  ]
+    "Insteon Device Categories and Product Keys (October 2008)",
+    "Insteon Developer's Guide (2009)"
+  ],
+  "verification": {
+    "status": "inferred",
+    "note": "Radio and role: no document read states them for this model. Both are read from the similar 2412S: the Insteon Developer's Guide (2009) describes the PowerLinc Modem as using a powerline modem chip, and the Insteon Modem Developer's Guide has the modem ALL-Link as a controller or as a responder."
+  }
 }
