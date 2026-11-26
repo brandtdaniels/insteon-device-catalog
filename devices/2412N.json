@@ -29,6 +29,7 @@
       }
     }
   ],
+  "radio": "powerline",
   "capabilities": [],
   "lifecycle": {
     "installation": {
@@ -178,5 +179,9 @@
     "Central Controller 2412N Owner's Manual",
     "Central Controller 2412N Quick Start Guide",
     "Insteon Device Categories and Product Keys (October 2008)"
-  ]
+  ],
+  "verification": {
+    "status": "inferred",
+    "note": "Radio: the Central Controller 2412N Owner's Manual's specifications list only a powerline frequency, so the catalog reads it as powerline. The manual also advertises setting up a wireless Insteon network, without saying the controller has an RF radio."
+  }
 }
