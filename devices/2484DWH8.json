@@ -19,6 +19,7 @@
     }
   ],
   "radio": "powerline",
+  "role": "both",
   "groups": [
     {
       "number": "0x01",
@@ -261,6 +262,7 @@
     "HouseLinc Device Definitions (version 2.9.87)",
     "Countdown Timer Dimmer Keypad, 8 Buttons 2484D Quick Start Guide",
     "Insteon Device Categories and Product Keys (October 2008)",
-    "Insteon Developer's Guide (2009)"
+    "Insteon Developer's Guide (2009)",
+    "Countdown Timer Dimmer Keypad, 8 Buttons 2484D Owner's Manual"
   ]
 }
