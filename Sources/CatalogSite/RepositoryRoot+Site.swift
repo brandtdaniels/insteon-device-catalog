@@ -4,8 +4,8 @@ import Foundation
 
 extension RepositoryRoot {
   /// What the landing page is built from, read from the repository: its profiles and command sets,
-  /// the capability descriptions in the profile schema, and the version `MAJOR.MINOR` from
-  /// `VERSION` with `patch` appended.
+  /// the capability descriptions in the profile schema, the script that shows a card's details, and
+  /// the version `MAJOR.MINOR` from `VERSION` with `patch` appended.
   public func siteInput(patch: Int) throws -> SiteInput {
     let version = try majorMinor()
 
@@ -14,19 +14,22 @@ extension RepositoryRoot {
       commandSets: try commandSetFiles().map(\.value),
       capabilityDescriptions: SiteInput.capabilityDescriptions(in: try schema(.deviceProfile)),
       version: "\(version).\(patch)",
-      major: String(version.prefix { $0 != "." })
+      major: String(version.prefix { $0 != "." }),
+      detailScript: try pageText("templates/detail.js")
     )
   }
 
   /// The template the page is filled into.
   public func pageTemplate() throws -> Template {
-    let url = self.url.appendingPathComponent("templates/index.html")
+    Template(try pageText("templates/index.html"))
+  }
 
-    guard let data = try? Data(contentsOf: url) else { throw SiteError.unreadableTemplate("templates/index.html") }
+  /// A text file the page is made from, by its path in the repository.
+  private func pageText(_ path: String) throws -> String {
+    guard let data = try? Data(contentsOf: url.appendingPathComponent(path)) else { throw SiteError.unreadableTemplate(path) }
 
     // A text file read in text mode has its line ends made into newlines.
-    let text = String(decoding: data, as: UTF8.self).replacingOccurrences(of: "\r\n", with: "\n").replacingOccurrences(of: "\r", with: "\n")
-    return Template(text)
+    return String(decoding: data, as: UTF8.self).replacingOccurrences(of: "\r\n", with: "\n").replacingOccurrences(of: "\r", with: "\n")
   }
 
   /// The landing page for the repository's data, as the build writes `index.html`.

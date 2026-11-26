@@ -41,12 +41,12 @@ struct TemplateSubstitutionTests {
     #expect(try Template("$a").substitute(["a": "$b", "b": "X"]) == "$b")
   }
 
-  @Test func theRepositoryTemplateNamesTheElevenPlaceholdersTheBuildFills() throws {
+  @Test func theRepositoryTemplateNamesTheTwelvePlaceholdersTheBuildFills() throws {
     let template = try Template(String(contentsOf: CatalogRepository.url.appendingPathComponent("templates/index.html"), encoding: .utf8))
 
     #expect(template.placeholders == [
       "catalog_version", "version", "coverage", "capabilities", "category_options", "capability_options", "engine_options",
-      "verification_options", "count", "sections", "how"
+      "verification_options", "count", "sections", "how", "detail_script"
     ])
   }
 }

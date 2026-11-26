@@ -45,7 +45,9 @@ Every change to `main` publishes the profiles to GitHub Pages:
 - `https://brandtdaniels.github.io/insteon-device-catalog/v0/device-profile.schema.json` and
   `command-set.schema.json`: the schemas
 - `https://brandtdaniels.github.io/insteon-device-catalog/`: a page listing the files and every
-  profile, for people rather than software
+  profile, for people rather than software. Each profile's card opens everything the catalog
+  states about the product: its identities, groups, setup steps, commands and settings, how sure
+  each value is, and its sources
 
 See [API.md](API.md) for the files' formats, how to keep a copy up to date and how to look a
 device up. In short: read the manifest first, check that its version is one you understand, then
@@ -73,7 +75,10 @@ the catalog and treat downloading a newer one as optional.
    byte's bits twice, every flag and enumeration it names exists, and each command's `effect`
    and `idempotent` fit what the protocol and the command set say about it, as
    [API.md](API.md#what-a-command-does) describes.
-   A change to the tools comes with a test in `SwiftTests/`; `swift test` runs them.
+   A change to the tools comes with a test in `SwiftTests/`; `swift test` runs them. The page's
+   own script, [`templates/detail.js`](templates/detail.js), is tested there too: the tests run it
+   on every profile with JavaScriptCore on macOS, and with Node.js, which must be installed,
+   elsewhere.
    `swift run catalog version-check BASE_SHA` checks the version rule, and
    `swift run catalog build --output site --patch N --built ISO` writes the site CI publishes.
 3. Follow [CONVENTIONS.md](CONVENTIONS.md) for names, terms and citations; the build fails on

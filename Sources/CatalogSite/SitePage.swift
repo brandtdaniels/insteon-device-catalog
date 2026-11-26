@@ -12,13 +12,19 @@ public struct SiteInput: Sendable {
   public var version: String
   /// The major version, which names the folder the catalog is published in.
   public var major: String
+  /// The script that shows a card's full details, which the page carries inside itself.
+  public var detailScript: String
 
-  public init(profiles: [JSONValue], commandSets: [JSONValue], capabilityDescriptions: [String: String], version: String, major: String) {
+  public init(
+    profiles: [JSONValue], commandSets: [JSONValue], capabilityDescriptions: [String: String], version: String, major: String,
+    detailScript: String = ""
+  ) {
     self.profiles = profiles
     self.commandSets = commandSets
     self.capabilityDescriptions = capabilityDescriptions
     self.version = version
     self.major = major
+    self.detailScript = detailScript
   }
 
   /// Each capability kind's description, read from the profile schema's `$defs.capability.oneOf`.
@@ -135,7 +141,8 @@ public enum SitePage {
       "sections": fragments.sections,
       "category_options": fragments.categoryOptions,
       "engine_options": fragments.engineOptions,
-      "capability_options": fragments.capabilityOptions
+      "capability_options": fragments.capabilityOptions,
+      "detail_script": input.detailScript
     ])
   }
 }
