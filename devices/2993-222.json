@@ -18,6 +18,8 @@
       }
     }
   ],
+  "radio": "powerline",
+  "role": "controller",
   "capabilities": [],
   "lifecycle": {
     "installation": {
