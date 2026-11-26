@@ -23,6 +23,7 @@
       }
     }
   ],
+  "role": "responder",
   "capabilities": [],
   "lifecycle": {
     "installation": {
@@ -182,5 +183,9 @@
     "Infrared Transmitter 2411T Owner's Manual",
     "Infrared Transmitter 2411T Quick Start Guide",
     "Insteon Device Categories and Product Keys (October 2008)"
-  ]
+  ],
+  "verification": {
+    "status": "inferred",
+    "note": "Role: the Infrared Transmitter 2411T Owner's Manual describes linking it only to Insteon controllers, whose commands it turns into infrared; no document read says it can't control."
+  }
 }
